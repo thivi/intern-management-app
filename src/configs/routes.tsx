@@ -1,8 +1,6 @@
 import { RouteInterface } from "../models";
-import { SignIn } from "../pages/authentication";
-import { Dashboard } from "../pages/dashboard";
-import { SignOut } from "../pages/authentication/sign-out";
-import { LOGOUT, LOGIN, HOME} from "../constants";
+import { SignIn, Dashboard, ProfilePage, SignOut } from "../pages";
+import { LOGOUT, LOGIN, HOME, PROFILE } from "../constants";
 
 export const routes: RouteInterface[] = [
 	{
@@ -12,7 +10,7 @@ export const routes: RouteInterface[] = [
 		protected: false,
 		exact: true,
 		name: "Login",
-		appLayout: false
+		appLayout: false,
 	},
 	{
 		component: SignOut,
@@ -21,7 +19,7 @@ export const routes: RouteInterface[] = [
 		exact: true,
 		name: "Logout",
 		showOnMenu: false,
-		appLayout: false
+		appLayout: false,
 	},
 	{
 		component: Dashboard,
@@ -30,6 +28,15 @@ export const routes: RouteInterface[] = [
 		protected: true,
 		exact: true,
 		name: "Home",
-		appLayout: true
+		appLayout: true,
+	},
+	{
+		component: ProfilePage,
+		path: PROFILE,
+		showOnMenu: true,
+		protected: true,
+		exact: false,
+		name: "Profile",
+		appLayout: true,
 	},
 ];
