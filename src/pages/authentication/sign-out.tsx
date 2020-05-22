@@ -5,13 +5,14 @@ import { useHistory } from "react-router-dom";
 import { LOGIN } from "../../constants";
 
 export const SignOut = (): React.ReactElement => {
-	const { dispatch } = useContext(AuthContext);
+	const { authState, dispatch } = useContext(AuthContext);
 
 	const history = useHistory();
 	useEffect(() => {
 		updateCallbackUrl("/");
 		signOut(dispatch);
+		authState.authData.signOut();
 		history.push(LOGIN);
-	}, [history, dispatch]);
+	}, [history, dispatch, authState.authData]);
 	return <></>;
 };
