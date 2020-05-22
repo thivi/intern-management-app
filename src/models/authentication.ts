@@ -1,16 +1,9 @@
 import { SIGN_IN, ADD_DETAILS, SIGN_OUT } from "./../constants/authentication";
-import { StaffDetails } from ".";
 
 export interface AuthState {
 	authenticated: boolean;
-	/**
-	 * 0 - null
-	 * 1 - Admin
-	 * 2 - Staff
-	 */
-    isAdmin: 0 | 1 | 2;
     accessToken: string | null;
-    staffDetails: StaffDetails | null;
+    authData: gapi.auth2.GoogleAuth;
 }
 
 export interface SignIn {
@@ -25,7 +18,7 @@ export interface SignOut {
 
 export interface AddDetails {
     type: typeof ADD_DETAILS;
-    payload: StaffDetails;
+    payload: any;
 }
 export type AuthAction = AddDetails | SignIn | SignOut;
 
