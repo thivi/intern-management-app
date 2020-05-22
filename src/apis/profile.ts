@@ -2,7 +2,7 @@ import { Methods, http } from "../configs";
 import Axios, { AxiosRequestConfig } from "axios";
 import { apiEndpoints } from "../constants";
 import { errorStatus } from "../utils";
-import { GoogleProfile, Profile } from "../models";
+import { GoogleProfile } from "../models";
 
 export const getProfile = (): Promise<any> => {
 	const config: AxiosRequestConfig = {

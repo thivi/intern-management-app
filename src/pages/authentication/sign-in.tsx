@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useCallback } from "react";
 import { AuthContext } from "../../helpers";
 import { useHistory } from "react-router-dom";
 import { getCallbackUrl } from "../../utils";
@@ -9,18 +9,23 @@ export const SignIn = (): React.ReactElement => {
 
 	const history = useHistory();
 
-	const signIn = (GoogleAuth: gapi.auth2.GoogleAuth) => {
-		let user = GoogleAuth.currentUser.get();
-		if (user
-			.hasGrantedScopes(
-				"https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.profile")) {
-			dispatch({ type: SIGN_IN, payload: null });
-			dispatch({ type: ADD_DETAILS, payload: GoogleAuth });
-			history?.push(getCallbackUrl() ?? "");
-		} else {
-			GoogleAuth.signIn();
-		}
-	};
+	const signIn = useCallback(
+		(GoogleAuth: gapi.auth2.GoogleAuth) => {
+			let user = GoogleAuth.currentUser.get();
+			if (
+				user.hasGrantedScopes(
+					"https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.profile"
+				)
+			) {
+				dispatch({ type: SIGN_IN, payload: null });
+				dispatch({ type: ADD_DETAILS, payload: GoogleAuth });
+				history?.push(getCallbackUrl() ?? "");
+			} else {
+				GoogleAuth.signIn();
+			}
+		},
+		[dispatch, history]
+	);
 
 	useEffect(() => {
 		gapi.load("client:auth2", () => {
@@ -39,7 +44,7 @@ export const SignIn = (): React.ReactElement => {
 					});
 				});
 		});
-	}, []);
+	}, [signIn]);
 
 	return null;
 };
