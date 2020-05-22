@@ -10,7 +10,7 @@ export enum Methods {
 }
 
 const config: AxiosRequestConfig = {
-    baseURL: process.env.REACT_APP_API_ENDPOINT
+    baseURL: "https://sheets.googleapis.com/v4/spreadsheets/"
 };
 
 const httpClient = axios.create({
@@ -21,9 +21,10 @@ httpClient.interceptors.request.use(
     (config) => {
         if (getAccessToken()) {
             config.headers = {
-                Authorization: `bearer ${getAccessToken()}`
+                Authorization: `Bearer ${getAccessToken()}`
             };
         }
+        config.url=`${config.url}?key=${process.env.REACT_APP_API_KEY}`
         return config;
     },
     (error) => {
