@@ -1,13 +1,13 @@
 import { Methods, http } from "../configs";
 import Axios, { AxiosRequestConfig } from "axios";
-import { apiEndpoints } from "../constants";
+import { apiEndpoints, INTERN_PROFILE } from "../constants";
 import { errorStatus } from "../utils";
 import { GoogleProfile } from "../models";
 
 export const getProfile = (): Promise<any> => {
 	const config: AxiosRequestConfig = {
 		method: Methods.GET,
-		url: `${apiEndpoints.profile}/Intern_Profile`,
+		url: `${apiEndpoints.profile}/${INTERN_PROFILE}`,
 	};
 
 	return http(config)
@@ -75,9 +75,9 @@ export const updateProfile = (range: string, values: string[]): Promise<any> => 
 export const addProfile = (values: string[]): Promise<any> => {
 	const config: AxiosRequestConfig = {
 		method: Methods.POST,
-		url: `${apiEndpoints.profile}/Intern_Profile:append`,
+		url: `${apiEndpoints.profile}/${INTERN_PROFILE}:append`,
 		data: {
-			range:"Intern_Profile",
+			range: INTERN_PROFILE,
 			majorDimension: "ROWS",
 			values: [values],
 		},
