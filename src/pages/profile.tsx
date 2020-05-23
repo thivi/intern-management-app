@@ -39,6 +39,9 @@ export const ProfilePage = (): ReactElement => {
 					})
 					.catch((error) => {
 						//TODO Notify
+					})
+					.finally(() => {
+						setSubmitting(true);
 					});
 			} else {
 				addProfile(rows)
@@ -48,6 +51,9 @@ export const ProfilePage = (): ReactElement => {
 					})
 					.catch((error) => {
 						//TODO: Notify
+					})
+					.finally(() => {
+						setSubmitting(true);
 					});
 			}
 		},
@@ -73,8 +79,7 @@ export const ProfilePage = (): ReactElement => {
 			if (!(values.contact_number.match(/\d{10}/) || values.contact_number.match(/\d{9}/)))
 				errors["contact_number"] =
 					"Contact number is not of the right format. " + (errors["contact_number"] ?? "");
-			if (!validator.isURL(values.blog))
-				errors["blog"] = "Blog link should be a url. " + (errors["blog"] ?? "");
+			if (!validator.isURL(values.blog)) errors["blog"] = "Blog link should be a url. " + (errors["blog"] ?? "");
 			if (!validator.isURL(values.gantt_chart))
 				errors["gantt_chart"] = "Gannt Chart should be a link. " + (errors["gantt_chart"] ?? "");
 			if (new Date(values.leaving_date) <= new Date(values.joined_date))
