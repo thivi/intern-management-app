@@ -1,0 +1,1 @@
+export const INTERN_PROFILE = "Intern_Profile";

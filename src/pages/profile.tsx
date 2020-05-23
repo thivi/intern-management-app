@@ -1,26 +1,118 @@
-import React, { ReactElement, useEffect, useState } from "react";
-import { getGoogleProfile, getProfile } from "../apis";
+import React, { ReactElement, useEffect, useState, useCallback } from "react";
+import { getGoogleProfile, getProfile, updateProfile, addProfile } from "../apis";
 import { GoogleProfile, Profile } from "../models";
-import { Grid, Avatar, Typography, TextField } from "@material-ui/core";
+import { Grid, Avatar, Typography, TextField, Button } from "@material-ui/core";
+import { useFormik } from "formik";
+import { convertKeyToLabel } from "../utils";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
+import { Moment } from "moment";
+import { Skeleton } from "@material-ui/lab";
+import validator from "validator";
 
 export const ProfilePage = (): ReactElement => {
 	const [googleProfile, setGoogleProfile] = useState<GoogleProfile>(null);
 	const [profile, setProfile] = useState<Profile>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const [range, setRange] = useState("");
+
+	const formik = useFormik({
+		onSubmit: (values, { setSubmitting }) => {
+			const rows = [];
+			rows.push(googleProfile.email);
+			rows.push(googleProfile.name);
+			rows.push(values.university);
+			rows.push(values.degree);
+			rows.push(values.joined_date);
+			rows.push(values.leaving_date);
+			rows.push(values.contact_number);
+			rows.push(values.mentor);
+			rows.push(values.co_mentor);
+			rows.push(values.blog);
+			rows.push(values.gantt_chart);
+
+			if (profile) {
+				updateProfile(range, rows)
+					.then((response) => {
+						getProfileCall();
+						//TODO Notify
+					})
+					.catch((error) => {
+						//TODO Notify
+					})
+					.finally(() => {
+						setSubmitting(true);
+					});
+			} else {
+				addProfile(rows)
+					.then((response) => {
+						getProfileCall();
+						//TODO: Notify
+					})
+					.catch((error) => {
+						//TODO: Notify
+					})
+					.finally(() => {
+						setSubmitting(true);
+					});
+			}
+		},
+		enableReinitialize: true,
+		initialValues: {
+			university: profile?.University,
+			degree: profile?.Degree,
+			joined_date: profile?.Joined_date ?? new Date().toDateString(),
+			leaving_date: profile?.Leaving_date ?? new Date(new Date().getTime() + 15552000000).toDateString(),
+			contact_number: profile?.Contact_no,
+			mentor: profile?.Mentor,
+			co_mentor: profile?.Co_mentor,
+			blog: profile?.Blog,
+			gantt_chart: profile?.Gantt_chart,
+		},
+		validate: (values) => {
+			const errors: { [key: string]: string } = {};
+
+			Object.entries(values).forEach(([key, value]) => {
+				if (!value) errors[key] = `${convertKeyToLabel(key)} is required`;
+			});
+
+			if (!(values.contact_number.match(/\d{10}/) || values.contact_number.match(/\d{9}/)))
+				errors["contact_number"] =
+					"Contact number is not of the right format. " + (errors["contact_number"] ?? "");
+			if (!validator.isURL(values.blog)) errors["blog"] = "Blog link should be a url. " + (errors["blog"] ?? "");
+			if (!validator.isURL(values.gantt_chart))
+				errors["gantt_chart"] = "Gannt Chart should be a link. " + (errors["gantt_chart"] ?? "");
+			if (new Date(values.leaving_date) <= new Date(values.joined_date))
+				errors["leaving_date"] =
+					"Leaving Date should be later than the joined date. " + (errors["leaving_date"] ?? "");
+
+			return errors;
+		},
+	});
+
+	const { handleSubmit, touched, errors, values, handleChange, handleBlur, setFieldValue } = formik;
 
 	useEffect(() => {
+		setIsLoading(true);
 		getGoogleProfile()
 			.then((response) => {
 				setGoogleProfile(response);
 			})
 			.catch((error) => {
+				setIsLoading(false);
 				//TODO: Notify
 			});
 	}, []);
 
-	useEffect(() => {
+	const getProfileCall = useCallback(() => {
 		getProfile()
 			.then((response) => {
-				const rawProfile = response?.values?.find((value: string[]) => value[0] === googleProfile.email);
+				const rawProfile = response?.values?.find((value: string[], index: number) => {
+					if (value[0] === googleProfile.email) {
+						setRange(`Intern_Profile!A${index + 1}:AA${index + 1}`);
+						return true;
+					}
+				});
 				const profile: Profile = {
 					Email_ID: rawProfile[0],
 					Name: rawProfile[1],
@@ -38,117 +130,211 @@ export const ProfilePage = (): ReactElement => {
 			})
 			.catch((error) => {
 				//TODO: Notify
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	}, [googleProfile]);
 
+	useEffect(() => {
+		getProfileCall();
+	}, [googleProfile, getProfileCall]);
+
 	return (
-		<Grid container spacing={2}>
-			<Grid item xs={4}>
-				<Avatar src={googleProfile?.picture} />
-			</Grid>
-			<Grid item xs={8}>
-				<Typography variant="h5">{googleProfile?.name}</Typography>
-				<Typography>{googleProfile?.email}</Typography>
-			</Grid>
-			<Typography variant="h6">Academic Credentials</Typography>
-			<Grid item xs={12}>
-				<TextField
-					name="university"
-					placeholder="eg: University of Colombo, University of Moratuwa etc."
-					value={profile?.University}
-					variant="outlined"
-					label="University"
-					fullWidth
-				/>
-			</Grid>
-			<Grid item xs={12}>
-				<TextField
-					name="degree"
-					placeholder="eg: B.Sc. in Information Technology, B.Eng. in Software Engineering etc."
-					value={profile?.Degree}
-					variant="outlined"
-					label="Degree"
-					fullWidth
-				/>
+		<>
+			<Grid container spacing={2}>
+				<Grid item xs={4}>
+					<Avatar src={googleProfile?.picture} />
+				</Grid>
+				<Grid item xs={8}>
+					<Typography variant="h5">{googleProfile?.name}</Typography>
+					<Typography>{googleProfile?.email}</Typography>
+				</Grid>
 			</Grid>
 
-			<Typography variant="h6">Internship Period</Typography>
-			<Grid item xs={12}>
-				<TextField
-					name="joined"
-					placeholder={"eg: " + new Date().toDateString()}
-					value={profile?.Joined_date}
-					variant="outlined"
-					label="Joined Date"
-					fullWidth
-				/>
-			</Grid>
-			<Grid item xs={12}>
-				<TextField
-					name="leaving"
-					placeholder={"eg: " + new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30 * 6).toDateString()}
-					value={profile?.Leaving_date}
-					variant="outlined"
-					label="Leaving Date"
-					fullWidth
-				/>
-            </Grid>
-            
-            <Typography variant="h6">Contacts</Typography>
-			<Grid item xs={12}>
-				<TextField
-					name="contact"
-					placeholder="eg: 077756896532"
-					value={profile?.Contact_no}
-					variant="outlined"
-					label="Contact Number"
-					fullWidth
-				/>
-            </Grid>
-            
-            <Typography variant="h6">Mentors</Typography>
-			<Grid item xs={12}>
-				<TextField
-					name="mentor"
-					placeholder="eg: John Doe"
-					value={profile?.Mentor}
-					variant="outlined"
-					label="Mentor"
-					fullWidth
-				/>
-            </Grid>
-            <Grid item xs={12}>
-				<TextField
-					name="coMentor"
-					placeholder="eg: John Doe"
-					value={profile?.Co_mentor}
-					variant="outlined"
-					label="Co-Mentor"
-					fullWidth
-				/>
-            </Grid>
-            
-            <Typography variant="h6">Links</Typography>
-			<Grid item xs={12}>
-				<TextField
-					name="blog"
-					placeholder="eg: https://www.thearmchaircritic.org"
-					value={profile?.Blog}
-					variant="outlined"
-					label="Blog Link"
-					fullWidth
-				/>
-            </Grid>
-            <Grid item xs={12}>
-				<TextField
-					name="ganttChart"
-					placeholder="eg: https://docs.google.com/..."
-					value={profile?.Gantt_chart}
-					variant="outlined"
-					label="Link to Gantt Chart"
-					fullWidth
-				/>
-			</Grid>
-		</Grid>
+			<form noValidate onSubmit={handleSubmit}>
+				<Grid container spacing={2}>
+					<Typography variant="h6">Academic Credentials</Typography>
+					<Grid item xs={12}>
+						{isLoading ? (
+							<Skeleton variant="text" />
+						) : (
+							<TextField
+								name="university"
+								placeholder="eg: University of Colombo, University of Moratuwa etc."
+								value={values.university ?? ""}
+								onChange={handleChange}
+								variant="outlined"
+								label="University"
+								fullWidth
+								helperText={touched.university && errors.university && errors.university}
+								onBlur={handleBlur}
+							/>
+						)}
+					</Grid>
+					<Grid item xs={12}>
+						{isLoading ? (
+							<Skeleton variant="text" />
+						) : (
+							<TextField
+								name="degree"
+								placeholder={"eg: B.Sc. in Information Technology, B.Eng. in Software Engineering etc."}
+								value={values.degree ?? ""}
+								variant="outlined"
+								label="Degree"
+								fullWidth
+								onChange={handleChange}
+								helperText={touched.degree && errors.degree && errors.degree}
+								onBlur={handleBlur}
+							/>
+						)}
+					</Grid>
+
+					<Typography variant="h6">Internship Period</Typography>
+					<Grid item xs={12}>
+						<MuiPickersUtilsProvider utils={MomentUtils}>
+							{isLoading ? (
+								<Skeleton variant="text" />
+							) : (
+								<KeyboardDatePicker
+									name="joined_date"
+									placeholder={"eg: " + new Date().toDateString()}
+									value={values.joined_date}
+									label="Joined Date"
+									fullWidth
+									helperText={touched.joined_date && errors.joined_date && errors.joined_date}
+									onBlur={handleBlur}
+									margin="normal"
+									format="DD-MM-YYYY"
+									onChange={(date: Moment) => {
+										setFieldValue("joined_date", date);
+									}}
+									KeyboardButtonProps={{
+										"aria-label": "change date",
+									}}
+								/>
+							)}
+						</MuiPickersUtilsProvider>
+					</Grid>
+					<Grid item xs={12}>
+						<MuiPickersUtilsProvider utils={MomentUtils}>
+							{isLoading ? (
+								<Skeleton variant="text" />
+							) : (
+								<KeyboardDatePicker
+									name="leaving_date"
+									placeholder={"eg: " + new Date(new Date().getTime() + 15552000000).toDateString()}
+									label="Leaving Date"
+									fullWidth
+									onBlur={handleBlur}
+									margin="normal"
+									format="DD-MM-YYYY"
+									onChange={(date: Moment) => {
+										setFieldValue("leaving_date", date);
+									}}
+									KeyboardButtonProps={{
+										"aria-label": "change date",
+									}}
+									value={values.leaving_date}
+									helperText={touched.leaving_date && errors.leaving_date && errors.leaving_date}
+								/>
+							)}
+						</MuiPickersUtilsProvider>
+					</Grid>
+
+					<Typography variant="h6">Contacts</Typography>
+					<Grid item xs={12}>
+						{isLoading ? (
+							<Skeleton variant="text" />
+						) : (
+							<TextField
+								name="contact_number"
+								placeholder="eg: 077756896532"
+								value={values.contact_number ?? ""}
+								variant="outlined"
+								label="Contact Number"
+								fullWidth
+								onChange={handleChange}
+								helperText={touched.contact_number && errors.contact_number && errors.contact_number}
+								onBlur={handleBlur}
+							/>
+						)}
+					</Grid>
+
+					<Typography variant="h6">Mentors</Typography>
+					<Grid item xs={12}>
+						{isLoading ? (
+							<Skeleton variant="text" />
+						) : (
+							<TextField
+								name="mentor"
+								placeholder="eg: John Doe"
+								value={values.mentor ?? ""}
+								variant="outlined"
+								label="Mentor"
+								fullWidth
+								onChange={handleChange}
+								helperText={touched.mentor && errors.mentor && errors.mentor}
+								onBlur={handleBlur}
+							/>
+						)}
+					</Grid>
+					<Grid item xs={12}>
+						{isLoading ? (
+							<Skeleton variant="text" />
+						) : (
+							<TextField
+								name="co_mentor"
+								placeholder="eg: John Doe"
+								value={values.co_mentor ?? ""}
+								variant="outlined"
+								label="Co-Mentor"
+								fullWidth
+								onChange={handleChange}
+								helperText={touched.co_mentor && errors.co_mentor && errors.co_mentor}
+								onBlur={handleBlur}
+							/>
+						)}
+					</Grid>
+
+					<Typography variant="h6">Links</Typography>
+					<Grid item xs={12}>
+						{isLoading ? (
+							<Skeleton variant="text" />
+						) : (
+							<TextField
+								name="blog"
+								placeholder="eg: https://www.thearmchaircritic.org"
+								value={values.blog ?? ""}
+								variant="outlined"
+								label="Blog Link"
+								fullWidth
+								onChange={handleChange}
+								helperText={touched.blog && errors.blog && errors.blog}
+								onBlur={handleBlur}
+							/>
+						)}
+					</Grid>
+					<Grid item xs={12}>
+						{isLoading ? (
+							<Skeleton variant="text" />
+						) : (
+							<TextField
+								name="gantt_chart"
+								placeholder="eg: https://docs.google.com/..."
+								value={values.gantt_chart ?? ""}
+								variant="outlined"
+								label="Link to Gantt Chart"
+								fullWidth
+								onChange={handleChange}
+								helperText={touched.gantt_chart && errors.gantt_chart && errors.gantt_chart}
+								onBlur={handleBlur}
+							/>
+						)}
+					</Grid>
+					<Button type="submit">Submit</Button>
+				</Grid>
+			</form>
+		</>
 	);
 };

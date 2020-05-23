@@ -1,20 +1,20 @@
 import { Methods, http } from "../configs";
 import Axios, { AxiosRequestConfig } from "axios";
-import { apiEndpoints } from "../constants";
+import { apiEndpoints, INTERN_PROFILE } from "../constants";
 import { errorStatus } from "../utils";
 import { GoogleProfile } from "../models";
 
 export const getProfile = (): Promise<any> => {
 	const config: AxiosRequestConfig = {
 		method: Methods.GET,
-		url: `${apiEndpoints.profile}/Intern_Profile`,
+		url: `${apiEndpoints.profile}/${INTERN_PROFILE}`,
 	};
 
 	return http(config)
-        .then((response) => {
-            if (response.status !== 200) {
-                return Promise.reject(errorStatus(response.status));
-            }
+		.then((response) => {
+			if (response.status !== 200) {
+				return Promise.reject(errorStatus(response.status));
+			}
 
 			return Promise.resolve(response.data);
 		})
@@ -33,10 +33,64 @@ export const getGoogleProfile = (): Promise<GoogleProfile> => {
 	};
 
 	return Axios(config)
-        .then((response) => {
-            if (response.status !== 200) {
-                return Promise.reject(errorStatus(response.status));
-            }
+		.then((response) => {
+			if (response.status !== 200) {
+				return Promise.reject(errorStatus(response.status));
+			}
+
+			return Promise.resolve(response.data);
+		})
+		.catch((error) => {
+			return Promise.reject(error?.response?.data);
+		});
+};
+
+export const updateProfile = (range: string, values: string[]): Promise<any> => {
+	const config: AxiosRequestConfig = {
+		method: Methods.PUT,
+		url: `${apiEndpoints.profile}/${range}`,
+		data: {
+			range,
+			majorDimension: "ROWS",
+			values: [values],
+		},
+		params: {
+			valueInputOption: "USER_ENTERED",
+		},
+	};
+
+	return http(config)
+		.then((response) => {
+			if (response.status !== 200) {
+				return Promise.reject(errorStatus(response.status));
+			}
+
+			return Promise.resolve(response.data);
+		})
+		.catch((error) => {
+			return Promise.reject(error?.response?.data);
+		});
+};
+
+export const addProfile = (values: string[]): Promise<any> => {
+	const config: AxiosRequestConfig = {
+		method: Methods.POST,
+		url: `${apiEndpoints.profile}/${INTERN_PROFILE}:append`,
+		data: {
+			range: INTERN_PROFILE,
+			majorDimension: "ROWS",
+			values: [values],
+		},
+		params: {
+			valueInputOption: "USER_ENTERED",
+		},
+	};
+
+	return http(config)
+		.then((response) => {
+			if (response.status !== 200) {
+				return Promise.reject(errorStatus(response.status));
+			}
 
 			return Promise.resolve(response.data);
 		})
