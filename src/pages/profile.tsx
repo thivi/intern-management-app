@@ -70,7 +70,7 @@ export const ProfilePage = (): ReactElement => {
 				if (!value) errors[key] = `${convertKeyToLabel(key)} is required`;
 			});
 
-			if (!values.contact_number.match(/\d{10}/))
+			if (!(values.contact_number.match(/\d{10}/) || values.contact_number.match(/\d{9}/)))
 				errors["contact_number"] =
 					"Contact number is not of the right format. " + (errors["contact_number"] ?? "");
 			if (!validator.isURL(values.blog))
