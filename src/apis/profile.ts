@@ -11,10 +11,10 @@ export const getProfile = (): Promise<any> => {
 	};
 
 	return http(config)
-        .then((response) => {
-            if (response.status !== 200) {
-                return Promise.reject(errorStatus(response.status));
-            }
+		.then((response) => {
+			if (response.status !== 200) {
+				return Promise.reject(errorStatus(response.status));
+			}
 
 			return Promise.resolve(response.data);
 		})
@@ -33,10 +33,64 @@ export const getGoogleProfile = (): Promise<GoogleProfile> => {
 	};
 
 	return Axios(config)
-        .then((response) => {
-            if (response.status !== 200) {
-                return Promise.reject(errorStatus(response.status));
-            }
+		.then((response) => {
+			if (response.status !== 200) {
+				return Promise.reject(errorStatus(response.status));
+			}
+
+			return Promise.resolve(response.data);
+		})
+		.catch((error) => {
+			return Promise.reject(error?.response?.data);
+		});
+};
+
+export const updateProfile = (range: string, values: string[]): Promise<any> => {
+	const config: AxiosRequestConfig = {
+		method: Methods.PUT,
+		url: `${apiEndpoints.profile}/${range}`,
+		data: {
+			range,
+			majorDimension: "ROWS",
+			values: [values],
+		},
+		params: {
+			valueInputOption: "USER_ENTERED",
+		},
+	};
+
+	return http(config)
+		.then((response) => {
+			if (response.status !== 200) {
+				return Promise.reject(errorStatus(response.status));
+			}
+
+			return Promise.resolve(response.data);
+		})
+		.catch((error) => {
+			return Promise.reject(error?.response?.data);
+		});
+};
+
+export const addProfile = (values: string[]): Promise<any> => {
+	const config: AxiosRequestConfig = {
+		method: Methods.POST,
+		url: `${apiEndpoints.profile}/Intern_Profile:append`,
+		data: {
+			range:"Intern_Profile",
+			majorDimension: "ROWS",
+			values: [values],
+		},
+		params: {
+			valueInputOption: "USER_ENTERED",
+		},
+	};
+
+	return http(config)
+		.then((response) => {
+			if (response.status !== 200) {
+				return Promise.reject(errorStatus(response.status));
+			}
 
 			return Promise.resolve(response.data);
 		})
