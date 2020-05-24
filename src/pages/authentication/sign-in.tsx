@@ -3,6 +3,7 @@ import { AuthContext } from "../../helpers";
 import { useHistory } from "react-router-dom";
 import { getCallbackUrl } from "../../utils";
 import { SIGN_IN, ADD_DETAILS } from "../../constants";
+import { getGoogleProfile } from "../../apis";
 
 export const SignIn = (): React.ReactElement => {
 	const { dispatch } = useContext(AuthContext);
@@ -18,7 +19,15 @@ export const SignIn = (): React.ReactElement => {
 				)
 			) {
 				dispatch({ type: SIGN_IN, payload: null });
-				dispatch({ type: ADD_DETAILS, payload: GoogleAuth });
+				
+				getGoogleProfile()
+					.then((response) => {
+						dispatch({ type: ADD_DETAILS, payload: response });
+					})
+					.catch((error) => {
+						//TODO: Notify
+					});
+
 				history?.push(getCallbackUrl() ?? "");
 			} else {
 				GoogleAuth.signIn();
