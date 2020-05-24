@@ -1,6 +1,14 @@
 import { RouteInterface } from "../models";
-import { SignIn, Dashboard, ProfilePage, SignOut, PullRequests, GitIssues } from "../pages";
-import { LOGOUT, LOGIN, HOME, PROFILE, GIT_ISSUES_PATH, PULL_REQUESTS_PATH } from "../constants";
+import { SignIn, Dashboard, ProfilePage, SignOut, PullRequests, GitIssues, PresentationsOrWebinars } from "../pages";
+import {
+	LOGOUT,
+	LOGIN,
+	HOME,
+	PROFILE,
+	GIT_ISSUES_PATH,
+	PULL_REQUESTS_PATH,
+	PRESENTATIONS_OR_WEBINARS_PATH,
+} from "../constants";
 
 export const routes: RouteInterface[] = [
 	{
@@ -56,5 +64,14 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Pull Requests",
 		appLayout: true,
-	}
+	},
+	{
+		component: PresentationsOrWebinars,
+		path: PRESENTATIONS_OR_WEBINARS_PATH,
+		showOnMenu: true,
+		protected: true,
+		exact: false,
+		name: "Presentations/Webinars",
+		appLayout: true,
+	},
 ];
