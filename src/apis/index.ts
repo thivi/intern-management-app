@@ -4,3 +4,4 @@ export * from "./pull-requests";
 export * from "./presentations-or-webinars";
 export * from "./blogs";
 export * from "./projects";
+export * from "./project-tasks";
