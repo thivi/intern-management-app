@@ -9,6 +9,7 @@ import {
 	PresentationsOrWebinars,
 	Blogs,
 	Projects,
+	ProjectTasks,
 } from "../pages";
 import {
 	LOGOUT,
@@ -20,6 +21,7 @@ import {
 	PRESENTATIONS_OR_WEBINARS_PATH,
 	BLOGS_PATH,
 	PROJECTS_PATH,
+	PROJECT_TASKS_PATH,
 } from "../constants";
 
 export const routes: RouteInterface[] = [
@@ -104,4 +106,13 @@ export const routes: RouteInterface[] = [
 		name: "Projects",
 		appLayout: true,
 	},
+	{
+		component: ProjectTasks,
+		path: PROJECT_TASKS_PATH,
+		showOnMenu: true,
+		protected: true,
+		exact: false,
+		name: "Project Tasks",
+		appLayout: true,
+	}
 ];
