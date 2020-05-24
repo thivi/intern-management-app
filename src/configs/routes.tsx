@@ -1,5 +1,14 @@
 import { RouteInterface } from "../models";
-import { SignIn, Dashboard, ProfilePage, SignOut, PullRequests, GitIssues, PresentationsOrWebinars } from "../pages";
+import {
+	SignIn,
+	Dashboard,
+	ProfilePage,
+	SignOut,
+	PullRequests,
+	GitIssues,
+	PresentationsOrWebinars,
+	Blogs,
+} from "../pages";
 import {
 	LOGOUT,
 	LOGIN,
@@ -8,6 +17,7 @@ import {
 	GIT_ISSUES_PATH,
 	PULL_REQUESTS_PATH,
 	PRESENTATIONS_OR_WEBINARS_PATH,
+	BLOGS_PATH,
 } from "../constants";
 
 export const routes: RouteInterface[] = [
@@ -72,6 +82,15 @@ export const routes: RouteInterface[] = [
 		protected: true,
 		exact: false,
 		name: "Presentations/Webinars",
+		appLayout: true,
+	},
+	{
+		component: Blogs,
+		path: BLOGS_PATH,
+		showOnMenu: true,
+		protected: true,
+		exact: false,
+		name: "Blogs",
 		appLayout: true,
 	},
 ];
