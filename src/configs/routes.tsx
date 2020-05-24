@@ -1,7 +1,6 @@
 import { RouteInterface } from "../models";
-import { SignIn, Dashboard, ProfilePage, SignOut } from "../pages";
-import { LOGOUT, LOGIN, HOME, PROFILE, GIT_ISSUES_PATH } from "../constants";
-import { GitIssues } from "../pages/git-issues";
+import { SignIn, Dashboard, ProfilePage, SignOut, PullRequests, GitIssues } from "../pages";
+import { LOGOUT, LOGIN, HOME, PROFILE, GIT_ISSUES_PATH, PULL_REQUESTS_PATH } from "../constants";
 
 export const routes: RouteInterface[] = [
 	{
@@ -47,6 +46,15 @@ export const routes: RouteInterface[] = [
 		protected: true,
 		exact: false,
 		name: "Git Issues",
+		appLayout: true,
+	},
+	{
+		component: PullRequests,
+		path: PULL_REQUESTS_PATH,
+		showOnMenu: true,
+		protected: true,
+		exact: false,
+		name: "Pull Requests",
 		appLayout: true,
 	}
 ];
