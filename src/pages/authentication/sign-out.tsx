@@ -11,7 +11,7 @@ export const SignOut = (): React.ReactElement => {
 	useEffect(() => {
 		updateCallbackUrl("/");
 		signOut(dispatch);
-		authState.authData.signOut();
+		gapi.auth2.getAuthInstance().signOut()
 		history.push(LOGIN);
 	}, [history, dispatch, authState.authData]);
 	return <></>;
