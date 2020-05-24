@@ -8,6 +8,7 @@ import {
 	GitIssues,
 	PresentationsOrWebinars,
 	Blogs,
+	Projects,
 } from "../pages";
 import {
 	LOGOUT,
@@ -18,6 +19,7 @@ import {
 	PULL_REQUESTS_PATH,
 	PRESENTATIONS_OR_WEBINARS_PATH,
 	BLOGS_PATH,
+	PROJECTS_PATH,
 } from "../constants";
 
 export const routes: RouteInterface[] = [
@@ -91,6 +93,15 @@ export const routes: RouteInterface[] = [
 		protected: true,
 		exact: false,
 		name: "Blogs",
+		appLayout: true,
+	},
+	{
+		component: Projects,
+		path: PROJECTS_PATH,
+		showOnMenu: true,
+		protected: true,
+		exact: false,
+		name: "Projects",
 		appLayout: true,
 	},
 ];
