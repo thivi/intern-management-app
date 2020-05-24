@@ -97,8 +97,8 @@ export const GitIssues = (): ReactElement => {
 						else return -1;
 					});
 
-                    if (!sortOrder) sortedArray = sortedArray.reverse();
-                    
+					if (!sortOrder) sortedArray = sortedArray.reverse();
+
 					issuesToPaginate = [...sortedArray];
 				} else {
 					issuesToPaginate = [...filteredIssues];
@@ -108,10 +108,10 @@ export const GitIssues = (): ReactElement => {
 
 				let currentPage = page;
 
-                if (Math.ceil(issuesToPaginate.length / itemsPerPage) < page) {
-                    currentPage = Math.ceil(issuesToPaginate.length / itemsPerPage);
-                    setPage(currentPage);
-                }
+				if (Math.ceil(issuesToPaginate.length / itemsPerPage) < page) {
+					currentPage = Math.ceil(issuesToPaginate.length / itemsPerPage);
+					setPage(currentPage);
+				}
 
 				const paginateIssues = issuesToPaginate.slice(
 					(currentPage - 1) * itemsPerPage,
@@ -168,17 +168,17 @@ export const GitIssues = (): ReactElement => {
 	const search = (search: string) => {
 		const filteredIssues = gitIssues.filter((issue: GitIssue) => {
 			return issue.Issue_Title.toLowerCase().includes(search.toLowerCase());
-        });
+		});
 
-        let sortedArray = [...filteredIssues];
-        if (sorted) {
-            sortedArray = [...filteredIssues].sort((a: GitIssue, b: GitIssue) => {
-                if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
-                else return -1;
-            });
-    
-            if (!sortOrder) sortedArray = sortedArray.reverse();
-        }
+		let sortedArray = [...filteredIssues];
+		if (sorted) {
+			sortedArray = [...filteredIssues].sort((a: GitIssue, b: GitIssue) => {
+				if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
+				else return -1;
+			});
+
+			if (!sortOrder) sortedArray = sortedArray.reverse();
+		}
 
 		setFilteredGitIssues(sortedArray);
 		setPaginatedGitIssues(sortedArray.slice(0, itemsPerPage));
@@ -439,6 +439,9 @@ export const GitIssues = (): ReactElement => {
 																	editForm.errors.title &&
 																	editForm.errors.title
 																}
+																error={
+																	!!(editForm.touched.title && editForm.errors.title)
+																}
 															/>
 														</Grid>
 														<Grid xs={6} item>
@@ -454,6 +457,9 @@ export const GitIssues = (): ReactElement => {
 																	editForm.touched.link &&
 																	editForm.errors.link &&
 																	editForm.errors.link
+																}
+																error={
+																	!!(editForm.touched.link && editForm.errors.link)
 																}
 															/>
 														</Grid>

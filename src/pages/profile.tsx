@@ -169,6 +169,7 @@ export const ProfilePage = (): ReactElement => {
 								fullWidth
 								helperText={touched.university && errors.university && errors.university}
 								onBlur={handleBlur}
+								error={!!(touched.university && errors.university)}
 							/>
 						)}
 					</Grid>
@@ -186,6 +187,7 @@ export const ProfilePage = (): ReactElement => {
 								onChange={handleChange}
 								helperText={touched.degree && errors.degree && errors.degree}
 								onBlur={handleBlur}
+								error={!!(touched.degree && errors.degree)}
 							/>
 						)}
 					</Grid>
@@ -212,6 +214,7 @@ export const ProfilePage = (): ReactElement => {
 									KeyboardButtonProps={{
 										"aria-label": "change date",
 									}}
+									error={!!(touched.joined_date && errors.joined_date)}
 								/>
 							)}
 						</MuiPickersUtilsProvider>
@@ -237,6 +240,7 @@ export const ProfilePage = (): ReactElement => {
 									}}
 									value={values.leaving_date}
 									helperText={touched.leaving_date && errors.leaving_date && errors.leaving_date}
+									error={!!(touched.leaving_date && errors.leaving_date)}
 								/>
 							)}
 						</MuiPickersUtilsProvider>
@@ -257,6 +261,7 @@ export const ProfilePage = (): ReactElement => {
 								onChange={handleChange}
 								helperText={touched.contact_number && errors.contact_number && errors.contact_number}
 								onBlur={handleBlur}
+								error={!!(touched.contact_number && errors.contact_number)}
 							/>
 						)}
 					</Grid>
@@ -276,6 +281,7 @@ export const ProfilePage = (): ReactElement => {
 								onChange={handleChange}
 								helperText={touched.mentor && errors.mentor && errors.mentor}
 								onBlur={handleBlur}
+								error={!!(touched.mentor && errors.mentor)}
 							/>
 						)}
 					</Grid>
@@ -293,6 +299,7 @@ export const ProfilePage = (): ReactElement => {
 								onChange={handleChange}
 								helperText={touched.co_mentor && errors.co_mentor && errors.co_mentor}
 								onBlur={handleBlur}
+								error={!!(touched.co_mentor && errors.co_mentor)}
 							/>
 						)}
 					</Grid>
@@ -312,6 +319,7 @@ export const ProfilePage = (): ReactElement => {
 								onChange={handleChange}
 								helperText={touched.blog && errors.blog && errors.blog}
 								onBlur={handleBlur}
+								error={!!(touched.blog && errors.blog)}
 							/>
 						)}
 					</Grid>
@@ -329,6 +337,7 @@ export const ProfilePage = (): ReactElement => {
 								onChange={handleChange}
 								helperText={touched.gantt_chart && errors.gantt_chart && errors.gantt_chart}
 								onBlur={handleBlur}
+								error={!!(touched.gantt_chart && errors.gantt_chart)}
 							/>
 						)}
 					</Grid>
