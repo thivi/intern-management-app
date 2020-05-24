@@ -1,9 +1,10 @@
 import { SIGN_IN, ADD_DETAILS, SIGN_OUT } from "./../constants/authentication";
+import { GoogleProfile } from "./profile";
 
 export interface AuthState {
 	authenticated: boolean;
     accessToken: string | null;
-    authData: gapi.auth2.GoogleAuth;
+    authData: GoogleProfile;
 }
 
 export interface SignIn {
@@ -18,7 +19,7 @@ export interface SignOut {
 
 export interface AddDetails {
     type: typeof ADD_DETAILS;
-    payload: any;
+    payload: GoogleProfile;
 }
 export type AuthAction = AddDetails | SignIn | SignOut;
 
