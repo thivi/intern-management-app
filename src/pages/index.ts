@@ -5,3 +5,4 @@ export * from "./pull-requests";
 export * from "./git-issues";
 export * from "./presentations-or-webinars";
 export * from "./blogs";
+export * from "./projects";
