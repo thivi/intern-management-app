@@ -108,7 +108,7 @@ export const GitIssues = (): ReactElement => {
 
 				let currentPage = page;
 
-				if (Math.ceil(issuesToPaginate.length / itemsPerPage) < page) {
+				if (issuesToPaginate.length !== 0 && Math.ceil(issuesToPaginate.length / itemsPerPage) < page) {
 					currentPage = Math.ceil(issuesToPaginate.length / itemsPerPage);
 					setPage(currentPage);
 				}
