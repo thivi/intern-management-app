@@ -1,6 +1,6 @@
-import React, { ReactElement, useEffect, useState, useCallback } from "react";
-import { getGoogleProfile, getProfile, updateProfile, addProfile } from "../apis";
-import { GoogleProfile, Profile } from "../models";
+import React, { ReactElement, useEffect, useState, useCallback, useContext } from "react";
+import { getProfile, updateProfile, addProfile } from "../apis";
+import { Profile } from "../models";
 import { Grid, Avatar, Typography, TextField, Button } from "@material-ui/core";
 import { useFormik } from "formik";
 import { convertKeyToLabel } from "../utils";
@@ -9,18 +9,21 @@ import MomentUtils from "@date-io/moment";
 import { Moment } from "moment";
 import { Skeleton } from "@material-ui/lab";
 import validator from "validator";
+import { AuthContext } from "../helpers";
+import { INTERN_PROFILE } from "../constants";
 
 export const ProfilePage = (): ReactElement => {
-	const [googleProfile, setGoogleProfile] = useState<GoogleProfile>(null);
 	const [profile, setProfile] = useState<Profile>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [range, setRange] = useState("");
 
+	const { authState } = useContext(AuthContext);
+
 	const formik = useFormik({
 		onSubmit: (values, { setSubmitting }) => {
 			const rows = [];
-			rows.push(googleProfile.email);
-			rows.push(googleProfile.name);
+			rows.push(authState.authData.email);
+			rows.push(authState.authData.name);
 			rows.push(values.university);
 			rows.push(values.degree);
 			rows.push(values.joined_date);
@@ -76,13 +79,21 @@ export const ProfilePage = (): ReactElement => {
 				if (!value) errors[key] = `${convertKeyToLabel(key)} is required`;
 			});
 
-			if (!(values.contact_number.match(/\d{10}/) || values.contact_number.match(/\d{9}/)))
+			if (
+				values.contact_number &&
+				!(values.contact_number.match(/\d{10}/) || values.contact_number.match(/\d{9}/))
+			)
 				errors["contact_number"] =
 					"Contact number is not of the right format. " + (errors["contact_number"] ?? "");
-			if (!validator.isURL(values.blog)) errors["blog"] = "Blog link should be a url. " + (errors["blog"] ?? "");
-			if (!validator.isURL(values.gantt_chart))
+			if (values.blog && !validator.isURL(values.blog))
+				errors["blog"] = "Blog link should be a url. " + (errors["blog"] ?? "");
+			if (values.gantt_chart && !validator.isURL(values.gantt_chart))
 				errors["gantt_chart"] = "Gannt Chart should be a link. " + (errors["gantt_chart"] ?? "");
-			if (new Date(values.leaving_date) <= new Date(values.joined_date))
+			if (
+				values.leaving_date &&
+				values.joined_date &&
+				new Date(values.leaving_date) <= new Date(values.joined_date)
+			)
 				errors["leaving_date"] =
 					"Leaving Date should be later than the joined date. " + (errors["leaving_date"] ?? "");
 
@@ -92,24 +103,13 @@ export const ProfilePage = (): ReactElement => {
 
 	const { handleSubmit, touched, errors, values, handleChange, handleBlur, setFieldValue } = formik;
 
-	useEffect(() => {
-		setIsLoading(true);
-		getGoogleProfile()
-			.then((response) => {
-				setGoogleProfile(response);
-			})
-			.catch((error) => {
-				setIsLoading(false);
-				//TODO: Notify
-			});
-	}, []);
-
 	const getProfileCall = useCallback(() => {
+		setIsLoading(true);
 		getProfile()
 			.then((response) => {
 				const rawProfile = response?.values?.find((value: string[], index: number) => {
-					if (value[0] === googleProfile.email) {
-						setRange(`Intern_Profile!A${index + 1}:AA${index + 1}`);
+					if (value[0] === authState.authData.email) {
+						setRange(`${INTERN_PROFILE}!A${index + 1}:AA${index + 1}`);
 						return true;
 					}
 				});
@@ -134,21 +134,21 @@ export const ProfilePage = (): ReactElement => {
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [googleProfile]);
+	}, [authState.authData]);
 
 	useEffect(() => {
 		getProfileCall();
-	}, [googleProfile, getProfileCall]);
+	}, [authState.authData, getProfileCall]);
 
 	return (
 		<>
 			<Grid container spacing={2}>
 				<Grid item xs={4}>
-					<Avatar src={googleProfile?.picture} />
+					<Avatar src={authState.authData?.picture} />
 				</Grid>
 				<Grid item xs={8}>
-					<Typography variant="h5">{googleProfile?.name}</Typography>
-					<Typography>{googleProfile?.email}</Typography>
+					<Typography variant="h5">{authState.authData?.name}</Typography>
+					<Typography>{authState.authData?.email}</Typography>
 				</Grid>
 			</Grid>
 
