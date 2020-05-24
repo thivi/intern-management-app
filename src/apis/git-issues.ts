@@ -6,7 +6,7 @@ import { errorStatus } from "../utils";
 export const getIssues = (): Promise<any> => {
 	const config: AxiosRequestConfig = {
 		method: Methods.GET,
-		url: `${apiEndpoints.profile}/${GIT_ISSUES}`,
+		url: `${apiEndpoints.sheet}/${GIT_ISSUES}`,
 	};
 
 	return http(config)
@@ -25,7 +25,7 @@ export const getIssues = (): Promise<any> => {
 export const updateIssues = (range: string, values: string[]): Promise<any> => {
 	const config: AxiosRequestConfig = {
 		method: Methods.PUT,
-		url: `${apiEndpoints.profile}/${range}`,
+		url: `${apiEndpoints.sheet}/${range}`,
 		data: {
 			range,
 			majorDimension: "ROWS",
@@ -52,7 +52,7 @@ export const updateIssues = (range: string, values: string[]): Promise<any> => {
 export const addIssues = (values: string[]): Promise<any> => {
 	const config: AxiosRequestConfig = {
 		method: Methods.POST,
-		url: `${apiEndpoints.profile}/${GIT_ISSUES}:append`,
+		url: `${apiEndpoints.sheet}/${GIT_ISSUES}:append`,
 		data: {
 			range: GIT_ISSUES,
 			majorDimension: "ROWS",
@@ -79,7 +79,7 @@ export const addIssues = (values: string[]): Promise<any> => {
 export const deleteIssue = (range: string): Promise<any> => {
 	const config: AxiosRequestConfig = {
 		method: Methods.POST,
-		url: `${apiEndpoints.profile}/${range}:clear`
+		url: `${apiEndpoints.sheet}/${range}:clear`
 	};
 
 	return http(config)

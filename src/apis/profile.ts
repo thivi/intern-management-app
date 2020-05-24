@@ -7,7 +7,7 @@ import { GoogleProfile } from "../models";
 export const getProfile = (): Promise<any> => {
 	const config: AxiosRequestConfig = {
 		method: Methods.GET,
-		url: `${apiEndpoints.profile}/${INTERN_PROFILE}`,
+		url: `${apiEndpoints.sheet}/${INTERN_PROFILE}`,
 	};
 
 	return http(config)
@@ -48,7 +48,7 @@ export const getGoogleProfile = (): Promise<GoogleProfile> => {
 export const updateProfile = (range: string, values: string[]): Promise<any> => {
 	const config: AxiosRequestConfig = {
 		method: Methods.PUT,
-		url: `${apiEndpoints.profile}/${range}`,
+		url: `${apiEndpoints.sheet}/${range}`,
 		data: {
 			range,
 			majorDimension: "ROWS",
@@ -75,7 +75,7 @@ export const updateProfile = (range: string, values: string[]): Promise<any> => 
 export const addProfile = (values: string[]): Promise<any> => {
 	const config: AxiosRequestConfig = {
 		method: Methods.POST,
-		url: `${apiEndpoints.profile}/${INTERN_PROFILE}:append`,
+		url: `${apiEndpoints.sheet}/${INTERN_PROFILE}:append`,
 		data: {
 			range: INTERN_PROFILE,
 			majorDimension: "ROWS",
