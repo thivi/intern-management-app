@@ -1,6 +1,7 @@
 import { RouteInterface } from "../models";
 import { SignIn, Dashboard, ProfilePage, SignOut } from "../pages";
-import { LOGOUT, LOGIN, HOME, PROFILE } from "../constants";
+import { LOGOUT, LOGIN, HOME, PROFILE, GIT_ISSUES_PATH } from "../constants";
+import { GitIssues } from "../pages/git-issues";
 
 export const routes: RouteInterface[] = [
 	{
@@ -39,4 +40,13 @@ export const routes: RouteInterface[] = [
 		name: "Profile",
 		appLayout: true,
 	},
+	{
+		component: GitIssues,
+		path: GIT_ISSUES_PATH,
+		showOnMenu: true,
+		protected: true,
+		exact: false,
+		name: "Git Issues",
+		appLayout: true,
+	}
 ];
