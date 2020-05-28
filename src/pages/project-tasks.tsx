@@ -22,6 +22,7 @@ import {
 	Typography,
 	FormControlLabel,
 	Checkbox,
+	Switch,
 } from "@material-ui/core";
 import { ProjectTask } from "../models";
 import { getProjectTasks, addProjectTasks, updateProjectTasks, deleteProject } from "../apis";
@@ -61,6 +62,7 @@ export const ProjectTasks = (): ReactElement => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [deleteIndex, setDeleteIndex] = useState(-1);
 	const [sorted, setSorted] = useState(false);
+	const [hideCompleted, setHideCompleted] = useState(false);
 
 	const itemsPerPage = 10;
 
@@ -92,7 +94,10 @@ export const ProjectTasks = (): ReactElement => {
 				setProjectTasks(issues);
 
 				const filteredIssues = issues.filter((issue: ProjectTask) => {
-					return issue.Title.toLowerCase().includes(searchQuery.toLowerCase());
+					const query = searchQuery.toLowerCase();
+					const matchesQuery = issue.Title.toLowerCase().includes(query);
+					const show = hideCompleted ? issue.Completed === "no" : true;
+					return  matchesQuery && show ;
 				});
 
 				let issuesToPaginate;
@@ -131,7 +136,7 @@ export const ProjectTasks = (): ReactElement => {
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page]);
+	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page, hideCompleted]);
 
 	useEffect(() => {
 		if (init.current && getProjectTasksCall && authState.authData) {
@@ -171,10 +176,17 @@ export const ProjectTasks = (): ReactElement => {
 		setPage(1);
 	};
 
-	const search = (search: string) => {
+	const search = (search: string, hide?: boolean) => {
 		const filteredIssues = projectTasks.filter((issue: ProjectTask) => {
-			return issue.Title.toLowerCase().includes(search.toLowerCase());
+			const query = hide ? searchQuery.toLowerCase() : search.toLowerCase();
+			const matchesQuery = issue.Title.toLowerCase().includes(query);
+			const show = hide && !hideCompleted ? issue.Completed === "no" : true;
+			return  matchesQuery && show ;
 		});
+
+		if (hide) {
+			setHideCompleted(!hideCompleted);
+		}
 
 		let sortedArray = [...filteredIssues];
 		if (sorted) {
@@ -312,7 +324,7 @@ export const ProjectTasks = (): ReactElement => {
 		);
 	};
 
-	const handleCompleted = (checked:boolean, task: ProjectTask) => {
+	const handleCompleted = (checked: boolean, task: ProjectTask) => {
 		const projectTask = { ...task };
 		projectTask.Completed = checked ? "yes" : "no";
 
@@ -424,6 +436,12 @@ export const ProjectTasks = (): ReactElement => {
 					</IconButton>
 				</Grid>
 				<Grid item xs={9} container justify="flex-end">
+					<FormControlLabel
+						control={<Switch checked={hideCompleted} onChange={() => search("", true)} color="primary" />}
+						label="Hide Completed"
+						labelPlacement="start"
+					/>
+
 					<FormControl variant="outlined">
 						<InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
 						<OutlinedInput
@@ -519,7 +537,7 @@ export const ProjectTasks = (): ReactElement => {
 															control={
 																<Checkbox
 																	checked={gitIssue.Completed === "yes"}
-																	onChange={(event,checked) =>
+																	onChange={(event, checked) =>
 																		handleCompleted(checked, gitIssue)
 																	}
 																	name="completed"
