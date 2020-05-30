@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
 	AppBar,
 	Toolbar,
@@ -16,11 +16,14 @@ import useStyles from "../theme";
 import { routes } from "../configs";
 import { RouteInterface } from "../models/routes";
 import { useHistory, useLocation } from "react-router-dom";
+import { AuthContext } from "../helpers";
 
 export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactElement => {
 	const classes = useStyles();
 	const history = useHistory();
 	const location = useLocation();
+
+	const {authState} = useContext(AuthContext);
 
 	return (
 		<div>
@@ -37,7 +40,7 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 				<Drawer variant="permanent" className={classes.drawer} classes={{ paper: classes.drawerPaper }}>
 					<List component="nav">
 						{routes.map((route: RouteInterface, index: number) => {
-							return route.showOnMenu ? (
+							return route.showOnMenu && route.permission=== authState?.authData?.role ? (
 								<ListItem
 									button
 									key={index}
