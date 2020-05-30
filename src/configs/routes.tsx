@@ -10,6 +10,7 @@ import {
 	Blogs,
 	Projects,
 	ProjectTasks,
+	NotFound,
 } from "../pages";
 import {
 	LOGOUT,
@@ -22,6 +23,7 @@ import {
 	BLOGS_PATH,
 	PROJECTS_PATH,
 	PROJECT_TASKS_PATH,
+	NOT_FOUND,
 } from "../constants";
 
 export const routes: RouteInterface[] = [
@@ -33,6 +35,7 @@ export const routes: RouteInterface[] = [
 		exact: true,
 		name: "Login",
 		appLayout: false,
+		permission: "all",
 	},
 	{
 		component: SignOut,
@@ -42,6 +45,7 @@ export const routes: RouteInterface[] = [
 		name: "Logout",
 		showOnMenu: false,
 		appLayout: false,
+		permission: "all",
 	},
 	{
 		component: Dashboard,
@@ -51,6 +55,7 @@ export const routes: RouteInterface[] = [
 		exact: true,
 		name: "Home",
 		appLayout: true,
+		permission: "intern",
 	},
 	{
 		component: ProfilePage,
@@ -60,6 +65,7 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Profile",
 		appLayout: true,
+		permission: "intern",
 	},
 	{
 		component: GitIssues,
@@ -69,6 +75,7 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Git Issues",
 		appLayout: true,
+		permission: "intern",
 	},
 	{
 		component: PullRequests,
@@ -78,6 +85,7 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Pull Requests",
 		appLayout: true,
+		permission: "intern",
 	},
 	{
 		component: PresentationsOrWebinars,
@@ -87,6 +95,7 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Presentations/Webinars",
 		appLayout: true,
+		permission: "intern",
 	},
 	{
 		component: Blogs,
@@ -96,6 +105,7 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Blogs",
 		appLayout: true,
+		permission: "intern",
 	},
 	{
 		component: Projects,
@@ -105,6 +115,7 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Projects",
 		appLayout: true,
+		permission: "intern",
 	},
 	{
 		component: ProjectTasks,
@@ -114,5 +125,16 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Project Tasks",
 		appLayout: true,
-	}
+		permission: "intern",
+	},
+	{
+		component: NotFound,
+		path: NOT_FOUND,
+		showOnMenu: false,
+		protected: true,
+		exact: false,
+		name: "Not Found",
+		appLayout: true,
+		permission: "all",
+	},
 ];
