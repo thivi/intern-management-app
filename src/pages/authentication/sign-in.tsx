@@ -3,7 +3,8 @@ import { AuthContext } from "../../helpers";
 import { useHistory } from "react-router-dom";
 import { getCallbackUrl } from "../../utils";
 import { SIGN_IN, ADD_DETAILS } from "../../constants";
-import { getGoogleProfile } from "../../apis";
+import { getGoogleProfile, getRoles } from "../../apis";
+import { GoogleProfile } from "../../models";
 
 export const SignIn = (): React.ReactElement => {
 	const { dispatch } = useContext(AuthContext);
@@ -19,10 +20,22 @@ export const SignIn = (): React.ReactElement => {
 				)
 			) {
 				dispatch({ type: SIGN_IN, payload: null });
-				
+
 				getGoogleProfile()
-					.then((response) => {
-						dispatch({ type: ADD_DETAILS, payload: response });
+					.then((response: GoogleProfile) => {
+						dispatch({ type: ADD_DETAILS, payload: { ...response, role: null } });
+
+						getRoles()
+							.then((responseRoles) => {
+								const role = responseRoles?.values.find((role: string[]) => role[0] === response.email);
+								dispatch({
+									type: ADD_DETAILS,
+									payload: { role: role?.length > 0 ? role[1] : "none" },
+								});
+							})
+							.catch((error) => {
+								//TODO: Notify
+							});
 					})
 					.catch((error) => {
 						//TODO: Notify
