@@ -13,7 +13,7 @@ export const App = (): React.ReactElement => {
 			<Authentication>
 				<Switch>
 					<Redirect exact={true} path="/" to={HOME} />
-					{routes ?.map((route: RouteInterface, index: number) => {
+					{routes?.map((route: RouteInterface, index: number) => {
 						if (route.protected) {
 							return (
 								<ProtectedRoute
@@ -22,6 +22,7 @@ export const App = (): React.ReactElement => {
 									exact={route.exact}
 									component={route.component}
 									appLayout={route.appLayout}
+									permission={route.permission}
 								/>
 							);
 						} else {
@@ -32,7 +33,11 @@ export const App = (): React.ReactElement => {
 									exact={route.exact}
 									component={
 										route.appLayout
-											? () => <AppLayout>{route.component}</AppLayout>
+											? () => (
+													<AppLayout>
+														<route.component />
+													</AppLayout>
+											  )
 											: route.component
 									}
 								/>
