@@ -163,6 +163,7 @@ export const Blogs = (): ReactElement => {
 		setFilteredBlogs(sortedArray);
 		setPaginatedBlogs(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
+		setSortOrder(sortOrder);
 	};
 
 	const search = (search: string) => {
@@ -372,7 +373,6 @@ export const Blogs = (): ReactElement => {
 					<IconButton
 						aria-label="sort order"
 						onClick={() => {
-							setSortOrder(!sortOrder);
 							sort(sortBy, !sortOrder);
 						}}
 					>

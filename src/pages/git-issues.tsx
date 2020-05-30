@@ -163,6 +163,7 @@ export const GitIssues = (): ReactElement => {
 		setFilteredGitIssues(sortedArray);
 		setPaginatedGitIssues(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
+		setSortOrder(sortOrder);
 	};
 
 	const search = (search: string) => {
@@ -372,7 +373,6 @@ export const GitIssues = (): ReactElement => {
 					<IconButton
 						aria-label="sort order"
 						onClick={() => {
-							setSortOrder(!sortOrder);
 							sort(sortBy, !sortOrder);
 						}}
 					>
