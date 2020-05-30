@@ -35,13 +35,14 @@ export const SignIn = (): React.ReactElement => {
 							})
 							.catch((error) => {
 								//TODO: Notify
+							}).finally(() => {
+								history?.push(getCallbackUrl() ?? "");
 							});
 					})
 					.catch((error) => {
 						//TODO: Notify
 					});
 
-				history?.push(getCallbackUrl() ?? "");
 			} else {
 				GoogleAuth.signIn();
 			}
