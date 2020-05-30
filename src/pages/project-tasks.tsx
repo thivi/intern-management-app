@@ -174,6 +174,7 @@ export const ProjectTasks = (): ReactElement => {
 		setFilteredProjectTasks(sortedArray);
 		setPaginatedProjectTasks(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
+		setSortOrder(sortOrder);
 	};
 
 	const search = (search: string, hide?: boolean) => {
@@ -428,7 +429,6 @@ export const ProjectTasks = (): ReactElement => {
 					<IconButton
 						aria-label="sort order"
 						onClick={() => {
-							setSortOrder(!sortOrder);
 							sort(sortBy, !sortOrder);
 						}}
 					>

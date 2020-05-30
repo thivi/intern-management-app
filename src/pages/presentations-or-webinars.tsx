@@ -172,6 +172,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 		setFilteredPresentationsOrWebinars(sortedArray);
 		setPaginatedPresentationsOrWebinars(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
+		setSortOrder(sortOrder);
 	};
 
 	const search = (search: string) => {
@@ -383,7 +384,6 @@ export const PresentationsOrWebinars = (): ReactElement => {
 					<IconButton
 						aria-label="sort order"
 						onClick={() => {
-							setSortOrder(!sortOrder);
 							sort(sortBy, !sortOrder);
 						}}
 					>

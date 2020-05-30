@@ -166,6 +166,7 @@ export const Projects = (): ReactElement => {
 		setFilteredProjects(sortedArray);
 		setPaginatedProjects(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
+		setSortOrder(sortOrder);
 	};
 
 	const search = (search: string) => {
@@ -373,7 +374,6 @@ export const Projects = (): ReactElement => {
 					<IconButton
 						aria-label="sort order"
 						onClick={() => {
-							setSortOrder(!sortOrder);
 							sort(sortBy, !sortOrder);
 						}}
 					>
