@@ -10,7 +10,7 @@ const reducer = (state: AuthState, action: AuthAction): AuthState => {
 		case SIGN_OUT:
 			return { ...state, authenticated: false, accessToken: null };
 		case ADD_DETAILS:
-			return { ...state, authData: action.payload };
+			return { ...state, authData: { ...state.authData, ...action.payload,} };
 		default:
 			return { ...state };
 	}
