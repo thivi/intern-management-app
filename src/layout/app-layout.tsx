@@ -10,7 +10,7 @@ import {
 	ListItemIcon,
 	ListItemText,
 	Paper,
-	CssBaseline
+	CssBaseline,
 } from "@material-ui/core";
 import useStyles from "../theme";
 import { routes } from "../configs";
@@ -23,7 +23,7 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 	const history = useHistory();
 	const location = useLocation();
 
-	const {authState} = useContext(AuthContext);
+	const { authState } = useContext(AuthContext);
 
 	return (
 		<div>
@@ -40,14 +40,15 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 				<Drawer variant="permanent" className={classes.drawer} classes={{ paper: classes.drawerPaper }}>
 					<List component="nav">
 						{routes.map((route: RouteInterface, index: number) => {
-							return route.showOnMenu && route.permission=== authState?.authData?.role ? (
+							return route.showOnMenu &&
+								(route.permission === "all" || route.permission === authState?.authData?.role) ? (
 								<ListItem
 									button
 									key={index}
 									onClick={() => {
 										history.push(route.path);
 									}}
-									selected={route.path===location.pathname}
+									selected={route.path === location.pathname}
 								>
 									{route.icon ? <ListItemIcon>{route.icon}</ListItemIcon> : null}
 									<ListItemText primary={route.name} />
@@ -57,7 +58,9 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 					</List>
 				</Drawer>
 				<main className={classes.content}>
-					<Paper className={classes.paper} square>{props.children}</Paper>
+					<Paper className={classes.paper} square>
+						{props.children}
+					</Paper>
 				</main>
 			</div>
 		</div>
