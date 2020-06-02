@@ -9,3 +9,4 @@ export const BLOGS_PATH = "/blogs";
 export const PROJECTS_PATH = "/projects";
 export const PROJECT_TASKS_PATH = "/project-tasks";
 export const NOT_FOUND = "/404";
+export const INTERNS = "/interns";
