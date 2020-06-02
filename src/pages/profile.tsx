@@ -96,7 +96,10 @@ export const ProfilePage = (): ReactElement => {
 			)
 				errors["leaving_date"] =
 					"Leaving Date should be later than the joined date. " + (errors["leaving_date"] ?? "");
-
+			if (values.mentor && !validator.isEmail(values.mentor))
+				errors["mentor"] = "Co-mentor email should be a valid email address. " + (errors["mentor"] ?? "");
+			if (values.co_mentor && !validator.isEmail(values.co_mentor))
+				errors["co_mentor"] = "Co-mentor email should be a valid email address. " + (errors["co_mentor"] ?? "");
 			return errors;
 		},
 	});
@@ -276,7 +279,7 @@ export const ProfilePage = (): ReactElement => {
 								placeholder="eg: John Doe"
 								value={values.mentor ?? ""}
 								variant="outlined"
-								label="Mentor"
+								label="Mentor email"
 								fullWidth
 								onChange={handleChange}
 								helperText={touched.mentor && errors.mentor && errors.mentor}
@@ -294,7 +297,7 @@ export const ProfilePage = (): ReactElement => {
 								placeholder="eg: John Doe"
 								value={values.co_mentor ?? ""}
 								variant="outlined"
-								label="Co-Mentor"
+								label="Co-mentor email"
 								fullWidth
 								onChange={handleChange}
 								helperText={touched.co_mentor && errors.co_mentor && errors.co_mentor}
