@@ -1,6 +1,7 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { appBar, drawer, drawerPaper, appBarTitle, toolbar, root, content, paper } from "./app-layout";
 import { gridForm, gridRightMargin, pagination } from "./list-page";
+import { popOver } from "./popover";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	appBar: appBar(theme),
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	gridForm: gridForm(theme),
 	gridRightMargin: gridRightMargin(theme),
 	pagination: pagination(theme),
+	popOver: popOver(theme),
 }));
 
 export default useStyles;
