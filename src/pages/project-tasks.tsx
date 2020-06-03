@@ -181,7 +181,7 @@ export const ProjectTasks = (): ReactElement => {
 		const filteredIssues = projectTasks.filter((issue: ProjectTask) => {
 			const query = hide ? searchQuery.toLowerCase() : search.toLowerCase();
 			const matchesQuery = issue.Title.toLowerCase().includes(query);
-			const show = hide && !hideCompleted ? issue.Completed === "no" : true;
+			const show = (hide && !hideCompleted)||(!hide && hideCompleted) ? issue.Completed === "no" : true;
 			return  matchesQuery && show ;
 		});
 
@@ -455,7 +455,7 @@ export const ProjectTasks = (): ReactElement => {
 								<InputAdornment position="end">
 									{searchQuery ? (
 										<IconButton
-											aria-label="search"
+											aria-label="close"
 											edge="end"
 											onClick={() => {
 												setSearchQuery("");
