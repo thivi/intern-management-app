@@ -1,3 +1,5 @@
+import { Profile } from "./profile";
+
 export interface Intern {
 	email: string;
 	name: string;
@@ -6,4 +8,5 @@ export interface Intern {
 	presentationsOrWebinars: number;
 	blogs: number;
 	projectTasksCompletion: number;
+	profile: Profile;
 }
