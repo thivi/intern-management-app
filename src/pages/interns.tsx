@@ -11,6 +11,11 @@ import {
 	MenuItem,
 	InputAdornment,
 	OutlinedInput,
+	Typography,
+	Popover,
+	ListItemText,
+	FormControlLabel,
+	Switch,
 } from "@material-ui/core";
 import { Intern, Profile, PullRequest, GitIssue, PresentationOrWebinar, ProjectTask } from "../models";
 import { getBlogs, getProfile, getIssues, getPullRequests, getPresentationsOrWebinars, getProjectTasks } from "../apis";
@@ -27,6 +32,30 @@ const SORT_BY: {
 		key: "name",
 		text: "Name",
 	},
+	{
+		key: "blogs",
+		text: "No. of Blogs",
+	},
+	{
+		key: "email",
+		text: "Email",
+	},
+	{
+		key: "gitIssues",
+		text: "No. of GitIssues",
+	},
+	{
+		key: "presentationsOrWebinars",
+		text: "No. of Presentations/Webinars",
+	},
+	{
+		key: "projectTasksCompletion",
+		text: "Project Completion",
+	},
+	{
+		key: "pullRequests",
+		text: "No. of Pull Requests",
+	},
 ];
 
 interface InternInfo {
@@ -39,8 +68,8 @@ interface InternInfo {
 }
 
 export const Interns = (): ReactElement => {
-	const [paginatedBlogs, setPaginatedBlogs] = useState<Intern[]>([]);
-	const [filteredBlogs, setFilteredBlogs] = useState<Intern[]>([]);
+	const [paginatedInterns, setPaginatedInterns] = useState<Intern[]>([]);
+	const [filteredInterns, setFilteredInterns] = useState<Intern[]>([]);
 	const { authState } = useContext(AuthContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [page, setPage] = useState(1);
@@ -51,6 +80,10 @@ export const Interns = (): ReactElement => {
 	const [sorted, setSorted] = useState(false);
 	const [internInfo, setInternInfo] = useState<InternInfo[]>([]);
 	const [interns, setInterns] = useState<Intern[]>([]);
+	const [popOverIndex, setPopOverIndex] = useState(-1);
+	const [anchorEl, setAnchorEl] = useState(null);
+	const [showOnlyMentees, setShowOnlyMentees] = useState(false);
+	const [showOnlyActive, setShowOnlyActive] = useState(false);
 
 	const itemsPerPage = 10;
 
@@ -58,16 +91,30 @@ export const Interns = (): ReactElement => {
 
 	const init = useRef(true);
 
-	const getBlogsCall = useCallback(() => {
+	const isActive = useCallback((intern: Intern): boolean => {
+		return new Date(intern.profile.Leaving_date) >= new Date();
+	}, []);
+
+	const isMentee = useCallback(
+		(intern: Intern): boolean => {
+			return (
+				intern.profile.Mentor === authState.authData.email ||
+				intern.profile.Co_mentor === authState.authData.email
+			);
+		},
+		[authState]
+	);
+
+	const getInternsCall = useCallback(() => {
 		setIsLoading(true);
 		const profile = getProfile();
 		const blogs = getBlogs();
-		const gitIssues = getIssues();
+		const gitInterns = getIssues();
 		const pullRequests = getPullRequests();
 		const presentationsOrWebinars = getPresentationsOrWebinars();
 		const projectTasks = getProjectTasks();
 
-		Promise.all([profile, blogs, gitIssues, pullRequests, presentationsOrWebinars, projectTasks])
+		Promise.all([profile, blogs, gitInterns, pullRequests, presentationsOrWebinars, projectTasks])
 			.then((response) => {
 				const profiles: string[][] = response[0].values;
 				const internInfos: InternInfo[] = [];
@@ -130,7 +177,7 @@ export const Interns = (): ReactElement => {
 						Gantt_chart: profile[10],
 					};
 
-					internInfo.push({
+					internInfos.push({
 						profile: internProfile,
 						blogs: internBlogs,
 						gitIssues: internGitIssues,
@@ -143,6 +190,7 @@ export const Interns = (): ReactElement => {
 						internProjectTasks.filter((task: ProjectTask) => task.Completed === "yes").length ?? 0;
 
 					internsList.push({
+						profile: internProfile,
 						email: internProfile.Email_ID,
 						pullRequests: internPullRequests.length,
 						gitIssues: internGitIssues.length,
@@ -156,29 +204,36 @@ export const Interns = (): ReactElement => {
 				setInternInfo(internInfos);
 				setInterns(internsList);
 
-				const filteredIssues = internsList.filter((intern: Intern) => {
-					return intern.name.toLowerCase().includes(searchQuery.toLowerCase());
+				const filteredInterns = internsList.filter((intern: Intern) => {
+					const query = searchQuery.toLowerCase();
+					const matchesQuery = intern.name.toLowerCase().includes(query);
+					const showActive = showOnlyActive ? isActive(intern) : true;
+					const showMentees = showOnlyMentees ? isMentee(intern) : true;
+					return matchesQuery && showActive && showMentees;
 				});
 
 				let internsToPaginate;
 
 				if (sorted) {
-					let sortedArray = [...filteredIssues].sort((a: Intern, b: Intern) => {
-						if (sortBy === "name" || sortBy === "email")
+					let sortedArray = [...filteredInterns].sort((a: Intern, b: Intern) => {
+						if (sortBy === "name" || sortBy === "email") {
 							if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 							else return -1;
-						else if (a[sortBy] - b[sortBy]) return 1;
-						else return -1;
+						} else if (sortBy !== "profile") {
+							if (a[sortBy] - b[sortBy]) return 1;
+							else return -1;
+						}
+						return -1;
 					});
 
 					if (!sortOrder) sortedArray = sortedArray.reverse();
 
 					internsToPaginate = [...sortedArray];
 				} else {
-					internsToPaginate = [...filteredIssues];
+					internsToPaginate = [...filteredInterns];
 				}
 
-				setFilteredBlogs(internsToPaginate);
+				setFilteredInterns(internsToPaginate);
 
 				let currentPage = page;
 
@@ -187,11 +242,11 @@ export const Interns = (): ReactElement => {
 					setPage(currentPage);
 				}
 
-				const paginateIssues = internsToPaginate.slice(
+				const paginateInterns = internsToPaginate.slice(
 					(currentPage - 1) * itemsPerPage,
 					currentPage * itemsPerPage
 				);
-				setPaginatedBlogs(paginateIssues);
+				setPaginatedInterns(paginateInterns);
 			})
 			.catch((error) => {
 				//TODO: Notify
@@ -199,14 +254,14 @@ export const Interns = (): ReactElement => {
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [searchQuery, sortOrder, sorted, sortBy, page, internInfo]);
+	}, [searchQuery, sortOrder, sorted, sortBy, page, isActive, isMentee, showOnlyMentees, showOnlyActive]);
 
 	useEffect(() => {
-		if (init.current && getBlogsCall && authState.authData) {
-			getBlogsCall();
+		if (init.current && getInternsCall && authState.authData) {
+			getInternsCall();
 			init.current = false;
 		}
-	}, [getBlogsCall, authState.authData]);
+	}, [getInternsCall, authState.authData]);
 
 	const listSkeletons = (): ReactElement => {
 		const skeletons: ReactElement[] = [];
@@ -225,50 +280,81 @@ export const Interns = (): ReactElement => {
 		return <List>{skeletons}</List>;
 	};
 
-	const sort = (sortBy: keyof Intern, sortOrder?: boolean) => {
+	const sort = (sortBy: keyof Intern, order?: boolean) => {
 		setSorted(true);
-		let sortedArray = [...filteredBlogs].sort((a: Intern, b: Intern) => {
-			if (sortBy === "name" || sortBy === "email")
+		let sortedArray = [...filteredInterns].sort((a: Intern, b: Intern) => {
+			if (sortBy === "name" || sortBy === "email") {
 				if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 				else return -1;
-			else if (a[sortBy] - b[sortBy]) return 1;
-			else return -1;
+			} else if (sortBy !== "profile") {
+				if (a[sortBy] - b[sortBy]) return 1;
+				else return -1;
+			}
+
+			return -1;
 		});
 
-		if (!sortOrder) sortedArray = sortedArray.reverse();
+		if (order === false) sortedArray = sortedArray.reverse();
 
-		setFilteredBlogs(sortedArray);
-		setPaginatedBlogs(sortedArray.slice(0, itemsPerPage));
+		setFilteredInterns(sortedArray);
+		setPaginatedInterns(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
-		setSortOrder(sortOrder);
+		setSortOrder(order);
 	};
 
-	const search = (search: string) => {
-		const filteredIssues = interns.filter((issue: Intern) => {
-			return issue.name.toLowerCase().includes(search.toLowerCase());
+	const search = (search: string, active?: boolean, mentees?: boolean) => {
+		const filteredInterns = interns.filter((Intern: Intern) => {
+			const query = active || mentees ? searchQuery.toLowerCase() : search.toLowerCase();
+			const matchesQuery = Intern.name.toLowerCase().includes(query);
+			const showActive = (active && !showOnlyActive) || (!active && showOnlyActive) ? isActive(Intern) : true;
+			const showMentees =
+				(mentees && !showOnlyMentees) || (!mentees && showOnlyMentees) ? isMentee(Intern) : true;
+			return matchesQuery && showActive && showMentees;
 		});
 
-		let sortedArray = [...filteredIssues];
+		if (active) {
+			setShowOnlyActive(!showOnlyActive);
+		}
+
+		if (mentees) {
+			setShowOnlyMentees(!showOnlyMentees);
+		}
+
+		let sortedArray = [...filteredInterns];
 		if (sorted) {
-			sortedArray = [...filteredIssues].sort((a: Intern, b: Intern) => {
-				if (sortBy === "name" || sortBy === "email")
+			sortedArray = [...filteredInterns].sort((a: Intern, b: Intern) => {
+				if (sortBy === "name" || sortBy === "email") {
 					if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 					else return -1;
-				else if (a[sortBy] - b[sortBy]) return 1;
-				else return -1;
+				} else if (sortBy !== "profile") {
+					if (a[sortBy] - b[sortBy]) return 1;
+					else return -1;
+				}
+
+				return -1;
 			});
 
 			if (!sortOrder) sortedArray = sortedArray.reverse();
 		}
 
-		setFilteredBlogs(sortedArray);
-		setPaginatedBlogs(sortedArray.slice(0, itemsPerPage));
+		setFilteredInterns(sortedArray);
+		setPaginatedInterns(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
 	};
 
 	const handlePageChange = (event: ChangeEvent, value: number) => {
 		setPage(value);
-		setPaginatedBlogs(filteredBlogs.slice((value - 1) * itemsPerPage, value * itemsPerPage));
+		setPaginatedInterns(filteredInterns.slice((value - 1) * itemsPerPage, value * itemsPerPage));
+	};
+
+	const handlePopOverOpen = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>, index: number) => {
+		setPopOverIndex(index);
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handlePopOverClose = () => {
+		setPopOverIndex(-1);
+		setAnchorEl(null);
 	};
 
 	return (
@@ -304,6 +390,24 @@ export const Interns = (): ReactElement => {
 					</IconButton>
 				</Grid>
 				<Grid item xs={9} container justify="flex-end">
+					<FormControlLabel
+						control={
+							<Switch checked={showOnlyActive} onChange={() => search("", true, false)} color="primary" />
+						}
+						label="Show Only Active Interns"
+						labelPlacement="start"
+					/>
+					<FormControlLabel
+						control={
+							<Switch
+								checked={showOnlyMentees}
+								onChange={() => search("", false, true)}
+								color="primary"
+							/>
+						}
+						label="Show only me mentees"
+						labelPlacement="start"
+					/>
 					<FormControl variant="outlined">
 						<InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
 						<OutlinedInput
@@ -341,41 +445,107 @@ export const Interns = (): ReactElement => {
 			<List>
 				{isLoading
 					? listSkeletons()
-					: paginatedBlogs?.map((gitIssue: Intern, index: number) => {
+					: paginatedInterns?.map((intern: Intern, index: number) => {
 							return (
 								<React.Fragment key={index}>
 									<ListItem>
 										<Grid container spacing={2}>
 											<Grid container alignItems="center" item xs={4}>
-												{gitIssue.name}
+												<Typography
+													onMouseEnter={(
+														event: React.MouseEvent<HTMLSpanElement, MouseEvent>
+													) => {
+														handlePopOverOpen(event, index);
+													}}
+													onMouseLeave={handlePopOverClose}
+												>
+													{intern.name}
+												</Typography>
+												<Popover
+													open={popOverIndex === index}
+													anchorEl={anchorEl}
+													onClose={handlePopOverClose}
+													disableRestoreFocus
+													className={classes.popOver}
+													classes={{
+														paper: classes.paper,
+													}}
+													anchorOrigin={{
+														vertical: "bottom",
+														horizontal: "left",
+													}}
+													transformOrigin={{
+														vertical: "top",
+														horizontal: "left",
+													}}
+												>
+													<List>
+														<ListItem>
+															<ListItemText
+																secondary="Mentor"
+																primary={internInfo[index].profile.Mentor}
+															/>
+														</ListItem>
+														<ListItem>
+															<ListItemText
+																secondary="Co-mentor"
+																primary={intern.profile.Co_mentor}
+															/>
+														</ListItem>
+														<ListItem>
+															<ListItemText
+																secondary="Contact No."
+																primary={intern.profile.Contact_no}
+															/>
+														</ListItem>
+														<ListItem>
+															<ListItemText
+																secondary="University"
+																primary={intern.profile.University}
+															/>
+														</ListItem>
+														<ListItem>
+															<ListItemText
+																secondary="Joined Date"
+																primary={intern.profile.Joined_date}
+															/>
+														</ListItem>
+														<ListItem>
+															<ListItemText
+																secondary="Leaving Date"
+																primary={intern.profile.Leaving_date}
+															/>
+														</ListItem>
+													</List>
+												</Popover>
 											</Grid>
 											<Grid container alignItems="center" item xs={3}>
-												{gitIssue.email}
+												{intern.email}
 											</Grid>
 											<Grid container alignItems="center" item xs={1}>
-												{gitIssue.blogs}
+												{intern.blogs}
 											</Grid>
 											<Grid container alignItems="center" item xs={1}>
-												{gitIssue.gitIssues}
+												{intern.gitIssues}
 											</Grid>
 											<Grid container alignItems="center" item xs={1}>
-												{gitIssue.presentationsOrWebinars}
+												{intern.presentationsOrWebinars}
 											</Grid>
 											<Grid container alignItems="center" item xs={1}>
-												{gitIssue.projectTasksCompletion}
+												{intern.projectTasksCompletion}
 											</Grid>
 											<Grid container alignItems="center" item xs={1}>
-												{gitIssue.pullRequests}
+												{intern.pullRequests}
 											</Grid>
 										</Grid>
 									</ListItem>
-									{paginatedBlogs.length - 1 !== index && <Divider />}
+									{paginatedInterns.length - 1 !== index && <Divider />}
 								</React.Fragment>
 							);
 					  })}
 				{!isLoading && interns.length > 10 && (
 					<Pagination
-						count={Math.ceil(filteredBlogs.length / itemsPerPage)}
+						count={Math.ceil(filteredInterns.length / itemsPerPage)}
 						page={page}
 						onChange={handlePageChange}
 						showFirstButton
