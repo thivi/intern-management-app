@@ -165,7 +165,7 @@ export const Projects = (): ReactElement => {
 		setFilteredProjects(sortedArray);
 		setPaginatedProjects(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
-		sorted && setSortOrder(sortOrder);
+		sorted && setSortOrder(order);
 		setSorted(true);
 	};
 
