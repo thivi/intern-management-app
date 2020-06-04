@@ -162,7 +162,7 @@ export const PullRequests = (): ReactElement => {
 		setFilteredPullRequests(sortedArray);
 		setPaginatedPullRequests(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
-		sorted && setSortOrder(sortOrder);
+		sorted && setSortOrder(order);
 		setSorted(true);
 	};
 
