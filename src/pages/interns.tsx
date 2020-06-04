@@ -281,14 +281,12 @@ export const Interns = (): ReactElement => {
 	};
 
 	const sort = (sortBy: keyof Intern, order?: boolean) => {
-		setSorted(true);
 		let sortedArray = [...filteredInterns].sort((a: Intern, b: Intern) => {
 			if (sortBy === "name" || sortBy === "email") {
 				if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 				else return -1;
 			} else if (sortBy !== "profile") {
-				if (a[sortBy] - b[sortBy]) return 1;
-				else return -1;
+				return (a[sortBy] - b[sortBy]);
 			}
 
 			return -1;
@@ -299,7 +297,8 @@ export const Interns = (): ReactElement => {
 		setFilteredInterns(sortedArray);
 		setPaginatedInterns(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
-		setSortOrder(order);
+		sorted && setSortOrder(order);
+		setSorted(true);
 	};
 
 	const search = (search: string, active?: boolean, mentees?: boolean) => {
@@ -383,10 +382,14 @@ export const Interns = (): ReactElement => {
 					<IconButton
 						aria-label="sort order"
 						onClick={() => {
-							sort(sortBy, !sortOrder);
+							if (!sorted) {
+								sort(sortBy, sortOrder);
+							} else {
+								sort(sortBy, !sortOrder);
+							}
 						}}
 					>
-						<Sort style={{ transform: sortOrder ? "scaleY(-1)" : "scaleY(1)" }} />
+						<Sort style={{ transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)" }} />
 					</IconButton>
 				</Grid>
 				<Grid item xs={9} container justify="flex-end">

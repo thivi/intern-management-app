@@ -97,7 +97,7 @@ export const ProjectTasks = (): ReactElement => {
 					const query = searchQuery.toLowerCase();
 					const matchesQuery = issue.Title.toLowerCase().includes(query);
 					const show = hideCompleted ? issue.Completed === "no" : true;
-					return  matchesQuery && show ;
+					return matchesQuery && show;
 				});
 
 				let issuesToPaginate;
@@ -162,27 +162,27 @@ export const ProjectTasks = (): ReactElement => {
 		return <List>{skeletons}</List>;
 	};
 
-	const sort = (sortBy: keyof ProjectTask, sortOrder?: boolean) => {
-		setSorted(true);
+	const sort = (sortBy: keyof ProjectTask, order?: boolean) => {
 		let sortedArray = [...filteredProjectTasks].sort((a: ProjectTask, b: ProjectTask) => {
 			if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 			else return -1;
 		});
 
-		if (!sortOrder) sortedArray = sortedArray.reverse();
+		if (order === false) sortedArray = sortedArray.reverse();
 
 		setFilteredProjectTasks(sortedArray);
 		setPaginatedProjectTasks(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
-		setSortOrder(sortOrder);
+		sorted && setSortOrder(order);
+		setSorted(true);
 	};
 
 	const search = (search: string, hide?: boolean) => {
 		const filteredIssues = projectTasks.filter((issue: ProjectTask) => {
 			const query = hide ? searchQuery.toLowerCase() : search.toLowerCase();
 			const matchesQuery = issue.Title.toLowerCase().includes(query);
-			const show = (hide && !hideCompleted)||(!hide && hideCompleted) ? issue.Completed === "no" : true;
-			return  matchesQuery && show ;
+			const show = (hide && !hideCompleted) || (!hide && hideCompleted) ? issue.Completed === "no" : true;
+			return matchesQuery && show;
 		});
 
 		if (hide) {
@@ -429,10 +429,16 @@ export const ProjectTasks = (): ReactElement => {
 					<IconButton
 						aria-label="sort order"
 						onClick={() => {
-							sort(sortBy, !sortOrder);
+							if (!sorted) {
+								sort(sortBy, sortOrder);
+							} else {
+								sort(sortBy, !sortOrder);
+							}
 						}}
 					>
-						<Sort style={{ transform: sortOrder ? "scaleY(-1)" : "scaleY(1)" }} />
+						<Sort
+							style={{ transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)" }}
+						/>
 					</IconButton>
 				</Grid>
 				<Grid item xs={9} container justify="flex-end">

@@ -151,19 +151,19 @@ export const GitIssues = (): ReactElement => {
 		return <List>{skeletons}</List>;
 	};
 
-	const sort = (sortBy: keyof GitIssue, sortOrder?: boolean) => {
-		setSorted(true);
+	const sort = (sortBy: keyof GitIssue, order?: boolean) => {
 		let sortedArray = [...filteredGitIssues].sort((a: GitIssue, b: GitIssue) => {
 			if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 			else return -1;
 		});
 
-		if (!sortOrder) sortedArray = sortedArray.reverse();
+		if (order === false) sortedArray = sortedArray.reverse();
 
 		setFilteredGitIssues(sortedArray);
 		setPaginatedGitIssues(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
-		setSortOrder(sortOrder);
+		sorted && setSortOrder(order);
+		setSorted(true);
 	};
 
 	const search = (search: string) => {
@@ -373,10 +373,16 @@ export const GitIssues = (): ReactElement => {
 					<IconButton
 						aria-label="sort order"
 						onClick={() => {
-							sort(sortBy, !sortOrder);
+							if (!sorted) {
+								sort(sortBy, sortOrder);
+							} else {
+								sort(sortBy, !sortOrder);
+							}
 						}}
 					>
-						<Sort style={{ transform: sortOrder ? "scaleY(-1)" : "scaleY(1)" }} />
+						<Sort
+							style={{ transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)" }}
+						/>
 					</IconButton>
 				</Grid>
 				<Grid item xs={9} container justify="flex-end">
