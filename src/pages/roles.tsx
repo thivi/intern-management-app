@@ -208,7 +208,7 @@ export const Roles = (): ReactElement => {
 			const filteredIssues = roles.filter((issue: Role) => {
 				const query = roleFilter ? searchQuery.toLowerCase() : search.toLowerCase();
 				const matchesQuery = issue.Email_ID.toLowerCase().includes(query);
-				const show = roleFilter ? issue.role === showRole : true;
+				const show = roleFilter ? (showRole === "all" ? true : issue.role === showRole) : true;
 				return matchesQuery && show;
 			});
 
