@@ -56,6 +56,25 @@ const ROLES_OPTIONS = [
 	},
 ];
 
+const SHOW_ROLE_OPTIONS = [
+	{
+		key: "all",
+		text: "All",
+	},
+	{
+		key: "admin",
+		text: "Admin",
+	},
+	{
+		key: "intern",
+		text: "Intern",
+	},
+	{
+		key: "mentor",
+		text: "Mentor",
+	},
+];
+
 export const Roles = (): ReactElement => {
 	const [roles, setRoles] = useState<Role[]>([]);
 	const [paginatedRoles, setPaginatedRoles] = useState<Role[]>([]);
@@ -71,12 +90,14 @@ export const Roles = (): ReactElement => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [deleteIndex, setDeleteIndex] = useState(-1);
 	const [sorted, setSorted] = useState(false);
+	const [showRole, setShowRole] = useState(SHOW_ROLE_OPTIONS[0].key);
 
 	const itemsPerPage = 10;
 
 	const classes = useStyles();
 
 	const init = useRef(true);
+	const showInit = useRef(true);
 
 	const getRolesCall = useCallback(() => {
 		setIsLoading(true);
@@ -182,25 +203,39 @@ export const Roles = (): ReactElement => {
 		setSorted(true);
 	};
 
-	const search = (search: string) => {
-		const filteredIssues = roles.filter((issue: Role) => {
-			return issue.Email_ID.toLowerCase().includes(search.toLowerCase());
-		});
-
-		let sortedArray = [...filteredIssues];
-		if (sorted) {
-			sortedArray = [...filteredIssues].sort((a: Role, b: Role) => {
-				if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
-				else return -1;
+	const search = useCallback(
+		(search: string, roleFilter?: boolean) => {
+			const filteredIssues = roles.filter((issue: Role) => {
+				const query = roleFilter ? searchQuery.toLowerCase() : search.toLowerCase();
+				const matchesQuery = issue.Email_ID.toLowerCase().includes(query);
+				const show = roleFilter ? issue.role === showRole : true;
+				return matchesQuery && show;
 			});
 
-			if (!sortOrder) sortedArray = sortedArray.reverse();
-		}
+			let sortedArray = [...filteredIssues];
+			if (sorted) {
+				sortedArray = [...filteredIssues].sort((a: Role, b: Role) => {
+					if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
+					else return -1;
+				});
 
-		setFilteredRoles(sortedArray);
-		setPaginatedRoles(sortedArray.slice(0, itemsPerPage));
-		setPage(1);
-	};
+				if (!sortOrder) sortedArray = sortedArray.reverse();
+			}
+
+			setFilteredRoles(sortedArray);
+			setPaginatedRoles(sortedArray.slice(0, itemsPerPage));
+			setPage(1);
+		},
+		[roles, searchQuery, sortBy, sortOrder, sorted, showRole]
+	);
+
+	useEffect(() => {
+		if (showInit.current) {
+			showInit.current = false;
+		} else {
+			search("", true);
+		}
+	}, [showRole, search]);
 
 	const addForm = useFormik({
 		onSubmit: (values, { setSubmitting, resetForm }) => {
@@ -411,6 +446,24 @@ export const Roles = (): ReactElement => {
 					</IconButton>
 				</Grid>
 				<Grid item xs={9} container justify="flex-end">
+					<FormControl variant="outlined">
+						<InputLabel>Show Role</InputLabel>
+						<Select
+							value={showRole}
+							onChange={(event) => {
+								setShowRole(event.target.value as string);
+							}}
+							label="Show Role"
+						>
+							{SHOW_ROLE_OPTIONS.map((option, index: number) => {
+								return (
+									<MenuItem key={index} value={option.key}>
+										{option.text}
+									</MenuItem>
+								);
+							})}
+						</Select>
+					</FormControl>
 					<FormControl variant="outlined">
 						<InputLabel htmlFor="outlined-adornment-search">Search</InputLabel>
 						<OutlinedInput
