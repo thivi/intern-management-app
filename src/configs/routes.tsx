@@ -12,6 +12,7 @@ import {
 	ProjectTasks,
 	NotFound,
 	Interns,
+	Roles,
 } from "../pages";
 import {
 	LOGOUT,
@@ -26,6 +27,7 @@ import {
 	PROJECT_TASKS_PATH,
 	NOT_FOUND,
 	INTERNS,
+	ROLES_PATH,
 } from "../constants";
 
 export const routes: RouteInterface[] = [
@@ -148,5 +150,15 @@ export const routes: RouteInterface[] = [
 		name: "Interns",
 		appLayout: true,
 		permission: "mentor",
+	},
+	{
+		component: Roles,
+		path: ROLES_PATH,
+		showOnMenu: true,
+		protected: true,
+		exact: false,
+		name: "Roles",
+		appLayout: true,
+		permission: "admin",
 	},
 ];
