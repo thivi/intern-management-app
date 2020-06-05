@@ -17,8 +17,26 @@ import {
 	FormControlLabel,
 	Switch,
 } from "@material-ui/core";
-import { Intern, Profile, PullRequest, GitIssue, PresentationOrWebinar, ProjectTask, InternInfo } from "../models";
-import { getBlogs, getProfile, getIssues, getPullRequests, getPresentationsOrWebinars, getProjectTasks } from "../apis";
+import {
+	Intern,
+	Profile,
+	PullRequest,
+	GitIssue,
+	PresentationOrWebinar,
+	ProjectTask,
+	InternInfo,
+	Blog,
+	Project,
+} from "../models";
+import {
+	getBlogs,
+	getProfile,
+	getIssues,
+	getPullRequests,
+	getPresentationsOrWebinars,
+	getProjectTasks,
+	getProjects,
+} from "../apis";
 import { AuthContext } from "../helpers";
 import { Close, Sort, Search } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
@@ -107,8 +125,9 @@ export const Interns = (): ReactElement => {
 		const pullRequests = getPullRequests();
 		const presentationsOrWebinars = getPresentationsOrWebinars();
 		const projectTasks = getProjectTasks();
+		const projects = getProjects();
 
-		Promise.all([profile, blogs, gitInterns, pullRequests, presentationsOrWebinars, projectTasks])
+		Promise.all([profile, blogs, gitInterns, pullRequests, presentationsOrWebinars, projectTasks, projects])
 			.then((response) => {
 				const profiles: string[][] = response[0].values;
 				const internInfos: InternInfo[] = [];
@@ -123,8 +142,9 @@ export const Interns = (): ReactElement => {
 					const pullRequests = response[3].values.filter((value: string[]) => value[0] === email);
 					const presentationsOrWebinars = response[4].values.filter((value: string[]) => value[0] === email);
 					const projectTasks = response[5].values.filter((value: string[]) => value[0] === email);
+					const projects = response[6].values.filter((value: string[]) => value[0] === email);
 
-					const internBlogs: Intern[] = blogs.map((blog: string[]) => ({
+					const internBlogs: Blog[] = blogs.map((blog: string[]) => ({
 						Email_ID: blog[0],
 						Title: blog[1],
 						Link: blog[2],
@@ -137,9 +157,9 @@ export const Interns = (): ReactElement => {
 					}));
 
 					const internPullRequests: PullRequest[] = pullRequests.map((pullRequest: string[]) => ({
-						Email_ID: pullRequests[0],
-						Title: pullRequests[1],
-						Link: pullRequests[2],
+						Email_ID: pullRequest[0],
+						Title: pullRequest[1],
+						Link: pullRequest[2],
 					}));
 
 					const internPresentationsOrWebinars: PresentationOrWebinar[] = presentationsOrWebinars.map(
@@ -155,6 +175,12 @@ export const Interns = (): ReactElement => {
 						Title: projectTask[1],
 						PullRequest: projectTask[2],
 						Completed: projectTask[3],
+					}));
+
+					const internProjects: Project[] = projects.map((project: string[]) => ({
+						Email_ID: project[0],
+						Title: project[1],
+						Mentor: project[2],
 					}));
 
 					const internProfile: Profile = {
@@ -178,6 +204,7 @@ export const Interns = (): ReactElement => {
 						pullRequests: internPullRequests,
 						presentationsOrWebinars: internPresentationsOrWebinars,
 						projectTasks: internProjectTasks,
+						projects: internProjects,
 					});
 
 					const completedTasks =
@@ -193,6 +220,7 @@ export const Interns = (): ReactElement => {
 							Math.round((completedTasks / (internProjectTasks.length ?? 0) || 0) * 100) / 100,
 						name: internProfile.Name,
 						blogs: internBlogs.length,
+						projects: internProjects,
 					});
 				});
 				setInternInfo(internInfos);
@@ -213,7 +241,7 @@ export const Interns = (): ReactElement => {
 						if (sortBy === "name" || sortBy === "email") {
 							if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 							else return -1;
-						} else if (sortBy !== "profile") {
+						} else if (sortBy !== "profile" && sortBy !== "projects") {
 							if (a[sortBy] - b[sortBy]) return 1;
 							else return -1;
 						}
@@ -279,7 +307,7 @@ export const Interns = (): ReactElement => {
 			if (sortBy === "name" || sortBy === "email") {
 				if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 				else return -1;
-			} else if (sortBy !== "profile") {
+			} else if (sortBy !== "profile" && sortBy !== "projects") {
 				return a[sortBy] - b[sortBy];
 			}
 
@@ -319,7 +347,7 @@ export const Interns = (): ReactElement => {
 				if (sortBy === "name" || sortBy === "email") {
 					if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 					else return -1;
-				} else if (sortBy !== "profile") {
+				} else if (sortBy !== "profile" && sortBy !== "projects") {
 					if (a[sortBy] - b[sortBy]) return 1;
 					else return -1;
 				}
@@ -540,6 +568,14 @@ export const Interns = (): ReactElement => {
 																	<ListItemText
 																		secondary="Leaving Date"
 																		primary={intern.profile.Leaving_date}
+																	/>
+																</ListItem>
+																<ListItem>
+																	<ListItemText
+																		secondary="Project"
+																		primary={intern.projects
+																			.map((project: Project) => project.Title)
+																			.join("\n")}
 																	/>
 																</ListItem>
 															</List>
