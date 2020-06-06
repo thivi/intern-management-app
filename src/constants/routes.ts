@@ -11,3 +11,4 @@ export const PROJECT_TASKS_PATH = "/project-tasks";
 export const NOT_FOUND = "/404";
 export const INTERNS = "/interns";
 export const ROLES_PATH = "/roles";
+export const DASHBOARD = "/dashboard";
