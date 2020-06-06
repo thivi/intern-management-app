@@ -13,6 +13,7 @@ import {
 	NotFound,
 	Interns,
 	Roles,
+	Home,
 } from "../pages";
 import {
 	LOGOUT,
@@ -28,6 +29,7 @@ import {
 	INTERNS,
 	ROLES_PATH,
 	DASHBOARD,
+	HOME,
 } from "../constants";
 
 export const routes: RouteInterface[] = [
@@ -159,6 +161,16 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Dashboard",
 		appLayout: true,
-		permission: ["mentor","intern"],
+		permission: ["mentor", "intern"],
+	},
+	{
+		component: Home,
+		path: HOME,
+		showOnMenu: false,
+		protected: true,
+		exact: false,
+		name: "Home",
+		appLayout: true,
+		permission: "all",
 	},
 ];
