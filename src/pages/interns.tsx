@@ -573,9 +573,14 @@ export const Interns = (): ReactElement => {
 																<ListItem>
 																	<ListItemText
 																		secondary="Project"
-																		primary={intern.projects
-																			.map((project: Project) => project.Title)
-																			.join("\n")}
+																		primary={
+																			intern.projects instanceof Array &&
+																			intern.projects
+																				.map(
+																					(project: Project) => project.Title
+																				)
+																				.join("\n")
+																		}
 																	/>
 																</ListItem>
 															</List>
