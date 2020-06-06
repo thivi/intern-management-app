@@ -9,5 +9,5 @@ export interface RouteInterface {
 	name: string;
 	icon?: React.ReactElement | null | undefined;
 	appLayout: boolean;
-	permission: Permissions;
+	permission: Permissions | Permissions[];
 }
