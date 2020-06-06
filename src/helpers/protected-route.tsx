@@ -11,7 +11,7 @@ interface ProtectedRoutePropsInterface {
 	component: React.FunctionComponent | React.ComponentClass;
 	exact: boolean;
 	appLayout: boolean;
-	permission: Permissions;
+	permission: Permissions | Permissions[];
 }
 export const ProtectedRoute = (props: ProtectedRoutePropsInterface): React.ReactElement => {
 	const { path, component, exact, appLayout, permission } = props;
@@ -20,7 +20,11 @@ export const ProtectedRoute = (props: ProtectedRoutePropsInterface): React.React
 	updateCallbackUrl(path);
 
 	if (authState?.authenticated) {
-		if (authState?.authData?.role === permission) {
+		if (
+			(permission instanceof Array && permission.includes(authState?.authData?.role)) ||
+			authState?.authData?.role === permission ||
+			permission === "all"
+		) {
 			const route = <Route path={path} component={component} exact={exact} />;
 			return appLayout ? <AppLayout>{route}</AppLayout> : route;
 		} else if (path === NOT_FOUND) {

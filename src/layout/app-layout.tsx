@@ -41,7 +41,10 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 					<List component="nav">
 						{routes.map((route: RouteInterface, index: number) => {
 							return route.showOnMenu &&
-								(route.permission === "all" || route.permission === authState?.authData?.role) ? (
+								((route.permission instanceof Array &&
+									route.permission.includes(authState?.authData?.role)) ||
+									route.permission === "all" ||
+									route.permission === authState?.authData?.role) ? (
 								<ListItem
 									button
 									key={index}
