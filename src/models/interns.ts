@@ -3,23 +3,25 @@ import { GitIssue, PresentationOrWebinar, ProjectTask, PullRequest, Project } fr
 import { Blog } from "./blogs";
 
 export interface Intern {
-	email: string;
-	name: string;
+	email?: string;
+	name?: string;
 	pullRequests: number;
 	gitIssues: number;
 	presentationsOrWebinars: number;
 	blogs: number;
 	projectTasksCompletion: number;
-	profile: Profile;
-	projects: Project[];
+	profile?: Profile;
+	projects: Project[] | number;
+	profiles?: number;
 }
 
 export interface InternInfo {
-	profile: Profile;
+	profile?: Profile;
 	blogs: Blog[];
 	gitIssues: GitIssue[];
 	pullRequests: PullRequest[];
 	presentationsOrWebinars: PresentationOrWebinar[];
 	projectTasks: ProjectTask[];
 	projects: Project[];
+	profiles?: Profile[];
 }
