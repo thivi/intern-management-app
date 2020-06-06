@@ -17,7 +17,6 @@ import {
 import {
 	LOGOUT,
 	LOGIN,
-	HOME,
 	PROFILE,
 	GIT_ISSUES_PATH,
 	PULL_REQUESTS_PATH,
@@ -28,6 +27,7 @@ import {
 	NOT_FOUND,
 	INTERNS,
 	ROLES_PATH,
+	DASHBOARD,
 } from "../constants";
 
 export const routes: RouteInterface[] = [
@@ -50,16 +50,6 @@ export const routes: RouteInterface[] = [
 		showOnMenu: false,
 		appLayout: false,
 		permission: "all",
-	},
-	{
-		component: Dashboard,
-		path: HOME,
-		showOnMenu: false,
-		protected: true,
-		exact: true,
-		name: "Home",
-		appLayout: true,
-		permission: "intern",
 	},
 	{
 		component: ProfilePage,
@@ -160,5 +150,15 @@ export const routes: RouteInterface[] = [
 		name: "Roles",
 		appLayout: true,
 		permission: "admin",
+	},
+	{
+		component: Dashboard,
+		path: DASHBOARD,
+		showOnMenu: true,
+		protected: true,
+		exact: false,
+		name: "Dashboard",
+		appLayout: true,
+		permission: ["mentor","intern"],
 	},
 ];
