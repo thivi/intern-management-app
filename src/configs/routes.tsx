@@ -31,8 +31,32 @@ import {
 	DASHBOARD,
 	HOME,
 } from "../constants";
+import {
+	AccountCircleOutlined,
+	ErrorOutline,
+	SlideshowOutlined,
+	DashboardOutlined,
+	PlaylistAddCheckOutlined,
+	CreateOutlined,
+	WorkOutlineOutlined,
+	LowPriorityOutlined,
+	PeopleOutlineOutlined,
+	AssignmentIndOutlined,
+} from "@material-ui/icons";
+import React from "react";
 
 export const routes: RouteInterface[] = [
+	{
+		component: Dashboard,
+		path: DASHBOARD,
+		showOnMenu: true,
+		protected: true,
+		exact: false,
+		name: "Dashboard",
+		appLayout: true,
+		permission: ["mentor", "intern"],
+		icon: <DashboardOutlined />,
+	},
 	{
 		component: SignIn,
 		path: LOGIN,
@@ -62,6 +86,7 @@ export const routes: RouteInterface[] = [
 		name: "Profile",
 		appLayout: true,
 		permission: "intern",
+		icon: <AccountCircleOutlined />,
 	},
 	{
 		component: GitIssues,
@@ -72,6 +97,7 @@ export const routes: RouteInterface[] = [
 		name: "Git Issues",
 		appLayout: true,
 		permission: "intern",
+		icon: <ErrorOutline />,
 	},
 	{
 		component: PullRequests,
@@ -82,6 +108,7 @@ export const routes: RouteInterface[] = [
 		name: "Pull Requests",
 		appLayout: true,
 		permission: "intern",
+		icon: <LowPriorityOutlined />,
 	},
 	{
 		component: PresentationsOrWebinars,
@@ -92,6 +119,7 @@ export const routes: RouteInterface[] = [
 		name: "Presentations/Webinars",
 		appLayout: true,
 		permission: "intern",
+		icon: <SlideshowOutlined />,
 	},
 	{
 		component: Blogs,
@@ -102,6 +130,7 @@ export const routes: RouteInterface[] = [
 		name: "Blogs",
 		appLayout: true,
 		permission: "intern",
+		icon: <CreateOutlined />,
 	},
 	{
 		component: Projects,
@@ -112,6 +141,7 @@ export const routes: RouteInterface[] = [
 		name: "Projects",
 		appLayout: true,
 		permission: "intern",
+		icon: <WorkOutlineOutlined />,
 	},
 	{
 		component: ProjectTasks,
@@ -122,6 +152,7 @@ export const routes: RouteInterface[] = [
 		name: "Project Tasks",
 		appLayout: true,
 		permission: "intern",
+		icon: <PlaylistAddCheckOutlined />,
 	},
 	{
 		component: NotFound,
@@ -142,6 +173,7 @@ export const routes: RouteInterface[] = [
 		name: "Interns",
 		appLayout: true,
 		permission: "mentor",
+		icon: <PeopleOutlineOutlined />,
 	},
 	{
 		component: Roles,
@@ -152,16 +184,7 @@ export const routes: RouteInterface[] = [
 		name: "Roles",
 		appLayout: true,
 		permission: "admin",
-	},
-	{
-		component: Dashboard,
-		path: DASHBOARD,
-		showOnMenu: true,
-		protected: true,
-		exact: false,
-		name: "Dashboard",
-		appLayout: true,
-		permission: ["mentor", "intern"],
+		icon: <AssignmentIndOutlined />,
 	},
 	{
 		component: Home,
