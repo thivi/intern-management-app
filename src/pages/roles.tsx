@@ -7,25 +7,24 @@ import {
 	ListItem,
 	Divider,
 	IconButton,
-	Card,
-	CardContent,
 	FormControl,
 	InputLabel,
 	Select,
 	MenuItem,
-	InputAdornment,
-	OutlinedInput,
 	Dialog,
 	DialogActions,
 	DialogContentText,
 	DialogContent,
 	FormHelperText,
+	Paper,
+	Typography,
+	InputBase,
 } from "@material-ui/core";
 import { Role, RoleType } from "../models";
 import { getRoles, addRoles, updateRoles, deleteRole } from "../apis";
 import { AuthContext } from "../helpers";
 import { ROLES } from "../constants";
-import { Delete, Edit, Save, Close, Sort, Search } from "@material-ui/icons";
+import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
@@ -178,7 +177,7 @@ export const Roles = (): ReactElement => {
 				<ListItem key={i}>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
-							<Skeleton variant="text" />
+							<Skeleton variant="text" height={50} />
 						</Grid>
 					</Grid>
 				</ListItem>
@@ -359,35 +358,77 @@ export const Roles = (): ReactElement => {
 	return (
 		<>
 			{deleteIndex !== -1 && deleteConfirm()}
-			<Card variant="outlined">
-				<CardContent>
-					<form noValidate onSubmit={addForm.handleSubmit}>
-						<Grid container spacing={2}>
-							<Grid xs={5} item>
-								<TextField
-									variant="outlined"
-									name="email"
-									label="Email"
-									fullWidth
-									value={addForm.values.email}
+			<Paper className={classes.addPaper}>
+				<form noValidate onSubmit={addForm.handleSubmit}>
+					<Grid container spacing={2}>
+						<Grid xs={5} item>
+							<TextField
+								variant="outlined"
+								name="email"
+								label="Email"
+								fullWidth
+								value={addForm.values.email}
+								onBlur={addForm.handleBlur}
+								onChange={addForm.handleChange}
+								helperText={addForm.touched.email && addForm.errors.email && addForm.errors.email}
+								error={!!(addForm.touched.email && addForm.errors.email)}
+							/>
+						</Grid>
+						<Grid xs={5} item>
+							<FormControl variant="outlined" fullWidth>
+								<InputLabel>Role</InputLabel>
+								<Select
+									label="Role"
+									name="role"
+									value={addForm.values.role}
 									onBlur={addForm.handleBlur}
 									onChange={addForm.handleChange}
-									helperText={addForm.touched.email && addForm.errors.email && addForm.errors.email}
-									error={!!(addForm.touched.email && addForm.errors.email)}
-								/>
-							</Grid>
-							<Grid xs={5} item>
-								<FormControl variant="outlined">
-									<InputLabel>Role</InputLabel>
+									error={!!(addForm.touched.role && addForm.errors.role)}
+									fullWidth
+								>
+									{ROLES_OPTIONS.map((option, index: number) => {
+										return (
+											<MenuItem key={index} value={option.key}>
+												{option.text}
+											</MenuItem>
+										);
+									})}
+								</Select>
+								{addForm.touched.role && addForm.errors.role && (
+									<FormHelperText>{addForm.errors.role}</FormHelperText>
+								)}
+							</FormControl>
+						</Grid>
+						<Grid item xs={2} className={classes.addButtonGrid}>
+							<Button
+								className={classes.primaryButton}
+								startIcon={<Add />}
+								type="submit"
+								variant="contained"
+								color="primary"
+							>
+								Add
+							</Button>
+						</Grid>
+					</Grid>
+				</form>
+			</Paper>
+			<Paper variant="elevation" className={classes.listPaper}>
+				<List className={classes.list}>
+					<ListItem className={classes.listHeader}>
+						<Grid container spacing={2} className={classes.filterGrid}>
+							<Grid item xs={2}>
+								<FormControl variant="filled" fullWidth>
+									<InputLabel>Show Role</InputLabel>
 									<Select
-										label="Role"
-										name="role"
-										value={addForm.values.role}
-										onBlur={addForm.handleBlur}
-										onChange={addForm.handleChange}
-										error={!!(addForm.touched.role && addForm.errors.role)}
+										value={showRole}
+										onChange={(event) => {
+											setShowRole(event.target.value as string);
+										}}
+										label="Show Role"
+										fullWidth
 									>
-										{ROLES_OPTIONS.map((option, index: number) => {
+										{SHOW_ROLE_OPTIONS.map((option, index: number) => {
 											return (
 												<MenuItem key={index} value={option.key}>
 													{option.text}
@@ -395,86 +436,20 @@ export const Roles = (): ReactElement => {
 											);
 										})}
 									</Select>
-									{addForm.touched.role && addForm.errors.role && (
-										<FormHelperText>{addForm.errors.role}</FormHelperText>
-									)}
 								</FormControl>
 							</Grid>
-							<Grid item xs={2}>
-								<Button type="submit" variant="contained" color="primary">
-									Add
-								</Button>
-							</Grid>
-						</Grid>
-					</form>
-				</CardContent>
-			</Card>
-			<Grid container spacing={2}>
-				<Grid item xs={3}>
-					<FormControl variant="outlined">
-						<InputLabel>Sort By</InputLabel>
-						<Select
-							value={sortBy}
-							onChange={(event) => {
-								setSortBy(event.target.value as keyof Role);
-								sort(event.target.value as keyof Role);
-							}}
-							label="Sort By"
-						>
-							{SORT_BY.map((option, index: number) => {
-								return (
-									<MenuItem key={index} value={option.key}>
-										{option.text}
-									</MenuItem>
-								);
-							})}
-						</Select>
-					</FormControl>
-					<IconButton
-						aria-label="sort order"
-						onClick={() => {
-							if (!sorted) {
-								sort(sortBy, sortOrder);
-							} else {
-								sort(sortBy, !sortOrder);
-							}
-						}}
-					>
-						<Sort
-							style={{ transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)" }}
-						/>
-					</IconButton>
-				</Grid>
-				<Grid item xs={9} container justify="flex-end">
-					<FormControl variant="outlined">
-						<InputLabel>Show Role</InputLabel>
-						<Select
-							value={showRole}
-							onChange={(event) => {
-								setShowRole(event.target.value as string);
-							}}
-							label="Show Role"
-						>
-							{SHOW_ROLE_OPTIONS.map((option, index: number) => {
-								return (
-									<MenuItem key={index} value={option.key}>
-										{option.text}
-									</MenuItem>
-								);
-							})}
-						</Select>
-					</FormControl>
-					<FormControl variant="outlined">
-						<InputLabel htmlFor="outlined-adornment-search">Search</InputLabel>
-						<OutlinedInput
-							type="text"
-							value={searchQuery}
-							onChange={(e) => {
-								setSearchQuery(e.target.value);
-								search(e.target.value);
-							}}
-							endAdornment={
-								<InputAdornment position="end">
+							<Grid item xs={10} container justify="flex-end">
+								<Paper className={classes.search} variant="outlined">
+									<InputBase
+										placeholder="Search by email"
+										type="text"
+										value={searchQuery}
+										onChange={(e) => {
+											setSearchQuery(e.target.value);
+											search(e.target.value);
+										}}
+										fullWidth
+									/>
 									{searchQuery ? (
 										<IconButton
 											aria-label="search"
@@ -491,143 +466,183 @@ export const Roles = (): ReactElement => {
 											<Search />
 										</IconButton>
 									)}
-								</InputAdornment>
-							}
-							labelWidth={70}
-						/>
-					</FormControl>
-				</Grid>
-			</Grid>
-			<List>
-				{isLoading
-					? listSkeletons()
-					: paginatedRoles?.map((gitIssue: Role, index: number) => {
-							return (
-								<React.Fragment key={index}>
-									<ListItem>
-										<Grid container spacing={2}>
-											{editIndex === index ? (
-												<Grid container item xs={10}>
-													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
-														<Grid xs={6} item className={classes.gridRightMargin}>
-															<TextField
-																variant="standard"
-																name="email"
-																label="Email"
-																fullWidth
-																value={editForm.values.email}
-																onBlur={editForm.handleBlur}
-																onChange={editForm.handleChange}
-																helperText={
-																	editForm.touched.email &&
-																	editForm.errors.email &&
-																	editForm.errors.email
-																}
-																error={
-																	!!(editForm.touched.email && editForm.errors.email)
-																}
-															/>
-														</Grid>
-														<Grid xs={6} item>
-															<FormControl variant="standard">
-																<InputLabel>Role</InputLabel>
-																<Select
-																	label="Role"
-																	name="role"
-																	value={editForm.values.role}
+								</Paper>
+							</Grid>
+						</Grid>
+					</ListItem>
+					<ListItem className={classes.listHeader}>
+						<Grid container spacing={2}>
+							<Grid container item xs={5}>
+								<IconButton
+									aria-label="sort order"
+									onClick={() => {
+										setSortBy("Email_ID");
+										if (!sorted) {
+											sort("Email_ID", sortOrder);
+										} else {
+											sort("Email_ID", !sortOrder);
+										}
+									}}
+									size="small"
+									className={classes.sortButton}
+								>
+									<Sort
+										style={{
+											transform: sorted
+												? !sortOrder
+													? "scaleY(-1)"
+													: "scaleY(1)"
+												: "scaleY(-1)",
+										}}
+									/>
+								</IconButton>
+								<Typography variant="subtitle1">Email</Typography>
+							</Grid>
+							<Grid container item xs={5}>
+								<Typography variant="subtitle1">Role</Typography>
+							</Grid>
+						</Grid>
+					</ListItem>
+					{isLoading
+						? listSkeletons()
+						: paginatedRoles?.map((gitIssue: Role, index: number) => {
+								return (
+									<React.Fragment key={index}>
+										<ListItem>
+											<Grid container spacing={2}>
+												{editIndex === index ? (
+													<Grid container item xs={10}>
+														<form
+															onSubmit={editForm.handleSubmit}
+															className={classes.gridForm}
+														>
+															<Grid xs={6} item className={classes.gridRightMargin}>
+																<TextField
+																	variant="standard"
+																	name="email"
+																	label="Email"
+																	fullWidth
+																	value={editForm.values.email}
 																	onBlur={editForm.handleBlur}
 																	onChange={editForm.handleChange}
+																	helperText={
+																		editForm.touched.email &&
+																		editForm.errors.email &&
+																		editForm.errors.email
+																	}
 																	error={
 																		!!(
-																			editForm.touched.role &&
-																			editForm.errors.role
+																			editForm.touched.email &&
+																			editForm.errors.email
 																		)
 																	}
-																>
-																	{ROLES_OPTIONS.map((option, index: number) => {
-																		return (
-																			<MenuItem key={index} value={option.key}>
-																				{option.text}
-																			</MenuItem>
-																		);
-																	})}
-																</Select>
-																{editForm.touched.role && editForm.errors.role && (
-																	<FormHelperText>
-																		{editForm.errors.role}
-																	</FormHelperText>
-																)}
-															</FormControl>
+																/>
+															</Grid>
+															<Grid xs={6} item>
+																<FormControl variant="standard" fullWidth>
+																	<InputLabel>Role</InputLabel>
+																	<Select
+																		label="Role"
+																		name="role"
+																		value={editForm.values.role}
+																		onBlur={editForm.handleBlur}
+																		onChange={editForm.handleChange}
+																		error={
+																			!!(
+																				editForm.touched.role &&
+																				editForm.errors.role
+																			)
+																		}
+																		fullWidth
+																	>
+																		{ROLES_OPTIONS.map((option, index: number) => {
+																			return (
+																				<MenuItem
+																					key={index}
+																					value={option.key}
+																				>
+																					{option.text}
+																				</MenuItem>
+																			);
+																		})}
+																	</Select>
+																	{editForm.touched.role && editForm.errors.role && (
+																		<FormHelperText>
+																			{editForm.errors.role}
+																		</FormHelperText>
+																	)}
+																</FormControl>
+															</Grid>
+														</form>
+													</Grid>
+												) : (
+													<>
+														<Grid container alignItems="center" item xs={5}>
+															<Typography>{gitIssue.Email_ID}</Typography>
 														</Grid>
-													</form>
+														<Grid container alignItems="center" item xs={5}>
+															<Typography>{gitIssue.role}</Typography>
+														</Grid>
+													</>
+												)}
+												<Grid container justify="flex-end" item xs={2}>
+													{editIndex !== index && (
+														<IconButton
+															aria-label="edit"
+															onClick={() => {
+																setEditIndex(index);
+															}}
+														>
+															<Edit />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															onClick={() => editForm.handleSubmit()}
+															type="submit"
+															aria-label="save"
+														>
+															<Save />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															aria-label="close"
+															onClick={() => {
+																setEditIndex(-1);
+															}}
+														>
+															<Close />
+														</IconButton>
+													)}
+													<IconButton
+														aria-label="delete"
+														onClick={() => {
+															setDeleteIndex(parseInt(gitIssue.id));
+														}}
+													>
+														<Delete />
+													</IconButton>
 												</Grid>
-											) : (
-												<>
-													<Grid container alignItems="center" item xs={5}>
-														{gitIssue.Email_ID}
-													</Grid>
-													<Grid container alignItems="center" item xs={5}>
-														{gitIssue.role}
-													</Grid>
-												</>
-											)}
-											<Grid container justify="flex-end" item xs={2}>
-												{editIndex !== index && (
-													<IconButton
-														aria-label="edit"
-														onClick={() => {
-															setEditIndex(index);
-														}}
-													>
-														<Edit />
-													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														onClick={() => editForm.handleSubmit()}
-														type="submit"
-														aria-label="save"
-													>
-														<Save />
-													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														aria-label="close"
-														onClick={() => {
-															setEditIndex(-1);
-														}}
-													>
-														<Close />
-													</IconButton>
-												)}
-												<IconButton
-													aria-label="delete"
-													onClick={() => {
-														setDeleteIndex(parseInt(gitIssue.id));
-													}}
-												>
-													<Delete />
-												</IconButton>
 											</Grid>
-										</Grid>
-									</ListItem>
-									{paginatedRoles.length - 1 !== index && <Divider />}
-								</React.Fragment>
-							);
-					  })}
-				{!isLoading && roles.length > 10 && (
-					<Pagination
-						count={Math.ceil(filteredRoles.length / itemsPerPage)}
-						page={page}
-						onChange={handlePageChange}
-						showFirstButton
-						showLastButton
-						color="primary"
-						className={classes.pagination}
-					/>
-				)}
-			</List>
+										</ListItem>
+										{paginatedRoles.length - 1 !== index && <Divider />}
+									</React.Fragment>
+								);
+						  })}
+					{!isLoading && roles.length > 10 && (
+						<Pagination
+							count={Math.ceil(filteredRoles.length / itemsPerPage)}
+							page={page}
+							onChange={handlePageChange}
+							showFirstButton
+							showLastButton
+							color="primary"
+							className={classes.pagination}
+						/>
+					)}
+				</List>
+			</Paper>
 		</>
 	);
 };
