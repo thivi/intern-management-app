@@ -5,17 +5,13 @@ import {
 	ListItem,
 	Divider,
 	IconButton,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	InputAdornment,
-	OutlinedInput,
 	Typography,
 	Popover,
 	ListItemText,
 	FormControlLabel,
 	Switch,
+	Paper,
+	InputBase,
 } from "@material-ui/core";
 import {
 	Intern,
@@ -292,7 +288,7 @@ export const Interns = (): ReactElement => {
 				<ListItem key={i}>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
-							<Skeleton variant="text" />
+							<Skeleton variant="text" height={50} />
 						</Grid>
 					</Grid>
 				</ListItem>
@@ -390,78 +386,48 @@ export const Interns = (): ReactElement => {
 				/>
 			) : (
 				<>
-					<Grid container spacing={2}>
-						<Grid item xs={3}>
-							<FormControl variant="outlined">
-								<InputLabel>Sort By</InputLabel>
-								<Select
-									value={sortBy}
-									onChange={(event) => {
-										setSortBy(event.target.value as keyof Intern);
-										sort(event.target.value as keyof Intern);
-									}}
-									label="Sort By"
-								>
-									{SORT_BY.map((option, index: number) => {
-										return (
-											<MenuItem key={index} value={option.key}>
-												{option.text}
-											</MenuItem>
-										);
-									})}
-								</Select>
-							</FormControl>
-							<IconButton
-								aria-label="sort order"
-								onClick={() => {
-									if (!sorted) {
-										sort(sortBy, sortOrder);
-									} else {
-										sort(sortBy, !sortOrder);
-									}
-								}}
-							>
-								<Sort
-									style={{
-										transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)",
-									}}
-								/>
-							</IconButton>
-						</Grid>
-						<Grid item xs={9} container justify="flex-end">
-							<FormControlLabel
-								control={
-									<Switch
-										checked={showOnlyActive}
-										onChange={() => search("", true, false)}
-										color="primary"
-									/>
-								}
-								label="Show Only Active Interns"
-								labelPlacement="start"
-							/>
-							<FormControlLabel
-								control={
-									<Switch
-										checked={showOnlyMentees}
-										onChange={() => search("", false, true)}
-										color="primary"
-									/>
-								}
-								label="Show only me mentees"
-								labelPlacement="start"
-							/>
-							<FormControl variant="outlined">
-								<InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
-								<OutlinedInput
-									type="text"
-									value={searchQuery}
-									onChange={(e) => {
-										setSearchQuery(e.target.value);
-										search(e.target.value);
-									}}
-									endAdornment={
-										<InputAdornment position="end">
+					<Paper variant="elevation" className={classes.listPaper}>
+						<List className={classes.list}>
+							<ListItem className={classes.listHeader}>
+								<Grid container spacing={2} className={classes.filterGrid}>
+									<Grid item xs={2}>
+										<FormControlLabel
+											control={
+												<Switch
+													checked={showOnlyActive}
+													onChange={() => search("", true, false)}
+													color="secondary"
+												/>
+											}
+											label="Show Only Active Interns"
+											labelPlacement="top"
+										/>
+									</Grid>
+									<Grid item xs={2}>
+										<FormControlLabel
+											control={
+												<Switch
+													checked={showOnlyMentees}
+													onChange={() => search("", false, true)}
+													color="secondary"
+												/>
+											}
+											label="Show Only My Mentees"
+											labelPlacement="top"
+										/>
+									</Grid>
+									<Grid item xs={8} container justify="flex-end" alignItems="center">
+										<Paper className={classes.search} variant="outlined">
+											<InputBase
+												placeholder="Search by name"
+												type="text"
+												value={searchQuery}
+												onChange={(e) => {
+													setSearchQuery(e.target.value);
+													search(e.target.value);
+												}}
+												fullWidth
+											/>
 											{searchQuery ? (
 												<IconButton
 													aria-label="search"
@@ -478,150 +444,311 @@ export const Interns = (): ReactElement => {
 													<Search />
 												</IconButton>
 											)}
-										</InputAdornment>
-									}
-									labelWidth={70}
+										</Paper>
+									</Grid>
+								</Grid>
+							</ListItem>
+							<ListItem className={classes.listHeader}>
+								<Grid container spacing={2}>
+									<Grid container item xs={2}>
+										<IconButton
+											aria-label="sort order"
+											onClick={() => {
+												setSortBy("name");
+												if (!sorted) {
+													sort("name", sortOrder);
+												} else {
+													sort("name", !sortOrder);
+												}
+											}}
+											size="small"
+											className={classes.sortButton}
+										>
+											<Sort
+												style={{
+													transform: sorted
+														? !sortOrder
+															? "scaleY(-1)"
+															: "scaleY(1)"
+														: "scaleY(-1)",
+												}}
+											/>
+										</IconButton>
+										<Typography variant="subtitle1">Name</Typography>
+									</Grid>
+									<Grid container item xs={2}>
+										<IconButton
+											aria-label="sort order"
+											onClick={() => {
+												setSortBy("blogs");
+												if (!sorted) {
+													sort("blogs", sortOrder);
+												} else {
+													sort("blogs", !sortOrder);
+												}
+											}}
+											size="small"
+											className={classes.sortButton}
+										>
+											<Sort
+												style={{
+													transform: sorted
+														? !sortOrder
+															? "scaleY(-1)"
+															: "scaleY(1)"
+														: "scaleY(-1)",
+												}}
+											/>
+										</IconButton>
+										<Typography variant="subtitle1">Blogs</Typography>
+									</Grid>
+									<Grid container item xs={2}>
+										<IconButton
+											aria-label="sort order"
+											onClick={() => {
+												setSortBy("gitIssues");
+												if (!sorted) {
+													sort("gitIssues", sortOrder);
+												} else {
+													sort("gitIssues", !sortOrder);
+												}
+											}}
+											size="small"
+											className={classes.sortButton}
+										>
+											<Sort
+												style={{
+													transform: sorted
+														? !sortOrder
+															? "scaleY(-1)"
+															: "scaleY(1)"
+														: "scaleY(-1)",
+												}}
+											/>
+										</IconButton>
+										<Typography variant="subtitle1">Git Issues</Typography>
+									</Grid>
+									<Grid container item xs={2}>
+										<IconButton
+											aria-label="sort order"
+											onClick={() => {
+												setSortBy("presentationsOrWebinars");
+												if (!sorted) {
+													sort("presentationsOrWebinars", sortOrder);
+												} else {
+													sort("presentationsOrWebinars", !sortOrder);
+												}
+											}}
+											size="small"
+											className={classes.sortButton}
+										>
+											<Sort
+												style={{
+													transform: sorted
+														? !sortOrder
+															? "scaleY(-1)"
+															: "scaleY(1)"
+														: "scaleY(-1)",
+												}}
+											/>
+										</IconButton>
+										<Typography variant="subtitle1">Presentations</Typography>
+									</Grid>
+									<Grid container item xs={2}>
+										<IconButton
+											aria-label="sort order"
+											onClick={() => {
+												setSortBy("projectTasksCompletion");
+												if (!sorted) {
+													sort("projectTasksCompletion", sortOrder);
+												} else {
+													sort("projectTasksCompletion", !sortOrder);
+												}
+											}}
+											size="small"
+											className={classes.sortButton}
+										>
+											<Sort
+												style={{
+													transform: sorted
+														? !sortOrder
+															? "scaleY(-1)"
+															: "scaleY(1)"
+														: "scaleY(-1)",
+												}}
+											/>
+										</IconButton>
+										<Typography variant="subtitle1">Tasks Completion</Typography>
+									</Grid>
+									<Grid container item xs={2}>
+										<IconButton
+											aria-label="sort order"
+											onClick={() => {
+												setSortBy("pullRequests");
+												if (!sorted) {
+													sort("pullRequests", sortOrder);
+												} else {
+													sort("pullRequests", !sortOrder);
+												}
+											}}
+											size="small"
+											className={classes.sortButton}
+										>
+											<Sort
+												style={{
+													transform: sorted
+														? !sortOrder
+															? "scaleY(-1)"
+															: "scaleY(1)"
+														: "scaleY(-1)",
+												}}
+											/>
+										</IconButton>
+										<Typography variant="subtitle1">Pull Requests</Typography>
+									</Grid>
+								</Grid>
+							</ListItem>
+							{isLoading
+								? listSkeletons()
+								: paginatedInterns?.map((intern: Intern, index: number) => {
+										return (
+											<React.Fragment key={index}>
+												<ListItem>
+													<Grid container spacing={2}>
+														<Grid container alignItems="center" item xs={2}>
+															<Typography
+																onMouseEnter={(
+																	event: React.MouseEvent<HTMLSpanElement, MouseEvent>
+																) => {
+																	handlePopOverOpen(event, index);
+																}}
+																onMouseLeave={handlePopOverClose}
+																onClick={() => {
+																	setShowInternProfile(true);
+																	handlePopOverClose();
+																	setSelectedIntern(
+																		internInfo.find(
+																			(currIntern) =>
+																				currIntern.profile.Email_ID ===
+																				intern.profile.Email_ID
+																		)
+																	);
+																}}
+															>
+																{intern.name}
+															</Typography>
+															<Popover
+																open={popOverIndex === index}
+																anchorEl={anchorEl}
+																onClose={handlePopOverClose}
+																disableRestoreFocus
+																className={classes.popOver}
+																classes={{
+																	paper: classes.paper,
+																}}
+																anchorOrigin={{
+																	vertical: "bottom",
+																	horizontal: "left",
+																}}
+																transformOrigin={{
+																	vertical: "top",
+																	horizontal: "left",
+																}}
+															>
+																<List>
+																	<ListItem>
+																		<ListItemText
+																			secondary="Email"
+																			primary={intern.profile.Email_ID}
+																		/>
+																	</ListItem>
+																	<ListItem>
+																		<ListItemText
+																			secondary="Mentor"
+																			primary={intern.profile.Mentor}
+																		/>
+																	</ListItem>
+																	<ListItem>
+																		<ListItemText
+																			secondary="Co-mentor"
+																			primary={intern.profile.Co_mentor}
+																		/>
+																	</ListItem>
+																	<ListItem>
+																		<ListItemText
+																			secondary="Contact No."
+																			primary={intern.profile.Contact_no}
+																		/>
+																	</ListItem>
+																	<ListItem>
+																		<ListItemText
+																			secondary="University"
+																			primary={intern.profile.University}
+																		/>
+																	</ListItem>
+																	<ListItem>
+																		<ListItemText
+																			secondary="Joined Date"
+																			primary={intern.profile.Joined_date}
+																		/>
+																	</ListItem>
+																	<ListItem>
+																		<ListItemText
+																			secondary="Leaving Date"
+																			primary={intern.profile.Leaving_date}
+																		/>
+																	</ListItem>
+																	<ListItem>
+																		<ListItemText
+																			secondary="Project"
+																			primary={
+																				intern.projects instanceof Array &&
+																				intern.projects
+																					.map(
+																						(project: Project) =>
+																							project.Title
+																					)
+																					.join("\n")
+																			}
+																		/>
+																	</ListItem>
+																</List>
+															</Popover>
+														</Grid>
+														<Grid container alignItems="center" item xs={2}>
+															<Typography>{intern.blogs}</Typography>
+														</Grid>
+														<Grid container alignItems="center" item xs={2}>
+															<Typography>{intern.gitIssues}</Typography>
+														</Grid>
+														<Grid container alignItems="center" item xs={2}>
+															<Typography>{intern.presentationsOrWebinars}</Typography>
+														</Grid>
+														<Grid container alignItems="center" item xs={2}>
+															<Typography>{intern.projectTasksCompletion}</Typography>
+														</Grid>
+														<Grid container alignItems="center" item xs={2}>
+															<Typography>{intern.pullRequests}</Typography>
+														</Grid>
+													</Grid>
+												</ListItem>
+												{paginatedInterns.length - 1 !== index && <Divider />}
+											</React.Fragment>
+										);
+								  })}
+							{!isLoading && interns.length > 10 && (
+								<Pagination
+									count={Math.ceil(filteredInterns.length / itemsPerPage)}
+									page={page}
+									onChange={handlePageChange}
+									showFirstButton
+									showLastButton
+									color="primary"
+									className={classes.pagination}
 								/>
-							</FormControl>
-						</Grid>
-					</Grid>
-					<List>
-						{isLoading
-							? listSkeletons()
-							: paginatedInterns?.map((intern: Intern, index: number) => {
-									return (
-										<React.Fragment key={index}>
-											<ListItem>
-												<Grid container spacing={2}>
-													<Grid container alignItems="center" item xs={4}>
-														<Typography
-															onMouseEnter={(
-																event: React.MouseEvent<HTMLSpanElement, MouseEvent>
-															) => {
-																handlePopOverOpen(event, index);
-															}}
-															onMouseLeave={handlePopOverClose}
-															onClick={() => {
-																setShowInternProfile(true);
-																handlePopOverClose();
-																setSelectedIntern(
-																	internInfo.find(
-																		(currIntern) =>
-																			currIntern.profile.Email_ID ===
-																			intern.profile.Email_ID
-																	)
-																);
-															}}
-														>
-															{intern.name}
-														</Typography>
-														<Popover
-															open={popOverIndex === index}
-															anchorEl={anchorEl}
-															onClose={handlePopOverClose}
-															disableRestoreFocus
-															className={classes.popOver}
-															classes={{
-																paper: classes.paper,
-															}}
-															anchorOrigin={{
-																vertical: "bottom",
-																horizontal: "left",
-															}}
-															transformOrigin={{
-																vertical: "top",
-																horizontal: "left",
-															}}
-														>
-															<List>
-																<ListItem>
-																	<ListItemText
-																		secondary="Mentor"
-																		primary={intern.profile.Mentor}
-																	/>
-																</ListItem>
-																<ListItem>
-																	<ListItemText
-																		secondary="Co-mentor"
-																		primary={intern.profile.Co_mentor}
-																	/>
-																</ListItem>
-																<ListItem>
-																	<ListItemText
-																		secondary="Contact No."
-																		primary={intern.profile.Contact_no}
-																	/>
-																</ListItem>
-																<ListItem>
-																	<ListItemText
-																		secondary="University"
-																		primary={intern.profile.University}
-																	/>
-																</ListItem>
-																<ListItem>
-																	<ListItemText
-																		secondary="Joined Date"
-																		primary={intern.profile.Joined_date}
-																	/>
-																</ListItem>
-																<ListItem>
-																	<ListItemText
-																		secondary="Leaving Date"
-																		primary={intern.profile.Leaving_date}
-																	/>
-																</ListItem>
-																<ListItem>
-																	<ListItemText
-																		secondary="Project"
-																		primary={
-																			intern.projects instanceof Array &&
-																			intern.projects
-																				.map(
-																					(project: Project) => project.Title
-																				)
-																				.join("\n")
-																		}
-																	/>
-																</ListItem>
-															</List>
-														</Popover>
-													</Grid>
-													<Grid container alignItems="center" item xs={3}>
-														{intern.email}
-													</Grid>
-													<Grid container alignItems="center" item xs={1}>
-														{intern.blogs}
-													</Grid>
-													<Grid container alignItems="center" item xs={1}>
-														{intern.gitIssues}
-													</Grid>
-													<Grid container alignItems="center" item xs={1}>
-														{intern.presentationsOrWebinars}
-													</Grid>
-													<Grid container alignItems="center" item xs={1}>
-														{intern.projectTasksCompletion}
-													</Grid>
-													<Grid container alignItems="center" item xs={1}>
-														{intern.pullRequests}
-													</Grid>
-												</Grid>
-											</ListItem>
-											{paginatedInterns.length - 1 !== index && <Divider />}
-										</React.Fragment>
-									);
-							  })}
-						{!isLoading && interns.length > 10 && (
-							<Pagination
-								count={Math.ceil(filteredInterns.length / itemsPerPage)}
-								page={page}
-								onChange={handlePageChange}
-								showFirstButton
-								showLastButton
-								color="primary"
-								className={classes.pagination}
-							/>
-						)}
-					</List>
+							)}
+						</List>
+					</Paper>
 				</>
 			)}
 		</>
