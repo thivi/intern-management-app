@@ -3,14 +3,13 @@ import {
 	AppBar,
 	Toolbar,
 	Typography,
-	Button,
 	Drawer,
 	List,
 	ListItem,
 	ListItemIcon,
 	ListItemText,
-	Paper,
 	CssBaseline,
+	Avatar,
 } from "@material-ui/core";
 import useStyles from "../theme";
 import { routes } from "../configs";
@@ -31,9 +30,10 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 			<AppBar position="static" className={classes.appBar}>
 				<Toolbar>
 					<Typography variant="h6" className={classes.appBarTitle}>
-						App Name
+						Intern Management
 					</Typography>
-					<Button color="inherit">Login</Button>
+					<Typography variant="button">{authState?.authData?.given_name}</Typography>
+					<Avatar className={classes.avatar} src={authState?.authData?.picture} />
 				</Toolbar>
 			</AppBar>
 			<div className={classes.root}>
@@ -61,9 +61,7 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 					</List>
 				</Drawer>
 				<main className={classes.content}>
-					<Paper className={classes.paper} square>
-						{props.children}
-					</Paper>
+					<div className={classes.paper}>{props.children}</div>
 				</main>
 			</div>
 		</div>
