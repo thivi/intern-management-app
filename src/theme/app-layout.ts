@@ -9,6 +9,10 @@ export const appBarTitle = (theme: Theme) => ({
     flexGrow: 1
 });
 
+export const avatar = (theme: Theme) => ({
+    marginLeft: theme.spacing(1)
+});
+
 export const drawerPaper = (theme: Theme) => ({
     width: DRAWER_WIDTH,
     minHeight: "calc(100vh - "+theme.mixins.toolbar.minHeight+"px)",
