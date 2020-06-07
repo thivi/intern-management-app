@@ -8,18 +8,13 @@ import {
 	Link,
 	Divider,
 	IconButton,
-	Card,
-	CardContent,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	InputAdornment,
-	OutlinedInput,
 	Dialog,
 	DialogActions,
 	DialogContentText,
 	DialogContent,
+	Paper,
+	Typography,
+	InputBase,
 } from "@material-ui/core";
 import { PresentationOrWebinar } from "../models";
 import {
@@ -30,7 +25,7 @@ import {
 } from "../apis";
 import { AuthContext } from "../helpers";
 import { PULL_REQUESTS } from "../constants";
-import { Delete, Edit, Save, Close, Sort, Search } from "@material-ui/icons";
+import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
@@ -148,7 +143,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 				<ListItem key={i}>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
-							<Skeleton variant="text" />
+							<Skeleton variant="text" height={50} />
 						</Grid>
 					</Grid>
 				</ListItem>
@@ -321,93 +316,65 @@ export const PresentationsOrWebinars = (): ReactElement => {
 	return (
 		<>
 			{deleteIndex !== -1 && deleteConfirm()}
-			<Card variant="outlined">
-				<CardContent>
-					<form noValidate onSubmit={addForm.handleSubmit}>
-						<Grid container spacing={2}>
-							<Grid xs={5} item>
-								<TextField
-									variant="outlined"
-									name="title"
-									label="Title"
-									fullWidth
-									value={addForm.values.title}
-									onBlur={addForm.handleBlur}
-									onChange={addForm.handleChange}
-									helperText={addForm.touched.title && addForm.errors.title && addForm.errors.title}
-									error={!!(addForm.touched.title && addForm.errors.title)}
-								/>
-							</Grid>
-							<Grid xs={5} item>
-								<TextField
-									variant="outlined"
-									name="link"
-									label="Link"
-									fullWidth
-									value={addForm.values.link}
-									onBlur={addForm.handleBlur}
-									onChange={addForm.handleChange}
-									helperText={addForm.touched.link && addForm.errors.link && addForm.errors.link}
-									error={!!(addForm.touched.link && addForm.errors.link)}
-								/>
-							</Grid>
-							<Grid item xs={2}>
-								<Button type="submit" variant="contained" color="primary">
-									Add
-								</Button>
-							</Grid>
+			<Paper className={classes.addPaper}>
+				<form noValidate onSubmit={addForm.handleSubmit}>
+					<Grid container spacing={2}>
+						<Grid xs={5} item>
+							<TextField
+								variant="outlined"
+								name="title"
+								label="Title"
+								fullWidth
+								value={addForm.values.title}
+								onBlur={addForm.handleBlur}
+								onChange={addForm.handleChange}
+								helperText={addForm.touched.title && addForm.errors.title && addForm.errors.title}
+								error={!!(addForm.touched.title && addForm.errors.title)}
+							/>
 						</Grid>
-					</form>
-				</CardContent>
-			</Card>
-			<Grid container spacing={2}>
-				<Grid item xs={3}>
-					<FormControl variant="outlined">
-						<InputLabel>Sort By</InputLabel>
-						<Select
-							value={sortBy}
-							onChange={(event) => {
-								setSortBy(event.target.value as keyof PresentationOrWebinar);
-								sort(event.target.value as keyof PresentationOrWebinar);
-							}}
-							label="Sort By"
-						>
-							{SORT_BY.map((option, index: number) => {
-								return (
-									<MenuItem key={index} value={option.key}>
-										{option.text}
-									</MenuItem>
-								);
-							})}
-						</Select>
-					</FormControl>
-					<IconButton
-						aria-label="sort order"
-						onClick={() => {
-							if (!sorted) {
-								sort(sortBy, sortOrder);
-							} else {
-								sort(sortBy, !sortOrder);
-							}
-						}}
-					>
-						<Sort
-							style={{ transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)" }}
-						/>
-					</IconButton>
-				</Grid>
-				<Grid item xs={9} container justify="flex-end">
-					<FormControl variant="outlined">
-						<InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
-						<OutlinedInput
-							type="text"
-							value={searchQuery}
-							onChange={(e) => {
-								setSearchQuery(e.target.value);
-								search(e.target.value);
-							}}
-							endAdornment={
-								<InputAdornment position="end">
+						<Grid xs={5} item>
+							<TextField
+								variant="outlined"
+								name="link"
+								label="Link"
+								fullWidth
+								value={addForm.values.link}
+								onBlur={addForm.handleBlur}
+								onChange={addForm.handleChange}
+								helperText={addForm.touched.link && addForm.errors.link && addForm.errors.link}
+								error={!!(addForm.touched.link && addForm.errors.link)}
+							/>
+						</Grid>
+						<Grid item xs={2} className={classes.addButtonGrid}>
+							<Button
+								className={classes.primaryButton}
+								startIcon={<Add />}
+								type="submit"
+								variant="contained"
+								color="primary"
+							>
+								Add
+							</Button>
+						</Grid>
+					</Grid>
+				</form>
+			</Paper>
+			<Paper variant="elevation" className={classes.listPaper}>
+				<List className={classes.list}>
+					<ListItem className={classes.listHeader}>
+						<Grid container spacing={2} className={classes.filterGrid}>
+							<Grid item xs={12} container justify="flex-end">
+								<Paper className={classes.search} variant="outlined">
+									<InputBase
+										placeholder="Search by presentation/webinar name"
+										type="text"
+										value={searchQuery}
+										onChange={(e) => {
+											setSearchQuery(e.target.value);
+											search(e.target.value);
+										}}
+										fullWidth
+									/>
 									{searchQuery ? (
 										<IconButton
 											aria-label="search"
@@ -424,128 +391,164 @@ export const PresentationsOrWebinars = (): ReactElement => {
 											<Search />
 										</IconButton>
 									)}
-								</InputAdornment>
-							}
-							labelWidth={70}
-						/>
-					</FormControl>
-				</Grid>
-			</Grid>
-			<List>
-				{isLoading
-					? listSkeletons()
-					: paginatedPresentationsOrWebinars?.map((gitIssue: PresentationOrWebinar, index: number) => {
-							return (
-								<React.Fragment key={index}>
-									<ListItem>
-										<Grid container spacing={2}>
-											{editIndex === index ? (
-												<Grid container item xs={10}>
-													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
-														<Grid xs={6} item className={classes.gridRightMargin}>
-															<TextField
-																variant="standard"
-																name="title"
-																label="Title"
-																fullWidth
-																value={editForm.values.title}
-																onBlur={editForm.handleBlur}
-																onChange={editForm.handleChange}
-																helperText={
-																	editForm.touched.title &&
-																	editForm.errors.title &&
-																	editForm.errors.title
-																}
-																error={
-																	!!(editForm.touched.title && editForm.errors.title)
-																}
-															/>
-														</Grid>
-														<Grid xs={6} item>
-															<TextField
-																variant="standard"
-																name="link"
-																label="Link"
-																fullWidth
-																value={editForm.values.link}
-																onBlur={editForm.handleBlur}
-																onChange={editForm.handleChange}
-																helperText={
-																	editForm.touched.link &&
-																	editForm.errors.link &&
-																	editForm.errors.link
-																}
-																error={
-																	!!(editForm.touched.link && editForm.errors.link)
-																}
-															/>
-														</Grid>
-													</form>
-												</Grid>
-											) : (
-												<Grid container alignItems="center" item xs={10}>
-													<Link target="_blank" href={gitIssue.Link}>
-														{gitIssue.Title}
-													</Link>
-												</Grid>
-											)}
-											<Grid container justify="flex-end" item xs={2}>
-												{editIndex !== index && (
+								</Paper>
+							</Grid>
+						</Grid>
+					</ListItem>
+					<ListItem className={classes.listHeader}>
+						<Grid container spacing={2}>
+							<Grid container item xs={12}>
+								<IconButton
+									aria-label="sort order"
+									onClick={() => {
+										setSortBy("Title");
+										if (!sorted) {
+											sort("Title", sortOrder);
+										} else {
+											sort("Title", !sortOrder);
+										}
+									}}
+									size="small"
+									className={classes.sortButton}
+								>
+									<Sort
+										style={{
+											transform: sorted
+												? !sortOrder
+													? "scaleY(-1)"
+													: "scaleY(1)"
+												: "scaleY(-1)",
+										}}
+									/>
+								</IconButton>
+								<Typography variant="subtitle1">Presentation/Webinar Name</Typography>
+							</Grid>
+						</Grid>
+					</ListItem>
+					{isLoading
+						? listSkeletons()
+						: paginatedPresentationsOrWebinars?.map((gitIssue: PresentationOrWebinar, index: number) => {
+								return (
+									<React.Fragment key={index}>
+										<ListItem>
+											<Grid container spacing={2}>
+												{editIndex === index ? (
+													<Grid container item xs={10}>
+														<form
+															onSubmit={editForm.handleSubmit}
+															className={classes.gridForm}
+														>
+															<Grid xs={6} item className={classes.gridRightMargin}>
+																<TextField
+																	variant="standard"
+																	name="title"
+																	label="Title"
+																	fullWidth
+																	value={editForm.values.title}
+																	onBlur={editForm.handleBlur}
+																	onChange={editForm.handleChange}
+																	helperText={
+																		editForm.touched.title &&
+																		editForm.errors.title &&
+																		editForm.errors.title
+																	}
+																	error={
+																		!!(
+																			editForm.touched.title &&
+																			editForm.errors.title
+																		)
+																	}
+																/>
+															</Grid>
+															<Grid xs={6} item>
+																<TextField
+																	variant="standard"
+																	name="link"
+																	label="Link"
+																	fullWidth
+																	value={editForm.values.link}
+																	onBlur={editForm.handleBlur}
+																	onChange={editForm.handleChange}
+																	helperText={
+																		editForm.touched.link &&
+																		editForm.errors.link &&
+																		editForm.errors.link
+																	}
+																	error={
+																		!!(
+																			editForm.touched.link &&
+																			editForm.errors.link
+																		)
+																	}
+																/>
+															</Grid>
+														</form>
+													</Grid>
+												) : (
+													<Grid container alignItems="center" item xs={10}>
+														<Link target="_blank" href={gitIssue.Link}>
+															<Typography>{gitIssue.Title}</Typography>
+														</Link>
+													</Grid>
+												)}
+												<Grid container justify="flex-end" item xs={2}>
+													{editIndex !== index && (
+														<IconButton
+															aria-label="edit"
+															onClick={() => {
+																setEditIndex(index);
+															}}
+														>
+															<Edit />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															onClick={() => editForm.handleSubmit()}
+															type="submit"
+															aria-label="save"
+														>
+															<Save />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															aria-label="close"
+															onClick={() => {
+																setEditIndex(-1);
+															}}
+														>
+															<Close />
+														</IconButton>
+													)}
 													<IconButton
-														aria-label="edit"
+														aria-label="delete"
 														onClick={() => {
-															setEditIndex(index);
+															setDeleteIndex(parseInt(gitIssue.id));
 														}}
 													>
-														<Edit />
+														<Delete />
 													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														onClick={() => editForm.handleSubmit()}
-														type="submit"
-														aria-label="save"
-													>
-														<Save />
-													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														aria-label="close"
-														onClick={() => {
-															setEditIndex(-1);
-														}}
-													>
-														<Close />
-													</IconButton>
-												)}
-												<IconButton
-													aria-label="delete"
-													onClick={() => {
-														setDeleteIndex(parseInt(gitIssue.id));
-													}}
-												>
-													<Delete />
-												</IconButton>
+												</Grid>
 											</Grid>
-										</Grid>
-									</ListItem>
-									{paginatedPresentationsOrWebinars.length - 1 !== index && <Divider />}
-								</React.Fragment>
-							);
-					  })}
-				{!isLoading && presentationsOrWebinars.length > 10 && (
-					<Pagination
-						count={Math.ceil(filteredPresentationsOrWebinars.length / itemsPerPage)}
-						page={page}
-						onChange={handlePageChange}
-						showFirstButton
-						showLastButton
-						color="primary"
-						className={classes.pagination}
-					/>
-				)}
-			</List>
+										</ListItem>
+										{paginatedPresentationsOrWebinars.length - 1 !== index && <Divider />}
+									</React.Fragment>
+								);
+						  })}
+					{!isLoading && presentationsOrWebinars.length > 10 && (
+						<Pagination
+							count={Math.ceil(filteredPresentationsOrWebinars.length / itemsPerPage)}
+							page={page}
+							onChange={handlePageChange}
+							showFirstButton
+							showLastButton
+							color="primary"
+							className={classes.pagination}
+						/>
+					)}
+				</List>
+			</Paper>
 		</>
 	);
 };
