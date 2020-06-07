@@ -7,14 +7,6 @@ import {
 	ListItem,
 	Divider,
 	IconButton,
-	Card,
-	CardContent,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	InputAdornment,
-	OutlinedInput,
 	Dialog,
 	DialogActions,
 	DialogContentText,
@@ -22,16 +14,19 @@ import {
 	Typography,
 	FormControlLabel,
 	Checkbox,
+	Paper,
+	InputBase,
 	Switch,
 } from "@material-ui/core";
 import { ProjectTask } from "../models";
 import { getProjectTasks, addProjectTasks, updateProjectTasks, deleteProject } from "../apis";
 import { AuthContext } from "../helpers";
 import { PROJECT_TASKS } from "../constants";
-import { Delete, Edit, Save, Close, Sort, Search } from "@material-ui/icons";
+import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
+import validator from "validator";
 
 const SORT_BY: {
 	key: keyof ProjectTask;
@@ -152,7 +147,7 @@ export const ProjectTasks = (): ReactElement => {
 				<ListItem key={i}>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
-							<Skeleton variant="text" />
+							<Skeleton variant="text" height={50} />
 						</Grid>
 					</Grid>
 				</ListItem>
@@ -233,6 +228,8 @@ export const ProjectTasks = (): ReactElement => {
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
 			if (!values.pullRequest) errors["pullRequest"] = "PullRequest is required.";
+			if (validator.isURL(values.pullRequest))
+				errors["pullRequest"] = "Pull Request must be a valid URL. " + (errors["pullRequest"] ?? "");
 			if (!values.title) errors["title"] = "Title is required.";
 
 			return errors;
@@ -269,6 +266,8 @@ export const ProjectTasks = (): ReactElement => {
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
 			if (!values.pullRequest) errors["pullRequest"] = "PullRequest is required.";
+			if (validator.isURL(values.pullRequest))
+				errors["pullRequest"] = "Pull Request must be a valid URL. " + (errors["pullRequest"] ?? "");
 			if (!values.title) errors["title"] = "Title is required.";
 
 			return errors;
@@ -348,120 +347,99 @@ export const ProjectTasks = (): ReactElement => {
 	return (
 		<>
 			{deleteIndex !== -1 && deleteConfirm()}
-			<Card variant="outlined">
-				<CardContent>
-					<form noValidate onSubmit={addForm.handleSubmit}>
-						<Grid container spacing={2}>
-							<Grid xs={4} item>
-								<TextField
-									variant="outlined"
-									name="title"
-									label="Title"
-									fullWidth
-									value={addForm.values.title}
-									onBlur={addForm.handleBlur}
-									onChange={addForm.handleChange}
-									helperText={addForm.touched.title && addForm.errors.title && addForm.errors.title}
-									error={!!(addForm.touched.title && addForm.errors.title)}
-								/>
-							</Grid>
-							<Grid xs={4} item>
-								<TextField
-									variant="outlined"
-									name="pullRequest"
-									label="PullRequest"
-									fullWidth
-									value={addForm.values.pullRequest}
-									onBlur={addForm.handleBlur}
-									onChange={addForm.handleChange}
-									helperText={
-										addForm.touched.pullRequest &&
-										addForm.errors.pullRequest &&
-										addForm.errors.pullRequest
-									}
-									error={!!(addForm.touched.pullRequest && addForm.errors.pullRequest)}
-								/>
-							</Grid>
+			<Paper className={classes.addPaper}>
+				<form noValidate onSubmit={addForm.handleSubmit}>
+					<Grid container spacing={2}>
+						<Grid xs={4} item>
+							<TextField
+								variant="outlined"
+								name="title"
+								label="Title"
+								fullWidth
+								value={addForm.values.title}
+								onBlur={addForm.handleBlur}
+								onChange={addForm.handleChange}
+								helperText={addForm.touched.title && addForm.errors.title && addForm.errors.title}
+								error={!!(addForm.touched.title && addForm.errors.title)}
+							/>
+						</Grid>
+						<Grid xs={4} item>
+							<TextField
+								variant="outlined"
+								name="pullRequest"
+								label="PullRequest"
+								fullWidth
+								value={addForm.values.pullRequest}
+								onBlur={addForm.handleBlur}
+								onChange={addForm.handleChange}
+								helperText={
+									addForm.touched.pullRequest &&
+									addForm.errors.pullRequest &&
+									addForm.errors.pullRequest
+								}
+								error={!!(addForm.touched.pullRequest && addForm.errors.pullRequest)}
+							/>
+						</Grid>
+						<Grid item xs={2}>
+							<FormControlLabel
+								control={
+									<Checkbox
+										checked={addForm.values.completed}
+										onChange={addForm.handleChange}
+										name="completed"
+										onBlur={addForm.handleBlur}
+									/>
+								}
+								label="Completed?"
+								labelPlacement="top"
+							/>
+						</Grid>
+						<Grid item xs={2}>
+							<Button
+								className={classes.primaryButton}
+								startIcon={<Add />}
+								type="submit"
+								variant="contained"
+								color="primary"
+							>
+								Add
+							</Button>
+						</Grid>
+					</Grid>
+				</form>
+			</Paper>
+			<Paper variant="elevation" className={classes.listPaper}>
+				<List className={classes.list}>
+					<ListItem className={classes.listHeader}>
+						<Grid container spacing={2} className={classes.filterGrid}>
 							<Grid item xs={2}>
 								<FormControlLabel
 									control={
-										<Checkbox
-											checked={addForm.values.completed}
-											onChange={addForm.handleChange}
-											name="completed"
-											onBlur={addForm.handleBlur}
+										<Switch
+											checked={hideCompleted}
+											onChange={() => search("", true)}
+											color="secondary"
 										/>
 									}
-									label="Completed?"
+									label="Hide Completed"
 									labelPlacement="top"
 								/>
 							</Grid>
-							<Grid item xs={2}>
-								<Button type="submit" variant="contained" color="primary">
-									Add
-								</Button>
-							</Grid>
-						</Grid>
-					</form>
-				</CardContent>
-			</Card>
-			<Grid container spacing={2}>
-				<Grid item xs={3}>
-					<FormControl variant="outlined">
-						<InputLabel>Sort By</InputLabel>
-						<Select
-							value={sortBy}
-							onChange={(event) => {
-								setSortBy(event.target.value as keyof ProjectTask);
-								sort(event.target.value as keyof ProjectTask);
-							}}
-							label="Sort By"
-						>
-							{SORT_BY.map((option, index: number) => {
-								return (
-									<MenuItem key={index} value={option.key}>
-										{option.text}
-									</MenuItem>
-								);
-							})}
-						</Select>
-					</FormControl>
-					<IconButton
-						aria-label="sort order"
-						onClick={() => {
-							if (!sorted) {
-								sort(sortBy, sortOrder);
-							} else {
-								sort(sortBy, !sortOrder);
-							}
-						}}
-					>
-						<Sort
-							style={{ transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)" }}
-						/>
-					</IconButton>
-				</Grid>
-				<Grid item xs={9} container justify="flex-end">
-					<FormControlLabel
-						control={<Switch checked={hideCompleted} onChange={() => search("", true)} color="primary" />}
-						label="Hide Completed"
-						labelPlacement="start"
-					/>
-
-					<FormControl variant="outlined">
-						<InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
-						<OutlinedInput
-							type="text"
-							value={searchQuery}
-							onChange={(e) => {
-								setSearchQuery(e.target.value);
-								search(e.target.value);
-							}}
-							endAdornment={
-								<InputAdornment position="end">
+							<Grid item xs={10} container justify="flex-end" alignItems="center">
+								<Paper className={classes.search} variant="outlined">
+									<InputBase
+										placeholder="Search by project task name"
+										type="text"
+										value={searchQuery}
+										onChange={(e) => {
+											setSearchQuery(e.target.value);
+											search(e.target.value);
+										}}
+										fullWidth
+									/>
 									{searchQuery ? (
 										<IconButton
-											aria-label="close"
+											aria-label="search"
 											edge="end"
 											onClick={() => {
 												setSearchQuery("");
@@ -475,148 +453,209 @@ export const ProjectTasks = (): ReactElement => {
 											<Search />
 										</IconButton>
 									)}
-								</InputAdornment>
-							}
-							labelWidth={70}
-						/>
-					</FormControl>
-				</Grid>
-			</Grid>
-			<List>
-				{isLoading
-					? listSkeletons()
-					: paginatedProjectTasks?.map((gitIssue: ProjectTask, index: number) => {
-							return (
-								<React.Fragment key={index}>
-									<ListItem>
-										<Grid container spacing={2}>
-											{editIndex === index ? (
-												<Grid container item xs={10}>
-													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
-														<Grid xs={6} item className={classes.gridRightMargin}>
-															<TextField
-																variant="standard"
-																name="title"
-																label="Title"
-																fullWidth
-																value={editForm.values.title}
-																onBlur={editForm.handleBlur}
-																onChange={editForm.handleChange}
-																helperText={
-																	editForm.touched.title &&
-																	editForm.errors.title &&
-																	editForm.errors.title
-																}
-																error={
-																	!!(editForm.touched.title && editForm.errors.title)
-																}
-															/>
-														</Grid>
-														<Grid xs={6} item>
-															<TextField
-																variant="standard"
-																name="pullRequest"
-																label="PullRequest"
-																fullWidth
-																value={editForm.values.pullRequest}
-																onBlur={editForm.handleBlur}
-																onChange={editForm.handleChange}
-																helperText={
-																	editForm.touched.pullRequest &&
-																	editForm.errors.pullRequest &&
-																	editForm.errors.pullRequest
-																}
-																error={
-																	!!(
-																		editForm.touched.pullRequest &&
-																		editForm.errors.pullRequest
-																	)
-																}
-															/>
-														</Grid>
-													</form>
-												</Grid>
-											) : (
-												<>
-													<Grid item xs={1}>
-														<FormControlLabel
-															control={
-																<Checkbox
-																	checked={gitIssue.Completed === "yes"}
-																	onChange={(event, checked) =>
-																		handleCompleted(checked, gitIssue)
+								</Paper>
+							</Grid>
+						</Grid>
+					</ListItem>
+					<ListItem className={classes.listHeader}>
+						<Grid container spacing={2}>
+							<Grid container item xs={6}>
+								<IconButton
+									aria-label="sort order"
+									onClick={() => {
+										setSortBy("Title");
+										if (!sorted) {
+											sort("Title", sortOrder);
+										} else {
+											sort("Title", !sortOrder);
+										}
+									}}
+									size="small"
+									className={classes.sortButton}
+								>
+									<Sort
+										style={{
+											transform: sorted
+												? !sortOrder
+													? "scaleY(-1)"
+													: "scaleY(1)"
+												: "scaleY(-1)",
+										}}
+									/>
+								</IconButton>
+								<Typography variant="subtitle1">Task Name</Typography>
+							</Grid>
+							<Grid container item xs={4}>
+								<IconButton
+									aria-label="sort order"
+									onClick={() => {
+										setSortBy("PullRequest");
+										if (!sorted) {
+											sort("PullRequest", sortOrder);
+										} else {
+											sort("PullRequest", !sortOrder);
+										}
+									}}
+									size="small"
+									className={classes.sortButton}
+								>
+									<Sort
+										style={{
+											transform: sorted
+												? !sortOrder
+													? "scaleY(-1)"
+													: "scaleY(1)"
+												: "scaleY(-1)",
+										}}
+									/>
+								</IconButton>
+								<Typography variant="subtitle1">Pull Request</Typography>
+							</Grid>
+						</Grid>
+					</ListItem>
+					{isLoading
+						? listSkeletons()
+						: paginatedProjectTasks?.map((gitIssue: ProjectTask, index: number) => {
+								return (
+									<React.Fragment key={index}>
+										<ListItem>
+											<Grid container spacing={2}>
+												{editIndex === index ? (
+													<Grid container item xs={10}>
+														<form
+															onSubmit={editForm.handleSubmit}
+															className={classes.gridForm}
+														>
+															<Grid xs={6} item className={classes.gridRightMargin}>
+																<TextField
+																	variant="standard"
+																	name="title"
+																	label="Title"
+																	fullWidth
+																	value={editForm.values.title}
+																	onBlur={editForm.handleBlur}
+																	onChange={editForm.handleChange}
+																	helperText={
+																		editForm.touched.title &&
+																		editForm.errors.title &&
+																		editForm.errors.title
 																	}
-																	name="completed"
+																	error={
+																		!!(
+																			editForm.touched.title &&
+																			editForm.errors.title
+																		)
+																	}
 																/>
-															}
-															label=""
-														/>
+															</Grid>
+															<Grid xs={6} item>
+																<TextField
+																	variant="standard"
+																	name="pullRequest"
+																	label="PullRequest"
+																	fullWidth
+																	value={editForm.values.pullRequest}
+																	onBlur={editForm.handleBlur}
+																	onChange={editForm.handleChange}
+																	helperText={
+																		editForm.touched.pullRequest &&
+																		editForm.errors.pullRequest &&
+																		editForm.errors.pullRequest
+																	}
+																	error={
+																		!!(
+																			editForm.touched.pullRequest &&
+																			editForm.errors.pullRequest
+																		)
+																	}
+																/>
+															</Grid>
+														</form>
 													</Grid>
-													<Grid container alignItems="center" item xs={5}>
-														<Typography component="h4">{gitIssue.Title}</Typography>
-													</Grid>
-													<Grid container alignItems="center" item xs={4}>
-														<Typography component="h4">{gitIssue.PullRequest}</Typography>
-													</Grid>
-												</>
-											)}
-											<Grid container justify="flex-end" item xs={2}>
-												{editIndex !== index && (
+												) : (
+													<>
+														<Grid item xs={1}>
+															<FormControlLabel
+																control={
+																	<Checkbox
+																		checked={gitIssue.Completed === "yes"}
+																		onChange={(event, checked) =>
+																			handleCompleted(checked, gitIssue)
+																		}
+																		name="completed"
+																	/>
+																}
+																label=""
+															/>
+														</Grid>
+														<Grid container alignItems="center" item xs={5}>
+															<Typography component="h4">{gitIssue.Title}</Typography>
+														</Grid>
+														<Grid container alignItems="center" item xs={4}>
+															<Typography component="h4">
+																{gitIssue.PullRequest}
+															</Typography>
+														</Grid>
+													</>
+												)}
+												<Grid container justify="flex-end" item xs={2}>
+													{editIndex !== index && (
+														<IconButton
+															aria-label="edit"
+															onClick={() => {
+																setEditIndex(index);
+															}}
+														>
+															<Edit />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															onClick={() => editForm.handleSubmit()}
+															type="submit"
+															aria-label="save"
+														>
+															<Save />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															aria-label="close"
+															onClick={() => {
+																setEditIndex(-1);
+															}}
+														>
+															<Close />
+														</IconButton>
+													)}
 													<IconButton
-														aria-label="edit"
+														aria-label="delete"
 														onClick={() => {
-															setEditIndex(index);
+															setDeleteIndex(parseInt(gitIssue.id));
 														}}
 													>
-														<Edit />
+														<Delete />
 													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														onClick={() => editForm.handleSubmit()}
-														type="submit"
-														aria-label="save"
-													>
-														<Save />
-													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														aria-label="close"
-														onClick={() => {
-															setEditIndex(-1);
-														}}
-													>
-														<Close />
-													</IconButton>
-												)}
-												<IconButton
-													aria-label="delete"
-													onClick={() => {
-														setDeleteIndex(parseInt(gitIssue.id));
-													}}
-												>
-													<Delete />
-												</IconButton>
+												</Grid>
 											</Grid>
-										</Grid>
-									</ListItem>
-									{paginatedProjectTasks.length - 1 !== index && <Divider />}
-								</React.Fragment>
-							);
-					  })}
-				{!isLoading && projectTasks.length > 10 && (
-					<Pagination
-						count={Math.ceil(filteredProjectTasks.length / itemsPerPage)}
-						page={page}
-						onChange={handlePageChange}
-						showFirstButton
-						showLastButton
-						color="primary"
-						className={classes.pagination}
-					/>
-				)}
-			</List>
+										</ListItem>
+										{paginatedProjectTasks.length - 1 !== index && <Divider />}
+									</React.Fragment>
+								);
+						  })}
+					{!isLoading && projectTasks.length > 10 && (
+						<Pagination
+							count={Math.ceil(filteredProjectTasks.length / itemsPerPage)}
+							page={page}
+							onChange={handlePageChange}
+							showFirstButton
+							showLastButton
+							color="primary"
+							className={classes.pagination}
+						/>
+					)}
+				</List>
+			</Paper>
 		</>
 	);
 };
