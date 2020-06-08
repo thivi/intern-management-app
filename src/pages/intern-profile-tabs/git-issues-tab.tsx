@@ -1,18 +1,5 @@
 import React, { ReactElement, useState, ChangeEvent, useEffect } from "react";
-import {
-	Grid,
-	List,
-	ListItem,
-	Link,
-	Divider,
-	IconButton,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	InputAdornment,
-	OutlinedInput,
-} from "@material-ui/core";
+import { Grid, List, ListItem, Link, Divider, IconButton, Typography, Paper, InputBase } from "@material-ui/core";
 import { GitIssue } from "../../models";
 import { Close, Sort, Search } from "@material-ui/icons";
 import { Pagination } from "@material-ui/lab";
@@ -122,86 +109,75 @@ export const GitIssuesTab = (props: GitIssuesTabPropsInterface): ReactElement =>
 
 	return (
 		<>
-			<Grid container spacing={2}>
-				<Grid item xs={3}>
-					<FormControl variant="outlined">
-						<InputLabel>Sort By</InputLabel>
-						<Select
-							value={sortBy}
-							onChange={(event) => {
-								setSortBy(event.target.value as keyof GitIssue);
-								sort(event.target.value as keyof GitIssue);
-							}}
-							label="Sort By"
-						>
-							{SORT_BY.map((option, index: number) => {
-								return (
-									<MenuItem key={index} value={option.key}>
-										{option.text}
-									</MenuItem>
-								);
-							})}
-						</Select>
-					</FormControl>
-					<IconButton
-						aria-label="sort order"
-						onClick={() => {
-							if (!sorted) {
-								sort(sortBy, sortOrder);
-							} else {
-								sort(sortBy, !sortOrder);
-							}
-						}}
-					>
-						<Sort
-							style={{ transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)" }}
-						/>
-					</IconButton>
-				</Grid>
-				<Grid item xs={9} container justify="flex-end">
-					<FormControl variant="outlined">
-						<InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
-						<OutlinedInput
-							type="text"
-							value={searchQuery}
-							onChange={(e) => {
-								setSearchQuery(e.target.value);
-								search(e.target.value);
-							}}
-							endAdornment={
-								<InputAdornment position="end">
-									{searchQuery ? (
-										<IconButton
-											aria-label="search"
-											edge="end"
-											onClick={() => {
-												setSearchQuery("");
-												search("");
-											}}
-										>
-											<Close />
-										</IconButton>
-									) : (
-										<IconButton aria-label="search" edge="end">
-											<Search />
-										</IconButton>
-									)}
-								</InputAdornment>
-							}
-							labelWidth={70}
-						/>
-					</FormControl>
-				</Grid>
-			</Grid>
-			<List>
+			<List className={classes.list}>
+				<ListItem className={classes.listHeader}>
+					<Grid container spacing={2} className={classes.filterGrid}>
+						<Grid item xs={12} container justify="flex-end">
+							<Paper className={classes.search} variant="outlined">
+								<InputBase
+									placeholder="Search by issue title"
+									type="text"
+									value={searchQuery}
+									onChange={(e) => {
+										setSearchQuery(e.target.value);
+										search(e.target.value);
+									}}
+									fullWidth
+								/>
+								{searchQuery ? (
+									<IconButton
+										aria-label="search"
+										edge="end"
+										onClick={() => {
+											setSearchQuery("");
+											search("");
+										}}
+									>
+										<Close />
+									</IconButton>
+								) : (
+									<IconButton aria-label="search" edge="end">
+										<Search />
+									</IconButton>
+								)}
+							</Paper>
+						</Grid>
+					</Grid>
+				</ListItem>
+				<ListItem className={classes.listHeader}>
+					<Grid container spacing={2}>
+						<Grid container item xs={12}>
+							<IconButton
+								aria-label="sort order"
+								onClick={() => {
+									setSortBy("Issue_Title");
+									if (!sorted) {
+										sort("Issue_Title", sortOrder);
+									} else {
+										sort("Issue_Title", !sortOrder);
+									}
+								}}
+								size="small"
+								className={classes.sortButton}
+							>
+								<Sort
+									style={{
+										transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)",
+									}}
+								/>
+							</IconButton>
+							<Typography variant="subtitle1">Git Issue Title</Typography>
+						</Grid>
+					</Grid>
+				</ListItem>
 				{paginatedGitIssues?.map((gitIssue: GitIssue, index: number) => {
 					return (
 						<React.Fragment key={index}>
 							<ListItem>
 								<Grid container spacing={2}>
 									<Grid container alignItems="center" item xs={12}>
-										<Link target="_blank" href={gitIssue.Link}>
-											{gitIssue.Issue_Title}
+										<Link target="_blank" href={gitIssue.Link} className={classes.noButtonList}>
+											<Typography>{gitIssue.Issue_Title}</Typography>
 										</Link>
 									</Grid>
 								</Grid>
