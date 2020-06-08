@@ -61,3 +61,7 @@ export const filterGrid = (theme: Theme) => ({
 	marginTop: theme.spacing(2),
 	marginBottom: theme.spacing(2),
 });
+
+export const linkText = (theme: Theme) => ({
+	cursor: "pointer",
+});

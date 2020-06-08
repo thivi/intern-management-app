@@ -12,6 +12,7 @@ import {
 	sortButton,
 	search,
 	filterGrid,
+	linkText,
 } from "./list-page";
 import { popOver, primaryButton, leftAlignedGrid } from "./generic";
 import { profileAvatar, fieldsHeader, fieldsPaper } from "./profile";
@@ -48,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	tileRow: tileRow(theme),
 	tileGrid: tileGrid(theme),
 	tileColumn: tileColumn(theme),
+	linkText: linkText(theme),
 }));
 
 export default useStyles;
