@@ -37,6 +37,11 @@ const SORT_BY: {
 		text: "Mentor",
 	},
 ];
+interface Sort {
+	Title: boolean;
+	Mentor: boolean;
+	[key: string]: any;
+}
 
 export const Projects = (): ReactElement => {
 	const [projects, setProjects] = useState<Project[]>([]);
@@ -49,10 +54,10 @@ export const Projects = (): ReactElement => {
 	const [page, setPage] = useState(1);
 	const [sortBy, setSortBy] = useState(SORT_BY[0].key);
 	// true-Ascending false-Descending
-	const [sortOrder, setSortOrder] = useState(true);
+	const [sortOrder, setSortOrder] = useState<Sort>({ Title: true, Mentor: true });
 	const [searchQuery, setSearchQuery] = useState("");
 	const [deleteIndex, setDeleteIndex] = useState(-1);
-	const [sorted, setSorted] = useState(false);
+	const [sorted, setSorted] = useState<Sort>({ Title: false, Mentor: false });
 
 	const itemsPerPage = 10;
 
@@ -88,13 +93,13 @@ export const Projects = (): ReactElement => {
 
 				let issuesToPaginate;
 
-				if (sorted) {
+				if (sorted[sortBy]) {
 					let sortedArray = [...filteredIssues].sort((a: Project, b: Project) => {
 						if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 						else return -1;
 					});
 
-					if (!sortOrder) sortedArray = sortedArray.reverse();
+					if (!sortOrder[sortBy]) sortedArray = sortedArray.reverse();
 
 					issuesToPaginate = [...sortedArray];
 				} else {
@@ -159,8 +164,13 @@ export const Projects = (): ReactElement => {
 		setFilteredProjects(sortedArray);
 		setPaginatedProjects(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
-		sorted && setSortOrder(order);
-		setSorted(true);
+
+		const tempSortOrder: Sort = { ...sortOrder };
+		tempSortOrder[sortBy] = order;
+		sorted[sortBy] && setSortOrder(tempSortOrder);
+		const tempSorted: Sort = { ...sorted };
+		tempSorted[sortBy] = true;
+		setSorted(tempSorted);
 	};
 
 	const search = (search: string) => {
@@ -390,10 +400,10 @@ export const Projects = (): ReactElement => {
 									aria-label="sort order"
 									onClick={() => {
 										setSortBy("Title");
-										if (!sorted) {
-											sort("Title", sortOrder);
+										if (!sorted["Title"]) {
+											sort("Title", sortOrder["Title"]);
 										} else {
-											sort("Title", !sortOrder);
+											sort("Title", !sortOrder["Title"]);
 										}
 									}}
 									size="small"
@@ -401,8 +411,8 @@ export const Projects = (): ReactElement => {
 								>
 									<Sort
 										style={{
-											transform: sorted
-												? !sortOrder
+											transform: sorted["Title"]
+												? !sortOrder["Title"]
 													? "scaleY(-1)"
 													: "scaleY(1)"
 												: "scaleY(-1)",
@@ -416,10 +426,10 @@ export const Projects = (): ReactElement => {
 									aria-label="sort order"
 									onClick={() => {
 										setSortBy("Mentor");
-										if (!sorted) {
-											sort("Mentor", sortOrder);
+										if (!sorted["Mentor"]) {
+											sort("Mentor", sortOrder["Mentor"]);
 										} else {
-											sort("Mentor", !sortOrder);
+											sort("Mentor", !sortOrder["Mentor"]);
 										}
 									}}
 									size="small"
@@ -427,8 +437,8 @@ export const Projects = (): ReactElement => {
 								>
 									<Sort
 										style={{
-											transform: sorted
-												? !sortOrder
+											transform: sorted["Mentor"]
+												? !sortOrder["Mentor"]
 													? "scaleY(-1)"
 													: "scaleY(1)"
 												: "scaleY(-1)",
