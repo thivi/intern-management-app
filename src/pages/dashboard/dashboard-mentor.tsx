@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useCallback, useEffect } from "react";
+import React, { ReactElement, useState, useCallback, useEffect, useContext } from "react";
 import { Typography, Button, Grid, Paper } from "@material-ui/core";
 import {
 	Blog,
@@ -26,6 +26,8 @@ import { Chart, PieSeries, Title, Legend, Tooltip } from "@devexpress/dx-react-c
 
 import { Animation, EventTracker } from "@devexpress/dx-react-chart";
 import useStyles from "../../theme";
+import { findTimeofTheDay } from "../../utils";
+import { AuthContext } from "../../helpers";
 
 export const DashboardMentor = (): ReactElement => {
 	const [internInfo, setInternInfo] = useState<InternInfo>(null);
@@ -33,6 +35,8 @@ export const DashboardMentor = (): ReactElement => {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const history = useHistory();
+
+	const { authState } = useContext(AuthContext);
 
 	const classes = useStyles();
 
@@ -153,13 +157,24 @@ export const DashboardMentor = (): ReactElement => {
 
 	return (
 		<Grid container spacing={2}>
+			<Grid item xs={12}>
+				<Typography variant="h4">
+					Good {findTimeofTheDay()}, {authState.authData.name}!
+				</Typography>
+			</Grid>
 			<Grid item xs={6}>
 				<Paper className={classes.tile}>
 					{!isLoading && (
 						<Chart
 							data={[
-								{ type: "Completed", value: intern?.projectTasksCompletion * 100 },
-								{ type: "InComplete", value: 100 - intern?.projectTasksCompletion * 100 },
+								{
+									type: `Completed (${intern.projectTasksCompletion * 100}%)`,
+									value: intern?.projectTasksCompletion * 100,
+								},
+								{
+									type: `Incomplete (${100 - intern?.projectTasksCompletion * 100}%)`,
+									value: 100 - intern?.projectTasksCompletion * 100,
+								},
 							]}
 						>
 							<PieSeries valueField="value" argumentField="type" innerRadius={0.6} />
