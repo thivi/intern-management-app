@@ -779,7 +779,9 @@ export const Interns = (): ReactElement => {
 															<Typography>{intern.presentationsOrWebinars}</Typography>
 														</Grid>
 														<Grid container alignItems="center" item xs={2}>
-															<Typography>{intern.projectTasksCompletion}</Typography>
+															<Typography>
+																{intern.projectTasksCompletion * 100}%
+															</Typography>
 														</Grid>
 														<Grid container alignItems="center" item xs={2}>
 															<Typography>{intern.pullRequests}</Typography>
