@@ -13,9 +13,10 @@ import {
 	search,
 	filterGrid,
 	linkText,
+	noButtonList,
 } from "./list-page";
 import { popOver, primaryButton, leftAlignedGrid } from "./generic";
-import { profileAvatar, fieldsHeader, fieldsPaper } from "./profile";
+import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
 import { tile, tileRow, tileGrid, tileColumn } from "./dashboard";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,6 +51,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 	tileGrid: tileGrid(theme),
 	tileColumn: tileColumn(theme),
 	linkText: linkText(theme),
+	backButton: backButton(theme),
+	noButtonList: noButtonList(theme),
 }));
 
 export default useStyles;
