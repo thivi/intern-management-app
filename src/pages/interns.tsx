@@ -73,6 +73,17 @@ const SORT_BY: {
 	},
 ];
 
+interface Sort {
+	name: boolean;
+	blogs: boolean;
+	email: boolean;
+	gitIssues: boolean;
+	presentationsOrWebinars: boolean;
+	projectTasksCompletion: boolean;
+	pullRequests: boolean;
+	[key: string]: boolean;
+}
+
 export const Interns = (): ReactElement => {
 	const [paginatedInterns, setPaginatedInterns] = useState<Intern[]>([]);
 	const [filteredInterns, setFilteredInterns] = useState<Intern[]>([]);
@@ -81,9 +92,25 @@ export const Interns = (): ReactElement => {
 	const [page, setPage] = useState(1);
 	const [sortBy, setSortBy] = useState(SORT_BY[0].key);
 	// true-Ascending false-Descending
-	const [sortOrder, setSortOrder] = useState(true);
+	const [sortOrder, setSortOrder] = useState<Sort>({
+		name: true,
+		blogs: true,
+		email: true,
+		gitIssues: true,
+		presentationsOrWebinars: true,
+		projectTasksCompletion: true,
+		pullRequests: true,
+	});
 	const [searchQuery, setSearchQuery] = useState("");
-	const [sorted, setSorted] = useState(false);
+	const [sorted, setSorted] = useState<Sort>({
+		name: false,
+		blogs: false,
+		email: false,
+		gitIssues: false,
+		presentationsOrWebinars: false,
+		projectTasksCompletion: false,
+		pullRequests: false,
+	});
 	const [internInfo, setInternInfo] = useState<InternInfo[]>([]);
 	const [interns, setInterns] = useState<Intern[]>([]);
 	const [popOverIndex, setPopOverIndex] = useState(-1);
@@ -232,7 +259,7 @@ export const Interns = (): ReactElement => {
 
 				let internsToPaginate;
 
-				if (sorted) {
+				if (sorted[sortBy]) {
 					let sortedArray = [...filteredInterns].sort((a: Intern, b: Intern) => {
 						if (sortBy === "name" || sortBy === "email") {
 							if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
@@ -244,7 +271,7 @@ export const Interns = (): ReactElement => {
 						return -1;
 					});
 
-					if (!sortOrder) sortedArray = sortedArray.reverse();
+					if (!sortOrder[sortBy]) sortedArray = sortedArray.reverse();
 
 					internsToPaginate = [...sortedArray];
 				} else {
@@ -315,8 +342,13 @@ export const Interns = (): ReactElement => {
 		setFilteredInterns(sortedArray);
 		setPaginatedInterns(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
-		sorted && setSortOrder(order);
-		setSorted(true);
+
+		const tempSortOrder: Sort = { ...sortOrder };
+		tempSortOrder[sortBy] = order;
+		sorted[sortBy] && setSortOrder(tempSortOrder);
+		const tempSorted: Sort = { ...sorted };
+		tempSorted[sortBy] = true;
+		setSorted(tempSorted);
 	};
 
 	const search = (search: string, active?: boolean, mentees?: boolean) => {
@@ -455,10 +487,10 @@ export const Interns = (): ReactElement => {
 											aria-label="sort order"
 											onClick={() => {
 												setSortBy("name");
-												if (!sorted) {
-													sort("name", sortOrder);
+												if (!sorted["name"]) {
+													sort("name", sortOrder["name"]);
 												} else {
-													sort("name", !sortOrder);
+													sort("name", !sortOrder["name"]);
 												}
 											}}
 											size="small"
@@ -466,8 +498,8 @@ export const Interns = (): ReactElement => {
 										>
 											<Sort
 												style={{
-													transform: sorted
-														? !sortOrder
+													transform: sorted["name"]
+														? !sortOrder["name"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
 														: "scaleY(-1)",
@@ -481,10 +513,10 @@ export const Interns = (): ReactElement => {
 											aria-label="sort order"
 											onClick={() => {
 												setSortBy("blogs");
-												if (!sorted) {
-													sort("blogs", sortOrder);
+												if (!sorted["blogs"]) {
+													sort("blogs", sortOrder["blogs"]);
 												} else {
-													sort("blogs", !sortOrder);
+													sort("blogs", !sortOrder["blogs"]);
 												}
 											}}
 											size="small"
@@ -492,8 +524,8 @@ export const Interns = (): ReactElement => {
 										>
 											<Sort
 												style={{
-													transform: sorted
-														? !sortOrder
+													transform: sorted["blogs"]
+														? !sortOrder["blogs"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
 														: "scaleY(-1)",
@@ -507,10 +539,10 @@ export const Interns = (): ReactElement => {
 											aria-label="sort order"
 											onClick={() => {
 												setSortBy("gitIssues");
-												if (!sorted) {
-													sort("gitIssues", sortOrder);
+												if (!sorted["gitIssues"]) {
+													sort("gitIssues", sortOrder["gitIssues"]);
 												} else {
-													sort("gitIssues", !sortOrder);
+													sort("gitIssues", !sortOrder["gitIssues"]);
 												}
 											}}
 											size="small"
@@ -518,8 +550,8 @@ export const Interns = (): ReactElement => {
 										>
 											<Sort
 												style={{
-													transform: sorted
-														? !sortOrder
+													transform: sorted["gitIssues"]
+														? !sortOrder["gitIssues"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
 														: "scaleY(-1)",
@@ -533,10 +565,16 @@ export const Interns = (): ReactElement => {
 											aria-label="sort order"
 											onClick={() => {
 												setSortBy("presentationsOrWebinars");
-												if (!sorted) {
-													sort("presentationsOrWebinars", sortOrder);
+												if (!sorted["presentationsOrWebinars"]) {
+													sort(
+														"presentationsOrWebinars",
+														sortOrder["presentationsOrWebinars"]
+													);
 												} else {
-													sort("presentationsOrWebinars", !sortOrder);
+													sort(
+														"presentationsOrWebinars",
+														!sortOrder["presentationsOrWebinars"]
+													);
 												}
 											}}
 											size="small"
@@ -544,8 +582,8 @@ export const Interns = (): ReactElement => {
 										>
 											<Sort
 												style={{
-													transform: sorted
-														? !sortOrder
+													transform: sorted["presentationsOrWebinars"]
+														? !sortOrder["presentationsOrWebinars"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
 														: "scaleY(-1)",
@@ -559,10 +597,13 @@ export const Interns = (): ReactElement => {
 											aria-label="sort order"
 											onClick={() => {
 												setSortBy("projectTasksCompletion");
-												if (!sorted) {
-													sort("projectTasksCompletion", sortOrder);
+												if (!sorted["projectTasksCompletion"]) {
+													sort("projectTasksCompletion", sortOrder["projectTasksCompletion"]);
 												} else {
-													sort("projectTasksCompletion", !sortOrder);
+													sort(
+														"projectTasksCompletion",
+														!sortOrder["projectTasksCompletion"]
+													);
 												}
 											}}
 											size="small"
@@ -570,8 +611,8 @@ export const Interns = (): ReactElement => {
 										>
 											<Sort
 												style={{
-													transform: sorted
-														? !sortOrder
+													transform: sorted["projectTasksCompletion"]
+														? !sortOrder["projectTasksCompletion"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
 														: "scaleY(-1)",
@@ -585,10 +626,10 @@ export const Interns = (): ReactElement => {
 											aria-label="sort order"
 											onClick={() => {
 												setSortBy("pullRequests");
-												if (!sorted) {
-													sort("pullRequests", sortOrder);
+												if (!sorted["pullRequests"]) {
+													sort("pullRequests", sortOrder["pullRequests"]);
 												} else {
-													sort("pullRequests", !sortOrder);
+													sort("pullRequests", !sortOrder["pullRequests"]);
 												}
 											}}
 											size="small"
@@ -596,8 +637,8 @@ export const Interns = (): ReactElement => {
 										>
 											<Sort
 												style={{
-													transform: sorted
-														? !sortOrder
+													transform: sorted["pullRequests"]
+														? !sortOrder["pullRequests"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
 														: "scaleY(-1)",
