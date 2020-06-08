@@ -13,9 +13,9 @@ export const tileRow = (theme: Theme) => ({
 });
 
 export const tileGrid = (theme: Theme) => ({
-    height: "100%",
-    paddingRight: theme.spacing(1),
-    paddingLeft: theme.spacing(1),
+	height: "100%",
+	paddingRight: theme.spacing(1),
+	paddingLeft: theme.spacing(1),
 });
 
 export const tileColumn = (theme: Theme) => ({});
