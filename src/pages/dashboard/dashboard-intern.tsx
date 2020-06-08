@@ -33,6 +33,7 @@ import { Chart, PieSeries, Title, Legend, Tooltip } from "@devexpress/dx-react-c
 
 import { Animation, EventTracker } from "@devexpress/dx-react-chart";
 import useStyles from "../../theme";
+import { findTimeofTheDay } from "../../utils";
 
 export const DashboardIntern = (): ReactElement => {
 	const { authState } = useContext(AuthContext);
@@ -163,13 +164,24 @@ export const DashboardIntern = (): ReactElement => {
 
 	return (
 		<Grid container spacing={2}>
+			<Grid item xs={12}>
+				<Typography variant="h4">
+					Good {findTimeofTheDay()}, {authState.authData.name}!
+				</Typography>
+			</Grid>
 			<Grid item xs={6}>
 				<Paper className={classes.tile}>
 					{!isLoading && (
 						<Chart
 							data={[
-								{ type: "Completed", value: intern?.projectTasksCompletion * 100 },
-								{ type: "InComplete", value: 100 - intern?.projectTasksCompletion * 100 },
+								{
+									type: `Completed (${intern.projectTasksCompletion * 100}%)`,
+									value: intern?.projectTasksCompletion * 100,
+								},
+								{
+									type: `Incomplete (${100 - intern?.projectTasksCompletion * 100}%)`,
+									value: 100 - intern?.projectTasksCompletion * 100,
+								},
 							]}
 						>
 							<PieSeries valueField="value" argumentField="type" innerRadius={0.6} />
