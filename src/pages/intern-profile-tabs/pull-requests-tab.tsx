@@ -1,18 +1,5 @@
 import React, { ReactElement, useState, useEffect, ChangeEvent } from "react";
-import {
-	Grid,
-	List,
-	ListItem,
-	Link,
-	Divider,
-	IconButton,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	InputAdornment,
-	OutlinedInput,
-} from "@material-ui/core";
+import { Grid, List, ListItem, Link, Divider, IconButton, Typography, InputBase, Paper } from "@material-ui/core";
 import { PullRequest } from "../../models";
 import { Close, Sort, Search } from "@material-ui/icons";
 import { Pagination } from "@material-ui/lab";
@@ -122,86 +109,75 @@ export const PullRequestsTab = (props: PullRequestsTabPropsInterface): ReactElem
 
 	return (
 		<>
-			<Grid container spacing={2}>
-				<Grid item xs={3}>
-					<FormControl variant="outlined">
-						<InputLabel>Sort By</InputLabel>
-						<Select
-							value={sortBy}
-							onChange={(event) => {
-								setSortBy(event.target.value as keyof PullRequest);
-								sort(event.target.value as keyof PullRequest);
-							}}
-							label="Sort By"
-						>
-							{SORT_BY.map((option, index: number) => {
-								return (
-									<MenuItem key={index} value={option.key}>
-										{option.text}
-									</MenuItem>
-								);
-							})}
-						</Select>
-					</FormControl>
-					<IconButton
-						aria-label="sort order"
-						onClick={() => {
-							if (!sorted) {
-								sort(sortBy, sortOrder);
-							} else {
-								sort(sortBy, !sortOrder);
-							}
-						}}
-					>
-						<Sort
-							style={{ transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)" }}
-						/>
-					</IconButton>
-				</Grid>
-				<Grid item xs={9} container justify="flex-end">
-					<FormControl variant="outlined">
-						<InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
-						<OutlinedInput
-							type="text"
-							value={searchQuery}
-							onChange={(e) => {
-								setSearchQuery(e.target.value);
-								search(e.target.value);
-							}}
-							endAdornment={
-								<InputAdornment position="end">
-									{searchQuery ? (
-										<IconButton
-											aria-label="search"
-											edge="end"
-											onClick={() => {
-												setSearchQuery("");
-												search("");
-											}}
-										>
-											<Close />
-										</IconButton>
-									) : (
-										<IconButton aria-label="search" edge="end">
-											<Search />
-										</IconButton>
-									)}
-								</InputAdornment>
-							}
-							labelWidth={70}
-						/>
-					</FormControl>
-				</Grid>
-			</Grid>
-			<List>
+			<List className={classes.list}>
+				<ListItem className={classes.listHeader}>
+					<Grid container spacing={2} className={classes.filterGrid}>
+						<Grid item xs={12} container justify="flex-end">
+							<Paper className={classes.search} variant="outlined">
+								<InputBase
+									placeholder="Search by pull request title"
+									type="text"
+									value={searchQuery}
+									onChange={(e) => {
+										setSearchQuery(e.target.value);
+										search(e.target.value);
+									}}
+									fullWidth
+								/>
+								{searchQuery ? (
+									<IconButton
+										aria-label="search"
+										edge="end"
+										onClick={() => {
+											setSearchQuery("");
+											search("");
+										}}
+									>
+										<Close />
+									</IconButton>
+								) : (
+									<IconButton aria-label="search" edge="end">
+										<Search />
+									</IconButton>
+								)}
+							</Paper>
+						</Grid>
+					</Grid>
+				</ListItem>
+				<ListItem className={classes.listHeader}>
+					<Grid container spacing={2}>
+						<Grid container item xs={12}>
+							<IconButton
+								aria-label="sort order"
+								onClick={() => {
+									setSortBy("Title");
+									if (!sorted) {
+										sort("Title", sortOrder);
+									} else {
+										sort("Title", !sortOrder);
+									}
+								}}
+								size="small"
+								className={classes.sortButton}
+							>
+								<Sort
+									style={{
+										transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)",
+									}}
+								/>
+							</IconButton>
+							<Typography variant="subtitle1">Pull Request Title</Typography>
+						</Grid>
+					</Grid>
+				</ListItem>
 				{paginatedPullRequests?.map((gitIssue: PullRequest, index: number) => {
 					return (
 						<React.Fragment key={index}>
 							<ListItem>
 								<Grid container spacing={2}>
 									<Grid container alignItems="center" item xs={12}>
-										<Link target="_blank" href={gitIssue.Link}>
-											{gitIssue.Title}
+										<Link target="_blank" href={gitIssue.Link} className={classes.noButtonList}>
+											<Typography>{gitIssue.Title}</Typography>
 										</Link>
 									</Grid>
 								</Grid>
