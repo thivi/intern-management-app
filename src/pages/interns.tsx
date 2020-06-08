@@ -675,6 +675,8 @@ export const Interns = (): ReactElement => {
 																		)
 																	);
 																}}
+																color="primary"
+																className={classes.linkText}
 															>
 																{intern.name}
 															</Typography>
@@ -689,7 +691,7 @@ export const Interns = (): ReactElement => {
 																}}
 																anchorOrigin={{
 																	vertical: "bottom",
-																	horizontal: "left",
+																	horizontal: "right",
 																}}
 																transformOrigin={{
 																	vertical: "top",
@@ -697,12 +699,21 @@ export const Interns = (): ReactElement => {
 																}}
 															>
 																<List>
+																	<Typography variant="subtitle1">Contact</Typography>
 																	<ListItem>
 																		<ListItemText
 																			secondary="Email"
 																			primary={intern.profile.Email_ID}
 																		/>
 																	</ListItem>
+																	<ListItem>
+																		<ListItemText
+																			secondary="Contact No."
+																			primary={intern.profile.Contact_no}
+																		/>
+																	</ListItem>
+
+																	<Typography variant="subtitle1">Mentors</Typography>
 																	<ListItem>
 																		<ListItemText
 																			secondary="Mentor"
@@ -715,18 +726,10 @@ export const Interns = (): ReactElement => {
 																			primary={intern.profile.Co_mentor}
 																		/>
 																	</ListItem>
-																	<ListItem>
-																		<ListItemText
-																			secondary="Contact No."
-																			primary={intern.profile.Contact_no}
-																		/>
-																	</ListItem>
-																	<ListItem>
-																		<ListItemText
-																			secondary="University"
-																			primary={intern.profile.University}
-																		/>
-																	</ListItem>
+
+																	<Typography variant="subtitle1">
+																		Internship Period
+																	</Typography>
 																	<ListItem>
 																		<ListItemText
 																			secondary="Joined Date"
@@ -739,6 +742,16 @@ export const Interns = (): ReactElement => {
 																			primary={intern.profile.Leaving_date}
 																		/>
 																	</ListItem>
+
+																	<Typography variant="subtitle1">From</Typography>
+																	<ListItem>
+																		<ListItemText
+																			secondary="University"
+																			primary={intern.profile.University}
+																		/>
+																	</ListItem>
+
+																	<Typography variant="subtitle1">Career</Typography>
 																	<ListItem>
 																		<ListItemText
 																			secondary="Project"
