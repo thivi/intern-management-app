@@ -64,4 +64,11 @@ export const filterGrid = (theme: Theme) => ({
 
 export const linkText = (theme: Theme) => ({
 	cursor: "pointer",
+	paddingTop: theme.spacing(1),
+	paddingBottom: theme.spacing(1),
+});
+
+export const noButtonList = (theme: Theme) => ({
+	paddingTop: theme.spacing(1),
+	paddingBottom: theme.spacing(1),
 });
