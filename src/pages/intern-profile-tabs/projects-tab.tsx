@@ -1,18 +1,5 @@
 import React, { ReactElement, useState, useEffect, ChangeEvent } from "react";
-import {
-	Grid,
-	List,
-	ListItem,
-	Divider,
-	IconButton,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	InputAdornment,
-	OutlinedInput,
-	Typography,
-} from "@material-ui/core";
+import { Grid, List, ListItem, Divider, IconButton, Paper, InputBase, Typography } from "@material-ui/core";
 import { Project } from "../../models";
 import { Close, Sort, Search } from "@material-ui/icons";
 import { Pagination } from "@material-ui/lab";
@@ -31,6 +18,13 @@ const SORT_BY: {
 		text: "Mentor",
 	},
 ];
+
+interface Sort {
+	Title: boolean;
+	Mentor: boolean;
+	[key: string]: boolean;
+}
+
 interface ProjectsTabPropsInterface {
 	projects: Project[];
 }
@@ -41,9 +35,9 @@ export const ProjectsTab = (props: ProjectsTabPropsInterface): ReactElement => {
 	const [page, setPage] = useState(1);
 	const [sortBy, setSortBy] = useState(SORT_BY[0].key);
 	// true-Ascending false-Descending
-	const [sortOrder, setSortOrder] = useState(true);
+	const [sortOrder, setSortOrder] = useState<Sort>({ Title: true, Mentor: true });
 	const [searchQuery, setSearchQuery] = useState("");
-	const [sorted, setSorted] = useState(false);
+	const [sorted, setSorted] = useState<Sort>({ Title: false, Mentor: false });
 
 	const itemsPerPage = 10;
 
@@ -56,13 +50,13 @@ export const ProjectsTab = (props: ProjectsTabPropsInterface): ReactElement => {
 
 		let issuesToPaginate;
 
-		if (sorted) {
+		if (sorted[sortBy]) {
 			let sortedArray = [...filteredIssues].sort((a: Project, b: Project) => {
 				if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 				else return -1;
 			});
 
-			if (!sortOrder) sortedArray = sortedArray.reverse();
+			if (!sortOrder[sortBy]) sortedArray = sortedArray.reverse();
 
 			issuesToPaginate = [...sortedArray];
 		} else {
@@ -93,8 +87,13 @@ export const ProjectsTab = (props: ProjectsTabPropsInterface): ReactElement => {
 		setFilteredProjects(sortedArray);
 		setPaginatedProjects(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
-		sorted && setSortOrder(order);
-		setSorted(true);
+
+		const tempSortOrder: Sort = { ...sortOrder };
+		tempSortOrder[sortBy] = order;
+		sorted[sortBy] && setSortOrder(tempSortOrder);
+		const tempSorted: Sort = { ...sorted };
+		tempSorted[sortBy] = true;
+		setSorted(tempSorted);
 	};
 
 	const search = (search: string) => {
@@ -124,91 +123,110 @@ export const ProjectsTab = (props: ProjectsTabPropsInterface): ReactElement => {
 
 	return (
 		<>
-			<Grid container spacing={2}>
-				<Grid item xs={3}>
-					<FormControl variant="outlined">
-						<InputLabel>Sort By</InputLabel>
-						<Select
-							value={sortBy}
-							onChange={(event) => {
-								setSortBy(event.target.value as keyof Project);
-								sort(event.target.value as keyof Project);
-							}}
-							label="Sort By"
-						>
-							{SORT_BY.map((option, index: number) => {
-								return (
-									<MenuItem key={index} value={option.key}>
-										{option.text}
-									</MenuItem>
-								);
-							})}
-						</Select>
-					</FormControl>
-					<IconButton
-						aria-label="sort order"
-						onClick={() => {
-							if (!sorted) {
-								sort(sortBy, sortOrder);
-							} else {
-								sort(sortBy, !sortOrder);
-							}
-						}}
-					>
-						<Sort
-							style={{ transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)" }}
-						/>
-					</IconButton>
-				</Grid>
-				<Grid item xs={9} container justify="flex-end">
-					<FormControl variant="outlined">
-						<InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
-						<OutlinedInput
-							type="text"
-							value={searchQuery}
-							onChange={(e) => {
-								setSearchQuery(e.target.value);
-								search(e.target.value);
-							}}
-							endAdornment={
-								<InputAdornment position="end">
-									{searchQuery ? (
-										<IconButton
-											aria-label="search"
-											edge="end"
-											onClick={() => {
-												setSearchQuery("");
-												search("");
-											}}
-										>
-											<Close />
-										</IconButton>
-									) : (
-										<IconButton aria-label="search" edge="end">
-											<Search />
-										</IconButton>
-									)}
-								</InputAdornment>
-							}
-							labelWidth={70}
-						/>
-					</FormControl>
-				</Grid>
-			</Grid>
-			<List>
+			<List className={classes.list}>
+				<ListItem className={classes.listHeader}>
+					<Grid container spacing={2} className={classes.filterGrid}>
+						<Grid item xs={12} container justify="flex-end">
+							<Paper className={classes.search} variant="outlined">
+								<InputBase
+									placeholder="Search by project name"
+									type="text"
+									value={searchQuery}
+									onChange={(e) => {
+										setSearchQuery(e.target.value);
+										search(e.target.value);
+									}}
+									fullWidth
+								/>
+								{searchQuery ? (
+									<IconButton
+										aria-label="search"
+										edge="end"
+										onClick={() => {
+											setSearchQuery("");
+											search("");
+										}}
+									>
+										<Close />
+									</IconButton>
+								) : (
+									<IconButton aria-label="search" edge="end">
+										<Search />
+									</IconButton>
+								)}
+							</Paper>
+						</Grid>
+					</Grid>
+				</ListItem>
+				<ListItem className={classes.listHeader}>
+					<Grid container spacing={2}>
+						<Grid container item xs={6}>
+							<IconButton
+								aria-label="sort order"
+								onClick={() => {
+									setSortBy("Title");
+									if (!sorted["Title"]) {
+										sort("Title", sortOrder["Title"]);
+									} else {
+										sort("Title", !sortOrder["Title"]);
+									}
+								}}
+								size="small"
+								className={classes.sortButton}
+							>
+								<Sort
+									style={{
+										transform: sorted["Title"]
+											? !sortOrder["Title"]
+												? "scaleY(-1)"
+												: "scaleY(1)"
+											: "scaleY(-1)",
+									}}
+								/>
+							</IconButton>
+							<Typography variant="subtitle1">Project Name</Typography>
+						</Grid>
+						<Grid container item xs={6}>
+							<IconButton
+								aria-label="sort order"
+								onClick={() => {
+									setSortBy("Mentor");
+									if (!sorted["Mentor"]) {
+										sort("Mentor", sortOrder["Mentor"]);
+									} else {
+										sort("Mentor", !sortOrder["Mentor"]);
+									}
+								}}
+								size="small"
+								className={classes.sortButton}
+							>
+								<Sort
+									style={{
+										transform: sorted["Mentor"]
+											? !sortOrder["Mentor"]
+												? "scaleY(-1)"
+												: "scaleY(1)"
+											: "scaleY(-1)",
+									}}
+								/>
+							</IconButton>
+							<Typography variant="subtitle1">Mentor</Typography>
+						</Grid>
+					</Grid>
+				</ListItem>
 				{paginatedProjects?.map((gitIssue: Project, index: number) => {
 					return (
 						<React.Fragment key={index}>
 							<ListItem>
 								<Grid container spacing={2}>
-									<>
-										<Grid container alignItems="center" item xs={6}>
-											<Typography component="h4">{gitIssue.Title}</Typography>
-										</Grid>
-										<Grid container alignItems="center" item xs={6}>
-											<Typography component="h4">{gitIssue.Mentor}</Typography>
-										</Grid>
-									</>
+									<Grid container alignItems="center" item xs={6}>
+										<Typography component="h4" className={classes.noButtonList}>
+											{gitIssue.Title}
+										</Typography>
+									</Grid>
+									<Grid container alignItems="center" item xs={6}>
+										<Typography component="h4">{gitIssue.Mentor}</Typography>
+									</Grid>
 								</Grid>
 							</ListItem>
 							{paginatedProjects.length - 1 !== index && <Divider />}
