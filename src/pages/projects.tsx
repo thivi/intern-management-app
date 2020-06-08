@@ -40,7 +40,7 @@ const SORT_BY: {
 interface Sort {
 	Title: boolean;
 	Mentor: boolean;
-	[key: string]: any;
+	[key: string]: boolean;
 }
 
 export const Projects = (): ReactElement => {
