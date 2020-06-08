@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useCallback, useEffect } from "react";
-import { GridList, GridListTile, Card, CardContent, Typography, Button } from "@material-ui/core";
+import { GridList, GridListTile, Card, CardContent, Typography, Button, Grid, Paper } from "@material-ui/core";
 import {
 	Blog,
 	GitIssue,
@@ -20,11 +20,12 @@ import {
 	getProjectTasks,
 	getProjects,
 } from "../../apis";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { INTERNS } from "../../constants";
 import { Chart, PieSeries, Title, Legend, Tooltip } from "@devexpress/dx-react-chart-material-ui";
 
 import { Animation, EventTracker } from "@devexpress/dx-react-chart";
+import useStyles from "../../theme";
 
 export const DashboardMentor = (): ReactElement => {
 	const [internInfo, setInternInfo] = useState<InternInfo>(null);
@@ -32,6 +33,8 @@ export const DashboardMentor = (): ReactElement => {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const history = useHistory();
+
+	const classes = useStyles();
 
 	const getInternsCall = useCallback(() => {
 		setIsLoading(true);
@@ -149,95 +152,34 @@ export const DashboardMentor = (): ReactElement => {
 	}, [getInternsCall]);
 
 	return (
-		<>
-			{!isLoading && (
-				<Chart
-					data={[
-						{ type: "Completed", value: intern?.projectTasksCompletion * 100 },
-						{ type: "InComplete", value: 100 - intern?.projectTasksCompletion * 100 },
-					]}
-				>
-					<PieSeries valueField="value" argumentField="type" innerRadius={0.6} />
-					<Title text="Project Tasks Completed" />
-					<Animation />
-					<Legend />
-					<EventTracker />
-					<Tooltip />
-				</Chart>
-			)}
-			<GridList cols={3} cellHeight={160}>
-				<GridListTile cols={1}>
-					<Card>
-						<CardContent>
-							<Typography variant="h3">{intern?.blogs}</Typography>
-							<Typography variant="h6" color="textSecondary">
-								Blogs Written
+		<Grid container spacing={2}>
+			<Grid item xs={6}>
+				<Paper className={classes.tile}>
+					{!isLoading && (
+						<Chart
+							data={[
+								{ type: "Completed", value: intern?.projectTasksCompletion * 100 },
+								{ type: "InComplete", value: 100 - intern?.projectTasksCompletion * 100 },
+							]}
+						>
+							<PieSeries valueField="value" argumentField="type" innerRadius={0.6} />
+							<Title text="Project Tasks Completed" />
+							<Animation />
+							<Legend />
+							<EventTracker />
+							<Tooltip />
+						</Chart>
+					)}
+				</Paper>
+			</Grid>
+			<Grid container spacing={2} item xs={6} className={classes.tileColumn}>
+				<Grid container item xs={12} className={classes.tileRow}>
+					<Grid item xs={6} className={classes.tileGrid}>
+						<Paper className={classes.tile}>
+							<Typography variant="h3" align="center">
+								{intern?.profiles}
 							</Typography>
-							<Typography>Latest: {internInfo?.blogs[internInfo?.blogs?.length - 1]?.Title}</Typography>
-						</CardContent>
-					</Card>
-				</GridListTile>
-				<GridListTile cols={1}>
-					<Card>
-						<CardContent>
-							<Typography variant="h3">{intern?.gitIssues}</Typography>
-							<Typography variant="h6" color="textSecondary">
-								Git Issues Raised
-							</Typography>
-							<Typography>
-								Latest: {internInfo?.gitIssues[internInfo?.gitIssues?.length - 1]?.Issue_Title}
-							</Typography>
-						</CardContent>
-					</Card>
-				</GridListTile>
-				<GridListTile cols={1}>
-					<Card>
-						<CardContent>
-							<Typography variant="h3">{intern?.pullRequests}</Typography>
-							<Typography variant="h6" color="textSecondary">
-								Pull Requests Raised
-							</Typography>
-							<Typography>
-								Latest: {internInfo?.pullRequests[internInfo?.pullRequests?.length - 1]?.Title}
-							</Typography>
-						</CardContent>
-					</Card>
-				</GridListTile>
-				<GridListTile cols={1}>
-					<Card>
-						<CardContent>
-							<Typography variant="h3">{intern?.presentationsOrWebinars}</Typography>
-							<Typography variant="h6" color="textSecondary">
-								Presentations/Webinars Done
-							</Typography>
-							<Typography>
-								Latest:{" "}
-								{
-									internInfo?.presentationsOrWebinars[internInfo?.presentationsOrWebinars?.length - 1]
-										?.Title
-								}
-							</Typography>
-						</CardContent>
-					</Card>
-				</GridListTile>
-				<GridListTile cols={1}>
-					<Card>
-						<CardContent>
-							<Typography variant="h3">{intern?.projects}</Typography>
-							<Typography variant="h6" color="textSecondary">
-								Projects
-							</Typography>
-							<Typography>
-								Latest: {internInfo?.projects[internInfo?.projects?.length - 1]?.Title}
-							</Typography>
-						</CardContent>
-					</Card>
-				</GridListTile>
-				<GridListTile cols={1}>
-					<Card>
-						<CardContent>
-							<Typography variant="h3">{intern?.profiles}</Typography>
-							<Typography variant="h6" color="textSecondary">
+							<Typography variant="h6" color="textSecondary" align="center">
 								Active Interns
 							</Typography>
 							<Typography>
@@ -250,10 +192,86 @@ export const DashboardMentor = (): ReactElement => {
 							>
 								More
 							</Button>
-						</CardContent>
-					</Card>
-				</GridListTile>
-			</GridList>
-		</>
+						</Paper>
+					</Grid>
+
+					<Grid item xs={6} className={classes.tileGrid}>
+						<Paper className={classes.tile}>
+							<Typography variant="h3" align="center">
+								{intern?.gitIssues}
+							</Typography>
+							<Typography variant="h6" color="textSecondary" align="center">
+								Git Issues Raised
+							</Typography>
+							<Typography>
+								Latest: {internInfo?.gitIssues[internInfo?.gitIssues?.length - 1]?.Issue_Title}
+							</Typography>
+						</Paper>
+					</Grid>
+				</Grid>
+				<Grid container item xs={12} className={classes.tileRow}>
+					<Grid item xs={6} className={classes.tileGrid}>
+						<Paper className={classes.tile}>
+							<Typography variant="h3" align="center">
+								{intern?.pullRequests}
+							</Typography>
+							<Typography variant="h6" color="textSecondary" align="center">
+								Pull Requests Raised
+							</Typography>
+							<Typography>
+								Latest: {internInfo?.pullRequests[internInfo?.pullRequests?.length - 1]?.Title}
+							</Typography>
+						</Paper>
+					</Grid>
+
+					<Grid item xs={6} className={classes.tileGrid}>
+						<Paper className={classes.tile}>
+							<Typography variant="h3" align="center">
+								{intern?.presentationsOrWebinars}
+							</Typography>
+							<Typography variant="h6" color="textSecondary" align="center">
+								Presentations/Webinars Done
+							</Typography>
+							<Typography>
+								Latest:{" "}
+								{
+									internInfo?.presentationsOrWebinars[internInfo?.presentationsOrWebinars?.length - 1]
+										?.Title
+								}
+							</Typography>
+						</Paper>
+					</Grid>
+				</Grid>
+			</Grid>
+			<Grid item xs={6}>
+				<Paper className={classes.tile}>
+					<Typography variant="h3" align="center">
+						{intern?.projects}
+					</Typography>
+					<Typography variant="h6" color="textSecondary" align="center">
+						Projects
+					</Typography>
+					<Typography>Latest: {internInfo?.projects[internInfo?.projects?.length - 1]?.Title}</Typography>
+				</Paper>
+			</Grid>
+			<Grid item xs={6} container spacing={2} className={classes.tileColumn}>
+				<Grid container item xs={12}>
+					<Grid item xs={12} className={classes.tileGrid}>
+						<Paper className={classes.tile}>
+							<Typography variant="h3" align="center">
+								{intern?.blogs}
+							</Typography>
+							<Typography variant="h6" color="textSecondary" align="center">
+								Blogs Written
+							</Typography>
+							<Typography>
+								Latest: <Link to={internInfo?.blogs[internInfo?.blogs?.length - 1]?.Link}></Link>
+								{internInfo?.blogs[internInfo?.blogs?.length - 1]?.Title}
+							</Typography>
+						</Paper>
+					</Grid>
+				</Grid>
+			</Grid>
+		</Grid>
 	);
 };
