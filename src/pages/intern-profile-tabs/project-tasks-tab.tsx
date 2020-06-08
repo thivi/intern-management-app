@@ -5,12 +5,8 @@ import {
 	ListItem,
 	Divider,
 	IconButton,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	InputAdornment,
-	OutlinedInput,
+	Paper,
+	InputBase,
 	Typography,
 	FormControlLabel,
 	Checkbox,
@@ -35,22 +31,27 @@ const SORT_BY: {
 	},
 ];
 
+interface Sort {
+	Title: boolean;
+	PullRequest: boolean;
+	[key: string]: boolean;
+}
+
 interface ProjectTasksTabPropsInterface {
 	projectTasks: ProjectTask[];
 }
 
 export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElement => {
-    
-    const { projectTasks } = props;
-    
+	const { projectTasks } = props;
+
 	const [paginatedProjectTasks, setPaginatedProjectTasks] = useState<ProjectTask[]>([]);
 	const [filteredProjectTasks, setFilteredProjectTasks] = useState<ProjectTask[]>([]);
 	const [page, setPage] = useState(1);
 	const [sortBy, setSortBy] = useState(SORT_BY[0].key);
 	// true-Ascending false-Descending
-	const [sortOrder, setSortOrder] = useState(true);
+	const [sortOrder, setSortOrder] = useState<Sort>({ Title: true, PullRequest: true });
 	const [searchQuery, setSearchQuery] = useState("");
-	const [sorted, setSorted] = useState(false);
+	const [sorted, setSorted] = useState<Sort>({ Title: false, PullRequest: false });
 	const [hideCompleted, setHideCompleted] = useState(false);
 
 	const itemsPerPage = 10;
@@ -67,13 +68,13 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 
 		let issuesToPaginate;
 
-		if (sorted) {
+		if (sorted[sortBy]) {
 			let sortedArray = [...filteredIssues].sort((a: ProjectTask, b: ProjectTask) => {
 				if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 				else return -1;
 			});
 
-			if (!sortOrder) sortedArray = sortedArray.reverse();
+			if (!sortOrder[sortBy]) sortedArray = sortedArray.reverse();
 
 			issuesToPaginate = [...sortedArray];
 		} else {
@@ -104,8 +105,13 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 		setFilteredProjectTasks(sortedArray);
 		setPaginatedProjectTasks(sortedArray.slice(0, itemsPerPage));
 		setPage(1);
-		sorted && setSortOrder(order);
-		setSorted(true);
+
+		const tempSortOrder: Sort = { ...sortOrder };
+		tempSortOrder[sortBy] = order;
+		sorted[sortBy] && setSortOrder(tempSortOrder);
+		const tempSorted: Sort = { ...sorted };
+		tempSorted[sortBy] = true;
+		setSorted(tempSorted);
 	};
 
 	const search = (search: string, hide?: boolean) => {
@@ -142,109 +148,133 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 
 	return (
 		<>
-			<Grid container spacing={2}>
-				<Grid item xs={3}>
-					<FormControl variant="outlined">
-						<InputLabel>Sort By</InputLabel>
-						<Select
-							value={sortBy}
-							onChange={(event) => {
-								setSortBy(event.target.value as keyof ProjectTask);
-								sort(event.target.value as keyof ProjectTask);
-							}}
-							label="Sort By"
-						>
-							{SORT_BY.map((option, index: number) => {
-								return (
-									<MenuItem key={index} value={option.key}>
-										{option.text}
-									</MenuItem>
-								);
-							})}
-						</Select>
-					</FormControl>
-					<IconButton
-						aria-label="sort order"
-						onClick={() => {
-							if (!sorted) {
-								sort(sortBy, sortOrder);
-							} else {
-								sort(sortBy, !sortOrder);
-							}
-						}}
-					>
-						<Sort
-							style={{ transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)" }}
-						/>
-					</IconButton>
-				</Grid>
-				<Grid item xs={9} container justify="flex-end">
-					<FormControlLabel
-						control={<Switch checked={hideCompleted} onChange={() => search("", true)} color="primary" />}
-						label="Hide Completed"
-						labelPlacement="start"
-					/>
-
-					<FormControl variant="outlined">
-						<InputLabel htmlFor="outlined-adornment-password">Search</InputLabel>
-						<OutlinedInput
-							type="text"
-							value={searchQuery}
-							onChange={(e) => {
-								setSearchQuery(e.target.value);
-								search(e.target.value);
-							}}
-							endAdornment={
-								<InputAdornment position="end">
-									{searchQuery ? (
-										<IconButton
-											aria-label="close"
-											edge="end"
-											onClick={() => {
-												setSearchQuery("");
-												search("");
-											}}
-										>
-											<Close />
-										</IconButton>
-									) : (
-										<IconButton aria-label="search" edge="end">
-											<Search />
-										</IconButton>
-									)}
-								</InputAdornment>
-							}
-							labelWidth={70}
-						/>
-					</FormControl>
-				</Grid>
-			</Grid>
-			<List>
+			<List className={classes.list}>
+				<ListItem className={classes.listHeader}>
+					<Grid container spacing={2} className={classes.filterGrid}>
+						<Grid item xs={2}>
+							<FormControlLabel
+								control={
+									<Switch
+										checked={hideCompleted}
+										onChange={() => search("", true)}
+										color="secondary"
+									/>
+								}
+								label="Hide Completed"
+								labelPlacement="top"
+							/>
+						</Grid>
+						<Grid item xs={10} container justify="flex-end" alignItems="center">
+							<Paper className={classes.search} variant="outlined">
+								<InputBase
+									placeholder="Search by project task name"
+									type="text"
+									value={searchQuery}
+									onChange={(e) => {
+										setSearchQuery(e.target.value);
+										search(e.target.value);
+									}}
+									fullWidth
+								/>
+								{searchQuery ? (
+									<IconButton
+										aria-label="search"
+										edge="end"
+										onClick={() => {
+											setSearchQuery("");
+											search("");
+										}}
+									>
+										<Close />
+									</IconButton>
+								) : (
+									<IconButton aria-label="search" edge="end">
+										<Search />
+									</IconButton>
+								)}
+							</Paper>
+						</Grid>
+					</Grid>
+				</ListItem>
+				<ListItem className={classes.listHeader}>
+					<Grid container spacing={2}>
+						<Grid container item xs={7}>
+							<IconButton
+								aria-label="sort order"
+								onClick={() => {
+									setSortBy("Title");
+									if (!sorted["Title"]) {
+										sort("Title", sortOrder["Title"]);
+									} else {
+										sort("Title", !sortOrder["Title"]);
+									}
+								}}
+								size="small"
+								className={classes.sortButton}
+							>
+								<Sort
+									style={{
+										transform: sorted["Title"]
+											? !sortOrder["Title"]
+												? "scaleY(-1)"
+												: "scaleY(1)"
+											: "scaleY(-1)",
+									}}
+								/>
+							</IconButton>
+							<Typography variant="subtitle1">Task Name</Typography>
+						</Grid>
+						<Grid container item xs={5}>
+							<IconButton
+								aria-label="sort order"
+								onClick={() => {
+									setSortBy("PullRequest");
+									if (!sorted["PullRequest"]) {
+										sort("PullRequest", sortOrder["PullRequest"]);
+									} else {
+										sort("PullRequest", !sortOrder["PullRequest"]);
+									}
+								}}
+								size="small"
+								className={classes.sortButton}
+							>
+								<Sort
+									style={{
+										transform: sorted["PullRequest"]
+											? !sortOrder["PullRequest"]
+												? "scaleY(-1)"
+												: "scaleY(1)"
+											: "scaleY(-1)",
+									}}
+								/>
+							</IconButton>
+							<Typography variant="subtitle1">Pull Request</Typography>
+						</Grid>
+					</Grid>
+				</ListItem>
 				{paginatedProjectTasks?.map((gitIssue: ProjectTask, index: number) => {
 					return (
 						<React.Fragment key={index}>
 							<ListItem>
 								<Grid container spacing={2}>
-									<>
-										<Grid item xs={1}>
-											<FormControlLabel
-												control={
-													<Checkbox
-														checked={gitIssue.Completed === "yes"}
-														name="completed"
-														disabled
-													/>
-												}
-												label=""
-											/>
-										</Grid>
-										<Grid container alignItems="center" item xs={6}>
-											<Typography component="h4">{gitIssue.Title}</Typography>
-										</Grid>
-										<Grid container alignItems="center" item xs={5}>
-											<Typography component="h4">{gitIssue.PullRequest}</Typography>
-										</Grid>
-									</>
+									<Grid item xs={1}>
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={gitIssue.Completed === "yes"}
+													name="completed"
+													disabled
+												/>
+											}
+											label=""
+										/>
+									</Grid>
+									<Grid container alignItems="center" item xs={6}>
+										<Typography component="h4">{gitIssue.Title}</Typography>
+									</Grid>
+									<Grid container alignItems="center" item xs={5}>
+										<Typography component="h4">{gitIssue.PullRequest}</Typography>
+									</Grid>
 								</Grid>
 							</ListItem>
 							{paginatedProjectTasks.length - 1 !== index && <Divider />}
