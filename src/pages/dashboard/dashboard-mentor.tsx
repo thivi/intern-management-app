@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useCallback, useEffect } from "react";
-import { GridList, GridListTile, Card, CardContent, Typography, Button, Grid, Paper } from "@material-ui/core";
+import { Typography, Button, Grid, Paper } from "@material-ui/core";
 import {
 	Blog,
 	GitIssue,
