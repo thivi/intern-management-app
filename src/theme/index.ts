@@ -14,6 +14,8 @@ import {
 	filterGrid,
 	linkText,
 	noButtonList,
+	customSwitch,
+	switchLabel,
 } from "./list-page";
 import { popOver, primaryButton, leftAlignedGrid } from "./generic";
 import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
@@ -53,6 +55,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 	linkText: linkText(theme),
 	backButton: backButton(theme),
 	noButtonList: noButtonList(theme),
+	customSwitch: customSwitch(theme),
+	switchLabel: switchLabel(theme),
 }));
 
 export default useStyles;

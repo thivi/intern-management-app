@@ -72,3 +72,17 @@ export const noButtonList = (theme: Theme) => ({
 	paddingTop: theme.spacing(1),
 	paddingBottom: theme.spacing(1),
 });
+
+export const customSwitch = (theme: Theme) => ({
+	color: theme.palette.secondary.main,
+	"&.Mui-checked": {
+		color: theme.palette.common.white,
+	},
+	"&.Mui-checked + .MuiSwitch-track": {
+		backgroundColor: theme.palette.secondary.light,
+	},
+});
+
+export const switchLabel = (theme: Theme) => ({
+	textAlign: "center" as const,
+});
