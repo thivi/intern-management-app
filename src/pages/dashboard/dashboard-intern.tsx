@@ -1,6 +1,6 @@
 import React, { ReactElement, useContext, useState, useCallback, useEffect } from "react";
 import { Typography, Button, Paper, Grid, List, ListItem, ListItemIcon } from "@material-ui/core";
-import { AuthContext } from "../../helpers";
+import { AuthContext, NotificationContext } from "../../helpers";
 import {
 	Blog,
 	GitIssue,
@@ -11,6 +11,7 @@ import {
 	Profile,
 	InternInfo,
 	Intern,
+	NotificationType,
 } from "../../models";
 import {
 	getProfile,
@@ -33,12 +34,13 @@ import { Chart, PieSeries, Title, Legend, Tooltip } from "@devexpress/dx-react-c
 
 import { Animation, EventTracker } from "@devexpress/dx-react-chart";
 import useStyles from "../../theme";
-import { findTimeOfTheDay } from "../../utils";
+import { findTimeOfTheDay, Notify } from "../../utils";
 import { Skeleton } from "@material-ui/lab";
 import { WorkOutlineOutlined } from "@material-ui/icons";
 
 export const DashboardIntern = (): ReactElement => {
 	const { authState } = useContext(AuthContext);
+	const { dispatch } = useContext(NotificationContext);
 
 	const [internInfo, setInternInfo] = useState<InternInfo>(null);
 	const [intern, setIntern] = useState<Intern>(null);
@@ -153,12 +155,12 @@ export const DashboardIntern = (): ReactElement => {
 				setInternInfo(internInfoObj);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				dispatch(Notify({ status: NotificationType.ERROR, message: error }));
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [authState]);
+	}, [authState, dispatch]);
 
 	useEffect(() => {
 		getInternsCall();
