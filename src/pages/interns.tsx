@@ -429,10 +429,16 @@ export const Interns = (): ReactElement => {
 													checked={showOnlyActive}
 													onChange={() => search("", true, false)}
 													color="secondary"
+													classes={{
+														switchBase: classes.customSwitch,
+													}}
 												/>
 											}
 											label="Show Only Active Interns"
-											labelPlacement="top"
+											labelPlacement="bottom"
+											classes={{
+												root: classes.switchLabel,
+											}}
 										/>
 									</Grid>
 									<Grid item xs={2}>
@@ -442,10 +448,16 @@ export const Interns = (): ReactElement => {
 													checked={showOnlyMentees}
 													onChange={() => search("", false, true)}
 													color="secondary"
+													classes={{
+														switchBase: classes.customSwitch,
+													}}
 												/>
 											}
 											label="Show Only My Mentees"
-											labelPlacement="top"
+											labelPlacement="bottom"
+											classes={{
+												root: classes.switchLabel,
+											}}
 										/>
 									</Grid>
 									<Grid item xs={8} container justify="flex-end" alignItems="center">
