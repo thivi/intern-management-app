@@ -10,6 +10,7 @@ import {
 	Profile,
 	InternInfo,
 	Intern,
+	NotificationType,
 } from "../../models";
 import {
 	getProfile,
@@ -26,8 +27,8 @@ import { Chart, PieSeries, Title, Legend, Tooltip } from "@devexpress/dx-react-c
 
 import { Animation, EventTracker } from "@devexpress/dx-react-chart";
 import useStyles from "../../theme";
-import { findTimeOfTheDay } from "../../utils";
-import { AuthContext } from "../../helpers";
+import { findTimeOfTheDay, Notify } from "../../utils";
+import { AuthContext, NotificationContext } from "../../helpers";
 import { Skeleton } from "@material-ui/lab";
 import { WorkOutlineOutlined, EditOutlined } from "@material-ui/icons";
 
@@ -39,6 +40,7 @@ export const DashboardMentor = (): ReactElement => {
 	const history = useHistory();
 
 	const { authState } = useContext(AuthContext);
+	const { dispatch } = useContext(NotificationContext);
 
 	const classes = useStyles();
 
@@ -146,7 +148,7 @@ export const DashboardMentor = (): ReactElement => {
 				setInternInfo(internInfoObj);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				dispatch(Notify({ status: NotificationType.ERROR, message: error }));
 			})
 			.finally(() => {
 				setIsLoading(false);
@@ -334,36 +336,36 @@ export const DashboardMentor = (): ReactElement => {
 								Blogs Written
 							</Typography>
 							<div>
-							<Typography variant="subtitle1">Latest: </Typography>
-							<List>
-								{isLoading ? (
-									<>
-										<Skeleton variant="text" height={50} />
-										<Skeleton variant="text" height={50} />
-										<Skeleton variant="text" height={50} />
-										<Skeleton variant="text" height={50} />
-										<Skeleton variant="text" height={50} />
-									</>
-								) : (
-									internInfo?.blogs.map((blog: Blog, index: number) => {
-										if (index < 4) {
-											return (
-												<ListItem>
-													<ListItemIcon>
-														<EditOutlined />
-													</ListItemIcon>
-													<Link to={blog.Link}>
-														<Typography>{blog.Title}</Typography>
-													</Link>
-												</ListItem>
-											);
-										}
+								<Typography variant="subtitle1">Latest: </Typography>
+								<List>
+									{isLoading ? (
+										<>
+											<Skeleton variant="text" height={50} />
+											<Skeleton variant="text" height={50} />
+											<Skeleton variant="text" height={50} />
+											<Skeleton variant="text" height={50} />
+											<Skeleton variant="text" height={50} />
+										</>
+									) : (
+										internInfo?.blogs.map((blog: Blog, index: number) => {
+											if (index < 4) {
+												return (
+													<ListItem>
+														<ListItemIcon>
+															<EditOutlined />
+														</ListItemIcon>
+														<Link to={blog.Link}>
+															<Typography>{blog.Title}</Typography>
+														</Link>
+													</ListItem>
+												);
+											}
 
-										return null;
-									})
-								)}
+											return null;
+										})
+									)}
 								</List>
-							</div>	
+							</div>
 						</Paper>
 					</Grid>
 				</Grid>
