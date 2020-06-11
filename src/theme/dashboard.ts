@@ -8,6 +8,10 @@ export const tile = (theme: Theme) => ({
 	justifyContent: "space-between" as const,
 });
 
+export const centeredTile = (theme: Theme) => ({
+	alignItems: "center",
+});
+
 export const tileRow = (theme: Theme) => ({
 	height: "50%",
 });
