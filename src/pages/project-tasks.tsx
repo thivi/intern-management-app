@@ -402,7 +402,7 @@ export const ProjectTasks = (): ReactElement => {
 									/>
 								}
 								label="Completed?"
-								labelPlacement="top"
+								labelPlacement="bottom"
 							/>
 						</Grid>
 						<Grid item xs={2}>
