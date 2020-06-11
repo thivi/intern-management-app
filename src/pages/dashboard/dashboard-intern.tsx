@@ -314,33 +314,35 @@ export const DashboardIntern = (): ReactElement => {
 					<Typography variant="h6" color="textSecondary" align="center">
 						Projects
 					</Typography>
-					<Typography variant="subtitle1">Latest: </Typography>
-					<List>
-						{isLoading ? (
-							<>
-								<Skeleton variant="text" height={50} />
-								<Skeleton variant="text" height={50} />
-								<Skeleton variant="text" height={50} />
-								<Skeleton variant="text" height={50} />
-								<Skeleton variant="text" height={50} />
-							</>
-						) : (
-							internInfo?.projects.map((project: Project, index: number) => {
-								if (index < 4) {
-									return (
-										<ListItem>
-											<ListItemIcon>
-												<WorkOutlineOutlined />
-											</ListItemIcon>
-											<Typography>{project.Title}</Typography>
-										</ListItem>
-									);
-								}
+					<div>
+						<Typography variant="subtitle1">Latest: </Typography>
+						<List>
+							{isLoading ? (
+								<>
+									<Skeleton variant="text" height={50} />
+									<Skeleton variant="text" height={50} />
+									<Skeleton variant="text" height={50} />
+									<Skeleton variant="text" height={50} />
+									<Skeleton variant="text" height={50} />
+								</>
+							) : (
+								internInfo?.projects.map((project: Project, index: number) => {
+									if (index < 4) {
+										return (
+											<ListItem>
+												<ListItemIcon>
+													<WorkOutlineOutlined />
+												</ListItemIcon>
+												<Typography>{project.Title}</Typography>
+											</ListItem>
+										);
+									}
 
-								return null;
-							})
-						)}
-					</List>
+									return null;
+								})
+							)}
+						</List>
+					</div>
 					<Button
 						onClick={() => {
 							history.push(PROJECTS_PATH);
