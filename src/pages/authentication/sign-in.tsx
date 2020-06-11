@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useCallback } from "react";
-import { AuthContext } from "../../helpers";
+import { AuthContext, NotificationContext } from "../../helpers";
 import { useHistory } from "react-router-dom";
-import { getCallbackUrl } from "../../utils";
+import { getCallbackUrl, Notify } from "../../utils";
 import { SIGN_IN, ADD_DETAILS } from "../../constants";
 import { getGoogleProfile, getRoles } from "../../apis";
-import { GoogleProfile } from "../../models";
+import { GoogleProfile, NotificationType } from "../../models";
 
 export const SignIn = (): React.ReactElement => {
 	const { dispatch } = useContext(AuthContext);
+	const { dispatch: dispatchNotification } = useContext(NotificationContext);
 
 	const history = useHistory();
 
@@ -34,20 +35,30 @@ export const SignIn = (): React.ReactElement => {
 								});
 							})
 							.catch((error) => {
-								//TODO: Notify
-							}).finally(() => {
+								dispatchNotification(
+									Notify({
+										status: NotificationType.ERROR,
+										message: error,
+									})
+								);
+							})
+							.finally(() => {
 								history?.push(getCallbackUrl() ?? "");
 							});
 					})
 					.catch((error) => {
-						//TODO: Notify
+						dispatchNotification(
+							Notify({
+								status: NotificationType.ERROR,
+								message: error,
+							})
+						);
 					});
-
 			} else {
 				GoogleAuth.signIn();
 			}
 		},
-		[dispatch, history]
+		[dispatch, history, dispatchNotification]
 	);
 
 	useEffect(() => {
