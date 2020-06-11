@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useCallback, useEffect, useContext } from "react";
-import { Typography, Button, Grid, Paper } from "@material-ui/core";
+import { Typography, Button, Grid, Paper, List, ListItem, ListItemIcon } from "@material-ui/core";
 import {
 	Blog,
 	GitIssue,
@@ -26,8 +26,10 @@ import { Chart, PieSeries, Title, Legend, Tooltip } from "@devexpress/dx-react-c
 
 import { Animation, EventTracker } from "@devexpress/dx-react-chart";
 import useStyles from "../../theme";
-import { findTimeofTheDay } from "../../utils";
+import { findTimeOfTheDay } from "../../utils";
 import { AuthContext } from "../../helpers";
+import { Skeleton } from "@material-ui/lab";
+import { WorkOutlineOutlined, EditOutlined } from "@material-ui/icons";
 
 export const DashboardMentor = (): ReactElement => {
 	const [internInfo, setInternInfo] = useState<InternInfo>(null);
@@ -159,12 +161,12 @@ export const DashboardMentor = (): ReactElement => {
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
 				<Typography variant="h4">
-					Good {findTimeofTheDay()}, {authState.authData.name}!
+					Good {findTimeOfTheDay()}, {authState.authData.name}!
 				</Typography>
 			</Grid>
 			<Grid item xs={6}>
-				<Paper className={classes.tile}>
-					{!isLoading && (
+				<Paper className={`${classes.tile} ${classes.centeredTile}`}>
+					{!isLoading ? (
 						<Chart
 							data={[
 								{
@@ -176,6 +178,7 @@ export const DashboardMentor = (): ReactElement => {
 									value: 100 - intern?.projectTasksCompletion * 100,
 								},
 							]}
+							width={500}
 						>
 							<PieSeries valueField="value" argumentField="type" innerRadius={0.6} />
 							<Title text="Project Tasks Completed" />
@@ -184,6 +187,11 @@ export const DashboardMentor = (): ReactElement => {
 							<EventTracker />
 							<Tooltip />
 						</Chart>
+					) : (
+						<>
+							<Skeleton variant="text" height={70} width={400} />
+							<Skeleton variant="circle" height={400} width={400} animation="wave" />
+						</>
 					)}
 				</Paper>
 			</Grid>
@@ -191,14 +199,17 @@ export const DashboardMentor = (): ReactElement => {
 				<Grid container item xs={12} className={classes.tileRow}>
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
-							<Typography variant="h3" align="center">
-								{intern?.profiles}
-							</Typography>
+							{isLoading ? (
+								<div className={classes.centerAlign}>
+									<Skeleton variant="text" height={100} width={50} />
+								</div>
+							) : (
+								<Typography variant="h3" align="center">
+									{intern?.profiles}
+								</Typography>
+							)}
 							<Typography variant="h6" color="textSecondary" align="center">
 								Active Interns
-							</Typography>
-							<Typography>
-								Latest: {internInfo?.profiles[internInfo?.profiles?.length - 1]?.Name}
 							</Typography>
 							<Button
 								onClick={() => {
@@ -212,14 +223,17 @@ export const DashboardMentor = (): ReactElement => {
 
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
-							<Typography variant="h3" align="center">
-								{intern?.gitIssues}
-							</Typography>
+							{isLoading ? (
+								<div className={classes.centerAlign}>
+									<Skeleton variant="text" height={100} width={50} />
+								</div>
+							) : (
+								<Typography variant="h3" align="center">
+									{intern?.gitIssues}
+								</Typography>
+							)}
 							<Typography variant="h6" color="textSecondary" align="center">
 								Git Issues Raised
-							</Typography>
-							<Typography>
-								Latest: {internInfo?.gitIssues[internInfo?.gitIssues?.length - 1]?.Issue_Title}
 							</Typography>
 						</Paper>
 					</Grid>
@@ -227,32 +241,34 @@ export const DashboardMentor = (): ReactElement => {
 				<Grid container item xs={12} className={classes.tileRow}>
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
-							<Typography variant="h3" align="center">
-								{intern?.pullRequests}
-							</Typography>
+							{isLoading ? (
+								<div className={classes.centerAlign}>
+									<Skeleton variant="text" height={100} width={50} />
+								</div>
+							) : (
+								<Typography variant="h3" align="center">
+									{intern?.pullRequests}
+								</Typography>
+							)}
 							<Typography variant="h6" color="textSecondary" align="center">
 								Pull Requests Raised
-							</Typography>
-							<Typography>
-								Latest: {internInfo?.pullRequests[internInfo?.pullRequests?.length - 1]?.Title}
 							</Typography>
 						</Paper>
 					</Grid>
 
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
-							<Typography variant="h3" align="center">
-								{intern?.presentationsOrWebinars}
-							</Typography>
+							{isLoading ? (
+								<div className={classes.centerAlign}>
+									<Skeleton variant="text" height={100} width={50} />
+								</div>
+							) : (
+								<Typography variant="h3" align="center">
+									{intern?.presentationsOrWebinars}
+								</Typography>
+							)}
 							<Typography variant="h6" color="textSecondary" align="center">
 								Presentations/Webinars Done
-							</Typography>
-							<Typography>
-								Latest:{" "}
-								{
-									internInfo?.presentationsOrWebinars[internInfo?.presentationsOrWebinars?.length - 1]
-										?.Title
-								}
 							</Typography>
 						</Paper>
 					</Grid>
@@ -260,29 +276,94 @@ export const DashboardMentor = (): ReactElement => {
 			</Grid>
 			<Grid item xs={6}>
 				<Paper className={classes.tile}>
-					<Typography variant="h3" align="center">
-						{intern?.projects}
-					</Typography>
+					{isLoading ? (
+						<div className={classes.centerAlign}>
+							<Skeleton variant="text" height={100} width={50} />
+						</div>
+					) : (
+						<Typography variant="h3" align="center">
+							{intern?.projects}
+						</Typography>
+					)}
 					<Typography variant="h6" color="textSecondary" align="center">
 						Projects
 					</Typography>
-					<Typography>Latest: {internInfo?.projects[internInfo?.projects?.length - 1]?.Title}</Typography>
+					<Typography variant="subtitle1">Latest: </Typography>
+					<List>
+						{isLoading ? (
+							<>
+								<Skeleton variant="text" height={50} />
+								<Skeleton variant="text" height={50} />
+								<Skeleton variant="text" height={50} />
+								<Skeleton variant="text" height={50} />
+								<Skeleton variant="text" height={50} />
+							</>
+						) : (
+							internInfo?.projects.map((project: Project, index: number) => {
+								if (index < 4) {
+									return (
+										<ListItem>
+											<ListItemIcon>
+												<WorkOutlineOutlined />
+											</ListItemIcon>
+											<Typography>{project.Title}</Typography>
+										</ListItem>
+									);
+								}
+
+								return null;
+							})
+						)}
+					</List>
 				</Paper>
 			</Grid>
 			<Grid item xs={6} container spacing={2} className={classes.tileColumn}>
 				<Grid container item xs={12}>
 					<Grid item xs={12} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
-							<Typography variant="h3" align="center">
-								{intern?.blogs}
-							</Typography>
+							{isLoading ? (
+								<div className={classes.centerAlign}>
+									<Skeleton variant="text" height={100} width={50} />
+								</div>
+							) : (
+								<Typography variant="h3" align="center">
+									{intern?.blogs}
+								</Typography>
+							)}
 							<Typography variant="h6" color="textSecondary" align="center">
 								Blogs Written
 							</Typography>
-							<Typography>
-								Latest: <Link to={internInfo?.blogs[internInfo?.blogs?.length - 1]?.Link}></Link>
-								{internInfo?.blogs[internInfo?.blogs?.length - 1]?.Title}
-							</Typography>
+							<div>
+							<Typography variant="subtitle1">Latest: </Typography>
+							<List>
+								{isLoading ? (
+									<>
+										<Skeleton variant="text" height={50} />
+										<Skeleton variant="text" height={50} />
+										<Skeleton variant="text" height={50} />
+										<Skeleton variant="text" height={50} />
+										<Skeleton variant="text" height={50} />
+									</>
+								) : (
+									internInfo?.blogs.map((blog: Blog, index: number) => {
+										if (index < 4) {
+											return (
+												<ListItem>
+													<ListItemIcon>
+														<EditOutlined />
+													</ListItemIcon>
+													<Link to={blog.Link}>
+														<Typography>{blog.Title}</Typography>
+													</Link>
+												</ListItem>
+											);
+										}
+
+										return null;
+									})
+								)}
+								</List>
+							</div>	
 						</Paper>
 					</Grid>
 				</Grid>
