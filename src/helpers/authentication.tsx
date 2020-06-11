@@ -17,6 +17,7 @@ const reducer = (state: AuthState, action: AuthAction): AuthState => {
 };
 
 const initialState: AuthState = { authenticated: false, accessToken: null, authData: null };
+
 export const Authentication = (props: React.PropsWithChildren<any>): React.ReactElement => {
 	const [authState, dispatch] = useReducer(reducer, initialState);
 	const { children } = props;
