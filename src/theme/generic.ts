@@ -17,3 +17,8 @@ export const leftAlignedGrid = (theme: Theme) => ({
 	display: "flex",
 	justifyContent: "flex-end",
 });
+
+export const centerAlign = (theme: Theme) => ({
+	display: "flex",
+	justifyContent: "center",
+});
