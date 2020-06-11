@@ -16,15 +16,16 @@ import {
 	Typography,
 	InputBase,
 } from "@material-ui/core";
-import { Blog } from "../models";
+import { Blog, NotificationType } from "../models";
 import { getBlogs, addBlogs, updateBlogs, deleteBlog } from "../apis";
-import { AuthContext } from "../helpers";
+import { AuthContext, NotificationContext } from "../helpers";
 import { BLOGS } from "../constants";
 import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
+import { Notify } from "../utils";
 
 const SORT_BY: {
 	key: keyof Blog;
@@ -57,6 +58,8 @@ export const Blogs = (): ReactElement => {
 	const classes = useStyles();
 
 	const init = useRef(true);
+
+	const { dispatch } = useContext(NotificationContext);
 
 	const getBlogsCall = useCallback(() => {
 		setIsLoading(true);
@@ -115,12 +118,12 @@ export const Blogs = (): ReactElement => {
 				setPaginatedBlogs(paginateIssues);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				dispatch(Notify({ status: NotificationType.ERROR, message: error }));
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page]);
+	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page, dispatch]);
 
 	useEffect(() => {
 		if (init.current && getBlogsCall && authState.authData) {
@@ -136,7 +139,7 @@ export const Blogs = (): ReactElement => {
 				<ListItem key={i}>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
-							<Skeleton variant="text" height={50}/>
+							<Skeleton variant="text" height={50} />
 						</Grid>
 					</Grid>
 				</ListItem>
@@ -192,10 +195,10 @@ export const Blogs = (): ReactElement => {
 				.then((response) => {
 					getBlogsCall();
 					resetForm();
-					//TODO: Notify
+					dispatch(Notify({ status: NotificationType.SUCCESS, message: "Blog post was successfully added" }));
 				})
 				.catch((error) => {
-					//TODO: Notify
+					dispatch(Notify({ status: NotificationType.ERROR, message: error }));
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -227,10 +230,12 @@ export const Blogs = (): ReactElement => {
 				.then((response) => {
 					setEditIndex(-1);
 					getBlogsCall();
-					//TODO Notify
+					dispatch(
+						Notify({ status: NotificationType.SUCCESS, message: "Blog post was successfully updated." })
+					);
 				})
 				.catch((error) => {
-					//TODO Notify
+					dispatch(Notify({ status: NotificationType.ERROR, message: error }));
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -262,10 +267,10 @@ export const Blogs = (): ReactElement => {
 		deleteBlog(range[deleteIndex])
 			.then((response) => {
 				getBlogsCall();
-				//TODO Notify
+				dispatch(Notify({ status: NotificationType.SUCCESS, message: "Blog post was successfully deleted." }));
 			})
 			.catch((error) => {
-				//TODO Notify
+				dispatch(Notify({ status: NotificationType.ERROR, message: error }));
 			});
 	};
 
