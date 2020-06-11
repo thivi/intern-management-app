@@ -17,9 +17,9 @@ import {
 	customSwitch,
 	switchLabel,
 } from "./list-page";
-import { popOver, primaryButton, leftAlignedGrid } from "./generic";
+import { popOver, primaryButton, leftAlignedGrid, centerAlign } from "./generic";
 import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
-import { tile, tileRow, tileGrid, tileColumn } from "./dashboard";
+import { tile, tileRow, tileGrid, tileColumn, centeredTile } from "./dashboard";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	appBar: appBar(theme),
@@ -57,6 +57,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 	noButtonList: noButtonList(theme),
 	customSwitch: customSwitch(theme),
 	switchLabel: switchLabel(theme),
+	centeredTile: centeredTile(theme),
+	centerAlign: centerAlign(theme),
 }));
 
 export default useStyles;
