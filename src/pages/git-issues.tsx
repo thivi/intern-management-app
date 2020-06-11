@@ -16,15 +16,16 @@ import {
 	Typography,
 	InputBase,
 } from "@material-ui/core";
-import { GitIssue } from "../models";
+import { GitIssue, NotificationType } from "../models";
 import { getIssues, addIssues, updateIssues, deleteIssue } from "../apis";
-import { AuthContext } from "../helpers";
+import { AuthContext, NotificationContext } from "../helpers";
 import { GIT_ISSUES } from "../constants";
 import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
+import { Notify } from "../utils";
 
 const SORT_BY: {
 	key: keyof GitIssue;
@@ -57,6 +58,8 @@ export const GitIssues = (): ReactElement => {
 	const classes = useStyles();
 
 	const init = useRef(true);
+
+	const { dispatch } = useContext(NotificationContext);
 
 	const getGitIssuesCall = useCallback(() => {
 		setIsLoading(true);
@@ -115,7 +118,10 @@ export const GitIssues = (): ReactElement => {
 				setPaginatedGitIssues(paginateIssues);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				Notify({
+					status: NotificationType.ERROR,
+					message: error,
+				});
 			})
 			.finally(() => {
 				setIsLoading(false);
@@ -136,7 +142,7 @@ export const GitIssues = (): ReactElement => {
 				<ListItem key={i}>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
-							<Skeleton variant="text" height={50}/>
+							<Skeleton variant="text" height={50} />
 						</Grid>
 					</Grid>
 				</ListItem>
@@ -192,10 +198,18 @@ export const GitIssues = (): ReactElement => {
 				.then((response) => {
 					getGitIssuesCall();
 					resetForm();
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Git Issue was successfully added.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO: Notify
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					});
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -227,10 +241,16 @@ export const GitIssues = (): ReactElement => {
 				.then((response) => {
 					setEditIndex(-1);
 					getGitIssuesCall();
-					//TODO Notify
+					Notify({
+						status: NotificationType.SUCCESS,
+						message: "Git Issue was successfully updated.",
+					});
 				})
 				.catch((error) => {
-					//TODO Notify
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					});
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -262,10 +282,18 @@ export const GitIssues = (): ReactElement => {
 		deleteIssue(range[deleteIndex])
 			.then((response) => {
 				getGitIssuesCall();
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.SUCCESS,
+						message: "Git Issue was successfully deleted.",
+					})
+				);
 			})
 			.catch((error) => {
-				//TODO Notify
+				Notify({
+					status: NotificationType.ERROR,
+					message: error,
+				});
 			});
 	};
 
