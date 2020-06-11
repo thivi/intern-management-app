@@ -429,11 +429,16 @@ export const ProjectTasks = (): ReactElement => {
 										<Switch
 											checked={hideCompleted}
 											onChange={() => search("", true)}
-											color="secondary"
+											classes={{
+												switchBase: classes.customSwitch,
+											}}
 										/>
 									}
 									label="Hide Completed"
-									labelPlacement="top"
+									labelPlacement="bottom"
+									classes={{
+										root: classes.switchLabel,
+									}}
 								/>
 							</Grid>
 							<Grid item xs={10} container justify="flex-end" alignItems="center">
