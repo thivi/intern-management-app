@@ -14,6 +14,7 @@ import {
 	Typography,
 	Paper,
 	InputBase,
+	Box,
 } from "@material-ui/core";
 import { Project, NotificationType } from "../models";
 import { getProjects, addProjects, updateProjects, deleteProject } from "../apis";
@@ -324,27 +325,29 @@ export const Projects = (): ReactElement => {
 					setDeleteIndex(-1);
 				}}
 			>
-				<DialogContent>
-					<DialogContentText>Do you really want to delete this?</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button
-						onClick={() => {
-							setDeleteIndex(-1);
-						}}
-					>
-						Cancel
-					</Button>
-					<Button
-						color="primary"
-						onClick={() => {
-							handleDelete();
-							setDeleteIndex(-1);
-						}}
-					>
-						Delete
-					</Button>
-				</DialogActions>
+				<Box padding={1}>
+					<DialogContent>
+						<DialogContentText>Do you really want to delete this?</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button
+							onClick={() => {
+								setDeleteIndex(-1);
+							}}
+						>
+							Cancel
+						</Button>
+						<Button
+							color="primary"
+							onClick={() => {
+								handleDelete();
+								setDeleteIndex(-1);
+							}}
+						>
+							Delete
+						</Button>
+					</DialogActions>
+				</Box>
 			</Dialog>
 		);
 	};

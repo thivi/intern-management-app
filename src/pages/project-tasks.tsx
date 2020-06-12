@@ -17,6 +17,7 @@ import {
 	Paper,
 	InputBase,
 	Switch,
+	Box,
 } from "@material-ui/core";
 import { ProjectTask, NotificationType } from "../models";
 import { getProjectTasks, addProjectTasks, updateProjectTasks, deleteProject } from "../apis";
@@ -349,27 +350,29 @@ export const ProjectTasks = (): ReactElement => {
 					setDeleteIndex(-1);
 				}}
 			>
-				<DialogContent>
-					<DialogContentText>Do you really want to delete this?</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button
-						onClick={() => {
-							setDeleteIndex(-1);
-						}}
-					>
-						Cancel
-					</Button>
-					<Button
-						color="primary"
-						onClick={() => {
-							handleDelete();
-							setDeleteIndex(-1);
-						}}
-					>
-						Delete
-					</Button>
-				</DialogActions>
+				<Box padding={1}>
+					<DialogContent>
+						<DialogContentText>Do you really want to delete this?</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button
+							onClick={() => {
+								setDeleteIndex(-1);
+							}}
+						>
+							Cancel
+						</Button>
+						<Button
+							color="primary"
+							onClick={() => {
+								handleDelete();
+								setDeleteIndex(-1);
+							}}
+						>
+							Delete
+						</Button>
+					</DialogActions>
+				</Box>
 			</Dialog>
 		);
 	};

@@ -15,6 +15,7 @@ import {
 	Paper,
 	Typography,
 	InputBase,
+	Box,
 } from "@material-ui/core";
 import { GitIssue, NotificationType } from "../models";
 import { getIssues, addIssues, updateIssues, deleteIssue } from "../apis";
@@ -306,27 +307,29 @@ export const GitIssues = (): ReactElement => {
 					setDeleteIndex(-1);
 				}}
 			>
-				<DialogContent>
-					<DialogContentText>Do you really want to delete this?</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button
-						onClick={() => {
-							setDeleteIndex(-1);
-						}}
-					>
-						Cancel
-					</Button>
-					<Button
-						color="primary"
-						onClick={() => {
-							handleDelete();
-							setDeleteIndex(-1);
-						}}
-					>
-						Delete
-					</Button>
-				</DialogActions>
+				<Box padding={1}>
+					<DialogContent>
+						<DialogContentText>Do you really want to delete this?</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button
+							onClick={() => {
+								setDeleteIndex(-1);
+							}}
+						>
+							Cancel
+						</Button>
+						<Button
+							color="primary"
+							onClick={() => {
+								handleDelete();
+								setDeleteIndex(-1);
+							}}
+						>
+							Delete
+						</Button>
+					</DialogActions>
+				</Box>
 			</Dialog>
 		);
 	};

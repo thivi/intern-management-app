@@ -19,6 +19,7 @@ import {
 	Paper,
 	Typography,
 	InputBase,
+	Box,
 } from "@material-ui/core";
 import { Role, RoleType, NotificationType } from "../models";
 import { getRoles, addRoles, updateRoles, deleteRole } from "../apis";
@@ -369,27 +370,29 @@ export const Roles = (): ReactElement => {
 					setDeleteIndex(-1);
 				}}
 			>
-				<DialogContent>
-					<DialogContentText>Do you really want to delete this?</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button
-						onClick={() => {
-							setDeleteIndex(-1);
-						}}
-					>
-						Cancel
-					</Button>
-					<Button
-						color="primary"
-						onClick={() => {
-							handleDelete();
-							setDeleteIndex(-1);
-						}}
-					>
-						Delete
-					</Button>
-				</DialogActions>
+				<Box padding={1}>
+					<DialogContent>
+						<DialogContentText>Do you really want to delete this?</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button
+							onClick={() => {
+								setDeleteIndex(-1);
+							}}
+						>
+							Cancel
+						</Button>
+						<Button
+							color="primary"
+							onClick={() => {
+								handleDelete();
+								setDeleteIndex(-1);
+							}}
+						>
+							Delete
+						</Button>
+					</DialogActions>
+				</Box>
 			</Dialog>
 		);
 	};
