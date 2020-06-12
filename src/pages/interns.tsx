@@ -23,6 +23,7 @@ import {
 	InternInfo,
 	Blog,
 	Project,
+	NotificationType,
 } from "../models";
 import {
 	getBlogs,
@@ -33,11 +34,12 @@ import {
 	getProjectTasks,
 	getProjects,
 } from "../apis";
-import { AuthContext } from "../helpers";
+import { AuthContext, NotificationContext } from "../helpers";
 import { Close, Sort, Search } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { InternProfile } from ".";
+import { Notify } from "../utils";
 
 const SORT_BY: {
 	key: keyof Intern;
@@ -139,6 +141,8 @@ export const Interns = (): ReactElement => {
 		},
 		[authState]
 	);
+
+	const { dispatch } = useContext(NotificationContext);
 
 	const getInternsCall = useCallback(() => {
 		setIsLoading(true);
@@ -294,12 +298,17 @@ export const Interns = (): ReactElement => {
 				setPaginatedInterns(paginateInterns);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [searchQuery, sortOrder, sorted, sortBy, page, isActive, isMentee, showOnlyMentees, showOnlyActive]);
+	}, [searchQuery, sortOrder, sorted, sortBy, page, isActive, isMentee, showOnlyMentees, showOnlyActive, dispatch]);
 
 	useEffect(() => {
 		if (init.current && getInternsCall && authState.authData) {
