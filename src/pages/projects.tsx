@@ -15,14 +15,15 @@ import {
 	Paper,
 	InputBase,
 } from "@material-ui/core";
-import { Project } from "../models";
+import { Project, NotificationType } from "../models";
 import { getProjects, addProjects, updateProjects, deleteProject } from "../apis";
-import { AuthContext } from "../helpers";
+import { AuthContext, NotificationContext } from "../helpers";
 import { PROJECTS } from "../constants";
 import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
+import { Notify } from "../utils";
 
 const SORT_BY: {
 	key: keyof Project;
@@ -48,7 +49,6 @@ export const Projects = (): ReactElement => {
 	const [paginatedProjects, setPaginatedProjects] = useState<Project[]>([]);
 	const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
 	const [range, setRange] = useState<string[]>([]);
-	const { authState } = useContext(AuthContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [editIndex, setEditIndex] = useState(-1);
 	const [page, setPage] = useState(1);
@@ -62,6 +62,9 @@ export const Projects = (): ReactElement => {
 	const itemsPerPage = 10;
 
 	const classes = useStyles();
+
+	const { authState } = useContext(AuthContext);
+	const { dispatch } = useContext(NotificationContext);
 
 	const init = useRef(true);
 
@@ -122,12 +125,17 @@ export const Projects = (): ReactElement => {
 				setPaginatedProjects(paginateIssues);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page]);
+	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page, dispatch]);
 
 	useEffect(() => {
 		if (init.current && getProjectsCall && authState.authData) {
@@ -204,10 +212,20 @@ export const Projects = (): ReactElement => {
 				.then((response) => {
 					getProjectsCall();
 					resetForm();
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Project was successfully added.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error,
+						})
+					);
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -237,10 +255,20 @@ export const Projects = (): ReactElement => {
 				.then((response) => {
 					setEditIndex(-1);
 					getProjectsCall();
-					//TODO Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Project was successfully updated.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO Notify
+					dispatch(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error,
+						})
+					);
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -270,10 +298,20 @@ export const Projects = (): ReactElement => {
 		deleteProject(range[deleteIndex])
 			.then((response) => {
 				getProjectsCall();
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.SUCCESS,
+						message: "Project was successfully deleted.",
+					})
+				);
 			})
 			.catch((error) => {
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			});
 	};
 
