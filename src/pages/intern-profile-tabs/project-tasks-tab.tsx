@@ -16,6 +16,7 @@ import { ProjectTask } from "../../models";
 import { Close, Sort, Search } from "@material-ui/icons";
 import { Pagination } from "@material-ui/lab";
 import useStyles from "../../theme";
+import { EmptyPlaceholder, NoResultPlaceholder } from "../../components";
 
 const SORT_BY: {
 	key: keyof ProjectTask;
@@ -252,36 +253,47 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 						</Grid>
 					</Grid>
 				</ListItem>
-				{paginatedProjectTasks?.map((gitIssue: ProjectTask, index: number) => {
-					return (
-						<React.Fragment key={index}>
-							<ListItem>
-								<Grid container spacing={2}>
-									<Grid item xs={1}>
-										<FormControlLabel
-											control={
-												<Checkbox
-													checked={gitIssue.Completed === "yes"}
-													name="completed"
-													disabled
-												/>
-											}
-											label=""
-										/>
+				{projectTasks?.length === 0 ? (
+					<EmptyPlaceholder
+						title="The are no project tasks to show here"
+						subtitle="Why not add a new project task to show here?"
+					/>
+				) : filteredProjectTasks?.length === 0 ? (
+					<div>
+						<NoResultPlaceholder title="No results found" subtitle="Try something else?" />
+					</div>
+				) : (
+					paginatedProjectTasks?.map((gitIssue: ProjectTask, index: number) => {
+						return (
+							<React.Fragment key={index}>
+								<ListItem>
+									<Grid container spacing={2}>
+										<Grid item xs={1}>
+											<FormControlLabel
+												control={
+													<Checkbox
+														checked={gitIssue.Completed === "yes"}
+														name="completed"
+														disabled
+													/>
+												}
+												label=""
+											/>
+										</Grid>
+										<Grid container alignItems="center" item xs={6}>
+											<Typography component="h4">{gitIssue.Title}</Typography>
+										</Grid>
+										<Grid container alignItems="center" item xs={5}>
+											<Typography component="h4">{gitIssue.PullRequest}</Typography>
+										</Grid>
 									</Grid>
-									<Grid container alignItems="center" item xs={6}>
-										<Typography component="h4">{gitIssue.Title}</Typography>
-									</Grid>
-									<Grid container alignItems="center" item xs={5}>
-										<Typography component="h4">{gitIssue.PullRequest}</Typography>
-									</Grid>
-								</Grid>
-							</ListItem>
-							{paginatedProjectTasks.length - 1 !== index && <Divider />}
-						</React.Fragment>
-					);
-				})}
-				{projectTasks.length > 10 && (
+								</ListItem>
+								{paginatedProjectTasks.length - 1 !== index && <Divider />}
+							</React.Fragment>
+						);
+					})
+				)}
+				{filteredProjectTasks.length > 10 && (
 					<Pagination
 						count={Math.ceil(filteredProjectTasks.length / itemsPerPage)}
 						page={page}
