@@ -24,6 +24,7 @@ import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import { Notify } from "../utils";
+import { EmptyPlaceholder, NoResultPlaceholder } from "../components";
 
 const SORT_BY: {
 	key: keyof Project;
@@ -487,121 +488,126 @@ export const Projects = (): ReactElement => {
 							</Grid>
 						</Grid>
 					</ListItem>
-					{isLoading
-						? listSkeletons()
-						: paginatedProjects?.map((gitIssue: Project, index: number) => {
-								return (
-									<React.Fragment key={index}>
-										<ListItem>
-											<Grid container spacing={2}>
-												{editIndex === index ? (
-													<Grid container item xs={10}>
-														<form
-															onSubmit={editForm.handleSubmit}
-															className={classes.gridForm}
-														>
-															<Grid xs={6} item className={classes.gridRightMargin}>
-																<TextField
-																	variant="standard"
-																	name="title"
-																	label="Title"
-																	fullWidth
-																	value={editForm.values.title}
-																	onBlur={editForm.handleBlur}
-																	onChange={editForm.handleChange}
-																	helperText={
-																		editForm.touched.title &&
-																		editForm.errors.title &&
-																		editForm.errors.title
-																	}
-																	error={
-																		!!(
-																			editForm.touched.title &&
-																			editForm.errors.title
-																		)
-																	}
-																/>
-															</Grid>
-															<Grid xs={6} item>
-																<TextField
-																	variant="standard"
-																	name="mentor"
-																	label="Mentor"
-																	fullWidth
-																	value={editForm.values.mentor}
-																	onBlur={editForm.handleBlur}
-																	onChange={editForm.handleChange}
-																	helperText={
+					{isLoading ? (
+						listSkeletons()
+					) : projects?.length === 0 ? (
+						<EmptyPlaceholder
+							title="The are no blogs to show here"
+							subtitle="Why not add a new blog to show here?"
+						/>
+					) : filteredProjects?.length === 0 ? (
+						<div>
+							<NoResultPlaceholder title="No results found" subtitle="Try something else?" />
+						</div>
+					) : (
+						paginatedProjects?.map((gitIssue: Project, index: number) => {
+							return (
+								<React.Fragment key={index}>
+									<ListItem>
+										<Grid container spacing={2}>
+											{editIndex === index ? (
+												<Grid container item xs={10}>
+													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
+														<Grid xs={6} item className={classes.gridRightMargin}>
+															<TextField
+																variant="standard"
+																name="title"
+																label="Title"
+																fullWidth
+																value={editForm.values.title}
+																onBlur={editForm.handleBlur}
+																onChange={editForm.handleChange}
+																helperText={
+																	editForm.touched.title &&
+																	editForm.errors.title &&
+																	editForm.errors.title
+																}
+																error={
+																	!!(editForm.touched.title && editForm.errors.title)
+																}
+															/>
+														</Grid>
+														<Grid xs={6} item>
+															<TextField
+																variant="standard"
+																name="mentor"
+																label="Mentor"
+																fullWidth
+																value={editForm.values.mentor}
+																onBlur={editForm.handleBlur}
+																onChange={editForm.handleChange}
+																helperText={
+																	editForm.touched.mentor &&
+																	editForm.errors.mentor &&
+																	editForm.errors.mentor
+																}
+																error={
+																	!!(
 																		editForm.touched.mentor &&
-																		editForm.errors.mentor &&
 																		editForm.errors.mentor
-																	}
-																	error={
-																		!!(
-																			editForm.touched.mentor &&
-																			editForm.errors.mentor
-																		)
-																	}
-																/>
-															</Grid>
-														</form>
+																	)
+																}
+															/>
+														</Grid>
+													</form>
+												</Grid>
+											) : (
+												<>
+													<Grid container alignItems="center" item xs={5}>
+														<Typography component="h4">{gitIssue.Title}</Typography>
 													</Grid>
-												) : (
-													<>
-														<Grid container alignItems="center" item xs={5}>
-															<Typography component="h4">{gitIssue.Title}</Typography>
-														</Grid>
-														<Grid container alignItems="center" item xs={5}>
-															<Typography component="h4">{gitIssue.Mentor}</Typography>
-														</Grid>
-													</>
-												)}
-												<Grid container justify="flex-end" item xs={2}>
-													{editIndex !== index && (
-														<IconButton
-															aria-label="edit"
-															onClick={() => {
-																setEditIndex(index);
-															}}
-														>
-															<Edit />
-														</IconButton>
-													)}
-													{editIndex === index && (
-														<IconButton
-															onClick={() => editForm.handleSubmit()}
-															type="submit"
-															aria-label="save"
-														>
-															<Save />
-														</IconButton>
-													)}
-													{editIndex === index && (
-														<IconButton
-															aria-label="close"
-															onClick={() => {
-																setEditIndex(-1);
-															}}
-														>
-															<Close />
-														</IconButton>
-													)}
+													<Grid container alignItems="center" item xs={5}>
+														<Typography component="h4">{gitIssue.Mentor}</Typography>
+													</Grid>
+												</>
+											)}
+											<Grid container justify="flex-end" item xs={2}>
+												{editIndex !== index && (
 													<IconButton
-														aria-label="delete"
+														aria-label="edit"
 														onClick={() => {
-															setDeleteIndex(parseInt(gitIssue.id));
+															setEditIndex(index);
 														}}
 													>
-														<Delete />
+														<Edit />
 													</IconButton>
-												</Grid>
+												)}
+												{editIndex === index && (
+													<IconButton
+														onClick={() => editForm.handleSubmit()}
+														type="submit"
+														aria-label="save"
+													>
+														<Save />
+													</IconButton>
+												)}
+												{editIndex === index && (
+													<IconButton
+														aria-label="close"
+														onClick={() => {
+															setEditIndex(-1);
+														}}
+													>
+														<Close />
+													</IconButton>
+												)}
+												<IconButton
+													aria-label="delete"
+													onClick={() => {
+														setDeleteIndex(parseInt(gitIssue.id));
+													}}
+												>
+													<Delete />
+												</IconButton>
 											</Grid>
-										</ListItem>
-										{paginatedProjects.length - 1 !== index && <Divider />}
-									</React.Fragment>
-								);
-						  })}
-					{!isLoading && projects.length > 10 && (
+										</Grid>
+									</ListItem>
+									{paginatedProjects.length - 1 !== index && <Divider />}
+								</React.Fragment>
+							);
+						})
+					)}
+					{!isLoading && filteredProjects.length > 10 && (
 						<Pagination
 							count={Math.ceil(filteredProjects.length / itemsPerPage)}
 							page={page}
