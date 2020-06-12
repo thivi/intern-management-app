@@ -201,31 +201,33 @@ export const DashboardMentor = (): ReactElement => {
 			<Grid item xs={6}>
 				<Paper className={`${classes.tile} ${classes.centeredTile}`}>
 					{!isLoading ? (
-						<Chart
-							data={[
-								{
-									type: `Completed (${intern.projectTasksCompletion * 100}%)`,
-									value: intern?.projectTasksCompletion * 100,
-								},
-								{
-									type: `Incomplete (${100 - intern?.projectTasksCompletion * 100}%)`,
-									value: 100 - intern?.projectTasksCompletion * 100,
-								},
-							]}
-							width={500}
-						>
-							<PieSeries valueField="value" argumentField="type" innerRadius={0.6} />
-							<Title text="Project Tasks Completed" />
-							<Animation />
-							<Legend />
-							<EventTracker />
-							<Tooltip />
-						</Chart>
+						<Box padding={3}>
+							<Chart
+								data={[
+									{
+										type: `Completed (${intern.projectTasksCompletion * 100}%)`,
+										value: intern?.projectTasksCompletion * 100,
+									},
+									{
+										type: `Incomplete (${100 - intern?.projectTasksCompletion * 100}%)`,
+										value: 100 - intern?.projectTasksCompletion * 100,
+									},
+								]}
+								width={500}
+							>
+								<PieSeries valueField="value" argumentField="type" innerRadius={0.6} />
+								<Title text="Project Tasks Completed" />
+								<Animation />
+								<Legend />
+								<EventTracker />
+								<Tooltip />
+							</Chart>
+						</Box>
 					) : (
-						<>
+						<Box padding={3}>
 							<Skeleton variant="text" height={70} width={400} />
 							<Skeleton variant="circle" height={400} width={400} animation="wave" />
-						</>
+						</Box>
 					)}
 				</Paper>
 			</Grid>
@@ -253,6 +255,7 @@ export const DashboardMentor = (): ReactElement => {
 									onClick={() => {
 										history.push(INTERNS);
 									}}
+									fullWidth
 								>
 									More
 								</Button>
