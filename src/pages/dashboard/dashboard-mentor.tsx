@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useCallback, useEffect, useContext } from "react";
-import { Typography, Button, Grid, Paper, List, ListItem, ListItemIcon } from "@material-ui/core";
+import { Typography, Button, Grid, Paper, List, ListItem, ListItemIcon, Box, Link } from "@material-ui/core";
 import {
 	Blog,
 	GitIssue,
@@ -21,7 +21,7 @@ import {
 	getProjectTasks,
 	getProjects,
 } from "../../apis";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { INTERNS } from "../../constants";
 import { Chart, PieSeries, Title, Legend, Tooltip } from "@devexpress/dx-react-chart-material-ui";
 
@@ -31,6 +31,7 @@ import { findTimeOfTheDay, Notify } from "../../utils";
 import { AuthContext, NotificationContext } from "../../helpers";
 import { Skeleton } from "@material-ui/lab";
 import { WorkOutlineOutlined, EditOutlined } from "@material-ui/icons";
+import { MorningGraphic, NoonGraphic, EveningGraphic, NightGraphic } from "../../theme/img";
 
 export const DashboardMentor = (): ReactElement => {
 	const [internInfo, setInternInfo] = useState<InternInfo>(null);
@@ -159,12 +160,32 @@ export const DashboardMentor = (): ReactElement => {
 		getInternsCall();
 	}, [getInternsCall]);
 
+	const findIllustration = (): string => {
+		switch (findTimeOfTheDay().image) {
+			case "morning":
+				return MorningGraphic;
+			case "noon":
+				return NoonGraphic;
+			case "evening":
+				return EveningGraphic;
+			case "night":
+				return NightGraphic;
+		}
+	};
+
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
-				<Typography variant="h4">
-					Good {findTimeOfTheDay()}, {authState.authData.name}!
-				</Typography>
+				<Box display="flex" alignItems="center" marginBottom={3}>
+					<Box marginRight={3}>
+						<img width={100} src={findIllustration()} alt="good-morning" />
+					</Box>
+					<Box display="flex" alignItems="center">
+						<Typography variant="h4">
+							Good {findTimeOfTheDay().text}, {authState.authData.name}!
+						</Typography>
+					</Box>
+				</Box>
 			</Grid>
 			<Grid item xs={6}>
 				<Paper className={`${classes.tile} ${classes.centeredTile}`}>
@@ -354,7 +375,7 @@ export const DashboardMentor = (): ReactElement => {
 														<ListItemIcon>
 															<EditOutlined />
 														</ListItemIcon>
-														<Link to={blog.Link}>
+														<Link target="_blank" href={blog.Link}>
 															<Typography>{blog.Title}</Typography>
 														</Link>
 													</ListItem>
