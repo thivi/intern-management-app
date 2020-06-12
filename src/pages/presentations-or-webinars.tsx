@@ -16,20 +16,21 @@ import {
 	Typography,
 	InputBase,
 } from "@material-ui/core";
-import { PresentationOrWebinar } from "../models";
+import { PresentationOrWebinar, NotificationType } from "../models";
 import {
 	getPresentationsOrWebinars,
 	addPresentationsOrWebinars,
 	updatePresentationsOrWebinars,
 	deletePresentationOrWebinar,
 } from "../apis";
-import { AuthContext } from "../helpers";
+import { AuthContext, NotificationContext } from "../helpers";
 import { PULL_REQUESTS } from "../constants";
 import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
+import { Notify } from "../utils";
 
 const SORT_BY: {
 	key: keyof PresentationOrWebinar;
@@ -48,7 +49,6 @@ export const PresentationsOrWebinars = (): ReactElement => {
 	);
 	const [filteredPresentationsOrWebinars, setFilteredPresentationsOrWebinars] = useState<PresentationOrWebinar[]>([]);
 	const [range, setRange] = useState<string[]>([]);
-	const { authState } = useContext(AuthContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [editIndex, setEditIndex] = useState(-1);
 	const [page, setPage] = useState(1);
@@ -64,6 +64,9 @@ export const PresentationsOrWebinars = (): ReactElement => {
 	const classes = useStyles();
 
 	const init = useRef(true);
+
+	const { authState } = useContext(AuthContext);
+	const { dispatch } = useContext(NotificationContext);
 
 	const getPresentationsOrWebinarsCall = useCallback(() => {
 		setIsLoading(true);
@@ -122,12 +125,17 @@ export const PresentationsOrWebinars = (): ReactElement => {
 				setPaginatedPresentationsOrWebinars(paginateIssues);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page]);
+	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page, dispatch]);
 
 	useEffect(() => {
 		if (init.current && getPresentationsOrWebinarsCall && authState.authData) {
@@ -201,10 +209,20 @@ export const PresentationsOrWebinars = (): ReactElement => {
 				.then((response) => {
 					getPresentationsOrWebinarsCall();
 					resetForm();
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Presentation/Webinar was successfully added.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error,
+						})
+					);
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -236,10 +254,20 @@ export const PresentationsOrWebinars = (): ReactElement => {
 				.then((response) => {
 					setEditIndex(-1);
 					getPresentationsOrWebinarsCall();
-					//TODO Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Presentation/Webinar was successfully updated.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO Notify
+					dispatch(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error,
+						})
+					);
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -273,10 +301,20 @@ export const PresentationsOrWebinars = (): ReactElement => {
 		deletePresentationOrWebinar(range[deleteIndex])
 			.then((response) => {
 				getPresentationsOrWebinarsCall();
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.SUCCESS,
+						message: "Presentation/Webinar was successfully deleted.",
+					})
+				);
 			})
 			.catch((error) => {
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			});
 	};
 
