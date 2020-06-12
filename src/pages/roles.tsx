@@ -30,6 +30,7 @@ import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
 import { Notify } from "../utils";
+import { EmptyPlaceholder, NoResultPlaceholder } from "../components";
 
 const SORT_BY: {
 	key: keyof Role;
@@ -541,134 +542,136 @@ export const Roles = (): ReactElement => {
 							</Grid>
 						</Grid>
 					</ListItem>
-					{isLoading
-						? listSkeletons()
-						: paginatedRoles?.map((gitIssue: Role, index: number) => {
-								return (
-									<React.Fragment key={index}>
-										<ListItem>
-											<Grid container spacing={2}>
-												{editIndex === index ? (
-													<Grid container item xs={10}>
-														<form
-															onSubmit={editForm.handleSubmit}
-															className={classes.gridForm}
-														>
-															<Grid xs={6} item className={classes.gridRightMargin}>
-																<TextField
-																	variant="standard"
-																	name="email"
-																	label="Email"
-																	fullWidth
-																	value={editForm.values.email}
+					{isLoading ? (
+						listSkeletons()
+					) : roles?.length === 0 ? (
+						<EmptyPlaceholder
+							title="The are no roles to show here"
+							subtitle="Why not add a new role to show here?"
+						/>
+					) : filteredRoles?.length === 0 ? (
+						<div>
+							<NoResultPlaceholder title="No results found" subtitle="Try something else?" />
+						</div>
+					) : (
+						paginatedRoles?.map((gitIssue: Role, index: number) => {
+							return (
+								<React.Fragment key={index}>
+									<ListItem>
+										<Grid container spacing={2}>
+											{editIndex === index ? (
+												<Grid container item xs={10}>
+													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
+														<Grid xs={6} item className={classes.gridRightMargin}>
+															<TextField
+																variant="standard"
+																name="email"
+																label="Email"
+																fullWidth
+																value={editForm.values.email}
+																onBlur={editForm.handleBlur}
+																onChange={editForm.handleChange}
+																helperText={
+																	editForm.touched.email &&
+																	editForm.errors.email &&
+																	editForm.errors.email
+																}
+																error={
+																	!!(editForm.touched.email && editForm.errors.email)
+																}
+															/>
+														</Grid>
+														<Grid xs={6} item>
+															<FormControl variant="standard" fullWidth>
+																<InputLabel>Role</InputLabel>
+																<Select
+																	label="Role"
+																	name="role"
+																	value={editForm.values.role}
 																	onBlur={editForm.handleBlur}
 																	onChange={editForm.handleChange}
-																	helperText={
-																		editForm.touched.email &&
-																		editForm.errors.email &&
-																		editForm.errors.email
-																	}
 																	error={
 																		!!(
-																			editForm.touched.email &&
-																			editForm.errors.email
+																			editForm.touched.role &&
+																			editForm.errors.role
 																		)
 																	}
-																/>
-															</Grid>
-															<Grid xs={6} item>
-																<FormControl variant="standard" fullWidth>
-																	<InputLabel>Role</InputLabel>
-																	<Select
-																		label="Role"
-																		name="role"
-																		value={editForm.values.role}
-																		onBlur={editForm.handleBlur}
-																		onChange={editForm.handleChange}
-																		error={
-																			!!(
-																				editForm.touched.role &&
-																				editForm.errors.role
-																			)
-																		}
-																		fullWidth
-																	>
-																		{ROLES_OPTIONS.map((option, index: number) => {
-																			return (
-																				<MenuItem
-																					key={index}
-																					value={option.key}
-																				>
-																					{option.text}
-																				</MenuItem>
-																			);
-																		})}
-																	</Select>
-																	{editForm.touched.role && editForm.errors.role && (
-																		<FormHelperText>
-																			{editForm.errors.role}
-																		</FormHelperText>
-																	)}
-																</FormControl>
-															</Grid>
-														</form>
+																	fullWidth
+																>
+																	{ROLES_OPTIONS.map((option, index: number) => {
+																		return (
+																			<MenuItem key={index} value={option.key}>
+																				{option.text}
+																			</MenuItem>
+																		);
+																	})}
+																</Select>
+																{editForm.touched.role && editForm.errors.role && (
+																	<FormHelperText>
+																		{editForm.errors.role}
+																	</FormHelperText>
+																)}
+															</FormControl>
+														</Grid>
+													</form>
+												</Grid>
+											) : (
+												<>
+													<Grid container alignItems="center" item xs={5}>
+														<Typography>{gitIssue.Email_ID}</Typography>
 													</Grid>
-												) : (
-													<>
-														<Grid container alignItems="center" item xs={5}>
-															<Typography>{gitIssue.Email_ID}</Typography>
-														</Grid>
-														<Grid container alignItems="center" item xs={5}>
-															<Typography>{gitIssue.role}</Typography>
-														</Grid>
-													</>
-												)}
-												<Grid container justify="flex-end" item xs={2}>
-													{editIndex !== index && (
-														<IconButton
-															aria-label="edit"
-															onClick={() => {
-																setEditIndex(index);
-															}}
-														>
-															<Edit />
-														</IconButton>
-													)}
-													{editIndex === index && (
-														<IconButton
-															onClick={() => editForm.handleSubmit()}
-															type="submit"
-															aria-label="save"
-														>
-															<Save />
-														</IconButton>
-													)}
-													{editIndex === index && (
-														<IconButton
-															aria-label="close"
-															onClick={() => {
-																setEditIndex(-1);
-															}}
-														>
-															<Close />
-														</IconButton>
-													)}
+													<Grid container alignItems="center" item xs={5}>
+														<Typography>{gitIssue.role}</Typography>
+													</Grid>
+												</>
+											)}
+											<Grid container justify="flex-end" item xs={2}>
+												{editIndex !== index && (
 													<IconButton
-														aria-label="delete"
+														aria-label="edit"
 														onClick={() => {
-															setDeleteIndex(parseInt(gitIssue.id));
+															setEditIndex(index);
 														}}
 													>
-														<Delete />
+														<Edit />
 													</IconButton>
-												</Grid>
+												)}
+												{editIndex === index && (
+													<IconButton
+														onClick={() => editForm.handleSubmit()}
+														type="submit"
+														aria-label="save"
+													>
+														<Save />
+													</IconButton>
+												)}
+												{editIndex === index && (
+													<IconButton
+														aria-label="close"
+														onClick={() => {
+															setEditIndex(-1);
+														}}
+													>
+														<Close />
+													</IconButton>
+												)}
+												<IconButton
+													aria-label="delete"
+													onClick={() => {
+														setDeleteIndex(parseInt(gitIssue.id));
+													}}
+												>
+													<Delete />
+												</IconButton>
 											</Grid>
-										</ListItem>
-										{paginatedRoles.length - 1 !== index && <Divider />}
-									</React.Fragment>
-								);
-						  })}
-					{!isLoading && roles.length > 10 && (
+										</Grid>
+									</ListItem>
+									{paginatedRoles.length - 1 !== index && <Divider />}
+								</React.Fragment>
+							);
+						})
+					)}
+					{!isLoading && filteredRoles.length > 10 && (
 						<Pagination
 							count={Math.ceil(filteredRoles.length / itemsPerPage)}
 							page={page}
