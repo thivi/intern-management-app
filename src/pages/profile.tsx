@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState, useCallback, useContext } from "react";
 import { getProfile, updateProfile, addProfile } from "../apis";
 import { Profile, NotificationType } from "../models";
-import { Grid, Avatar, Typography, TextField, Button, Paper } from "@material-ui/core";
+import { Grid, Avatar, Typography, TextField, Button, Paper, Box } from "@material-ui/core";
 import { useFormik } from "formik";
 import { convertKeyToLabel, Notify } from "../utils";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
@@ -196,38 +196,42 @@ export const ProfilePage = (): ReactElement => {
 							{isLoading ? (
 								<Skeleton variant="text" height={80} />
 							) : (
-								<TextField
-									name="university"
-									placeholder="eg: University of Colombo, University of Moratuwa etc."
-									value={values.university ?? ""}
-									onChange={handleChange}
-									variant="outlined"
-									label="University"
-									fullWidth
-									helperText={touched.university && errors.university && errors.university}
-									onBlur={handleBlur}
-									error={!!(touched.university && errors.university)}
-								/>
+								<Box marginBottom={2}>
+									<TextField
+										name="university"
+										placeholder="eg: University of Colombo, University of Moratuwa etc."
+										value={values.university ?? ""}
+										onChange={handleChange}
+										variant="outlined"
+										label="University"
+										fullWidth
+										helperText={touched.university && errors.university && errors.university}
+										onBlur={handleBlur}
+										error={!!(touched.university && errors.university)}
+									/>
+								</Box>
 							)}
 						</Grid>
 						<Grid item xs={12}>
 							{isLoading ? (
 								<Skeleton variant="text" height={80} />
 							) : (
-								<TextField
-									name="degree"
-									placeholder={
-										"eg: B.Sc. in Information Technology, B.Eng. in Software Engineering etc."
-									}
-									value={values.degree ?? ""}
-									variant="outlined"
-									label="Degree"
-									fullWidth
-									onChange={handleChange}
-									helperText={touched.degree && errors.degree && errors.degree}
-									onBlur={handleBlur}
-									error={!!(touched.degree && errors.degree)}
-								/>
+								<Box marginBottom={2}>
+									<TextField
+										name="degree"
+										placeholder={
+											"eg: B.Sc. in Information Technology, B.Eng. in Software Engineering etc."
+										}
+										value={values.degree ?? ""}
+										variant="outlined"
+										label="Degree"
+										fullWidth
+										onChange={handleChange}
+										helperText={touched.degree && errors.degree && errors.degree}
+										onBlur={handleBlur}
+										error={!!(touched.degree && errors.degree)}
+									/>
+								</Box>
 							)}
 						</Grid>
 					</Grid>
@@ -303,20 +307,22 @@ export const ProfilePage = (): ReactElement => {
 							{isLoading ? (
 								<Skeleton variant="text" height={80} />
 							) : (
-								<TextField
-									name="contact_number"
-									placeholder="eg: 077756896532"
-									value={values.contact_number ?? ""}
-									variant="outlined"
-									label="Contact Number"
-									fullWidth
-									onChange={handleChange}
-									helperText={
-										touched.contact_number && errors.contact_number && errors.contact_number
-									}
-									onBlur={handleBlur}
-									error={!!(touched.contact_number && errors.contact_number)}
-								/>
+								<Box marginBottom={2}>
+									<TextField
+										name="contact_number"
+										placeholder="eg: 077756896532"
+										value={values.contact_number ?? ""}
+										variant="outlined"
+										label="Contact Number"
+										fullWidth
+										onChange={handleChange}
+										helperText={
+											touched.contact_number && errors.contact_number && errors.contact_number
+										}
+										onBlur={handleBlur}
+										error={!!(touched.contact_number && errors.contact_number)}
+									/>
+								</Box>
 							)}
 						</Grid>
 					</Grid>
@@ -331,36 +337,40 @@ export const ProfilePage = (): ReactElement => {
 							{isLoading ? (
 								<Skeleton variant="text" height={80} />
 							) : (
-								<TextField
-									name="mentor"
-									placeholder="eg: John Doe"
-									value={values.mentor ?? ""}
-									variant="outlined"
-									label="Mentor email"
-									fullWidth
-									onChange={handleChange}
-									helperText={touched.mentor && errors.mentor && errors.mentor}
-									onBlur={handleBlur}
-									error={!!(touched.mentor && errors.mentor)}
-								/>
+								<Box marginBottom={2}>
+									<TextField
+										name="mentor"
+										placeholder="eg: John Doe"
+										value={values.mentor ?? ""}
+										variant="outlined"
+										label="Mentor email"
+										fullWidth
+										onChange={handleChange}
+										helperText={touched.mentor && errors.mentor && errors.mentor}
+										onBlur={handleBlur}
+										error={!!(touched.mentor && errors.mentor)}
+									/>
+								</Box>
 							)}
 						</Grid>
 						<Grid item xs={12}>
 							{isLoading ? (
 								<Skeleton variant="text" height={80} />
 							) : (
-								<TextField
-									name="co_mentor"
-									placeholder="eg: John Doe"
-									value={values.co_mentor ?? ""}
-									variant="outlined"
-									label="Co-mentor email"
-									fullWidth
-									onChange={handleChange}
-									helperText={touched.co_mentor && errors.co_mentor && errors.co_mentor}
-									onBlur={handleBlur}
-									error={!!(touched.co_mentor && errors.co_mentor)}
-								/>
+								<Box marginBottom={2}>
+									<TextField
+										name="co_mentor"
+										placeholder="eg: John Doe"
+										value={values.co_mentor ?? ""}
+										variant="outlined"
+										label="Co-mentor email"
+										fullWidth
+										onChange={handleChange}
+										helperText={touched.co_mentor && errors.co_mentor && errors.co_mentor}
+										onBlur={handleBlur}
+										error={!!(touched.co_mentor && errors.co_mentor)}
+									/>
+								</Box>
 							)}
 						</Grid>
 					</Grid>
@@ -375,36 +385,40 @@ export const ProfilePage = (): ReactElement => {
 							{isLoading ? (
 								<Skeleton variant="text" height={80} />
 							) : (
-								<TextField
-									name="blog"
-									placeholder="eg: https://www.thearmchaircritic.org"
-									value={values.blog ?? ""}
-									variant="outlined"
-									label="Blog Link"
-									fullWidth
-									onChange={handleChange}
-									helperText={touched.blog && errors.blog && errors.blog}
-									onBlur={handleBlur}
-									error={!!(touched.blog && errors.blog)}
-								/>
+								<Box marginBottom={2}>
+									<TextField
+										name="blog"
+										placeholder="eg: https://www.thearmchaircritic.org"
+										value={values.blog ?? ""}
+										variant="outlined"
+										label="Blog Link"
+										fullWidth
+										onChange={handleChange}
+										helperText={touched.blog && errors.blog && errors.blog}
+										onBlur={handleBlur}
+										error={!!(touched.blog && errors.blog)}
+									/>
+								</Box>
 							)}
 						</Grid>
 						<Grid item xs={12}>
 							{isLoading ? (
 								<Skeleton variant="text" height={80} />
 							) : (
-								<TextField
-									name="gantt_chart"
-									placeholder="eg: https://docs.google.com/..."
-									value={values.gantt_chart ?? ""}
-									variant="outlined"
-									label="Link to Gantt Chart"
-									fullWidth
-									onChange={handleChange}
-									helperText={touched.gantt_chart && errors.gantt_chart && errors.gantt_chart}
-									onBlur={handleBlur}
-									error={!!(touched.gantt_chart && errors.gantt_chart)}
-								/>
+								<Box marginBottom={2}>
+									<TextField
+										name="gantt_chart"
+										placeholder="eg: https://docs.google.com/..."
+										value={values.gantt_chart ?? ""}
+										variant="outlined"
+										label="Link to Gantt Chart"
+										fullWidth
+										onChange={handleChange}
+										helperText={touched.gantt_chart && errors.gantt_chart && errors.gantt_chart}
+										onBlur={handleBlur}
+										error={!!(touched.gantt_chart && errors.gantt_chart)}
+									/>
+								</Box>
 							)}
 						</Grid>
 					</Grid>
