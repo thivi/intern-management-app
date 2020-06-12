@@ -40,6 +40,7 @@ import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { InternProfile } from ".";
 import { Notify } from "../utils";
+import { EmptyPlaceholder, NoResultPlaceholder } from "../components";
 
 const SORT_BY: {
 	key: keyof Intern;
@@ -670,150 +671,158 @@ export const Interns = (): ReactElement => {
 									</Grid>
 								</Grid>
 							</ListItem>
-							{isLoading
-								? listSkeletons()
-								: paginatedInterns?.map((intern: Intern, index: number) => {
-										return (
-											<React.Fragment key={index}>
-												<ListItem>
-													<Grid container spacing={2}>
-														<Grid container alignItems="center" item xs={2}>
-															<Typography
-																onMouseEnter={(
-																	event: React.MouseEvent<HTMLSpanElement, MouseEvent>
-																) => {
-																	handlePopOverOpen(event, index);
-																}}
-																onMouseLeave={handlePopOverClose}
-																onClick={() => {
-																	setShowInternProfile(true);
-																	handlePopOverClose();
-																	setSelectedIntern(
-																		internInfo.find(
-																			(currIntern) =>
-																				currIntern.profile.Email_ID ===
-																				intern.profile.Email_ID
-																		)
-																	);
-																}}
-																color="primary"
-																className={classes.linkText}
-															>
-																{intern.name}
-															</Typography>
-															<Popover
-																open={popOverIndex === index}
-																anchorEl={anchorEl}
-																onClose={handlePopOverClose}
-																disableRestoreFocus
-																className={classes.popOver}
-																classes={{
-																	paper: classes.paper,
-																}}
-																anchorOrigin={{
-																	vertical: "bottom",
-																	horizontal: "right",
-																}}
-																transformOrigin={{
-																	vertical: "top",
-																	horizontal: "left",
-																}}
-															>
-																<List>
-																	<Typography variant="subtitle1">Contact</Typography>
-																	<ListItem>
-																		<ListItemText
-																			secondary="Email"
-																			primary={intern.profile.Email_ID}
-																		/>
-																	</ListItem>
-																	<ListItem>
-																		<ListItemText
-																			secondary="Contact No."
-																			primary={intern.profile.Contact_no}
-																		/>
-																	</ListItem>
+							{isLoading ? (
+								listSkeletons()
+							) : interns?.length === 0 ? (
+								<EmptyPlaceholder
+									title="The are no interns to show here"
+									subtitle="Why not add a new intern to show here?"
+								/>
+							) : filteredInterns?.length === 0 ? (
+								<div>
+									<NoResultPlaceholder title="No results found" subtitle="Try something else?" />
+								</div>
+							) : (
+								paginatedInterns?.map((intern: Intern, index: number) => {
+									return (
+										<React.Fragment key={index}>
+											<ListItem>
+												<Grid container spacing={2}>
+													<Grid container alignItems="center" item xs={2}>
+														<Typography
+															onMouseEnter={(
+																event: React.MouseEvent<HTMLSpanElement, MouseEvent>
+															) => {
+																handlePopOverOpen(event, index);
+															}}
+															onMouseLeave={handlePopOverClose}
+															onClick={() => {
+																setShowInternProfile(true);
+																handlePopOverClose();
+																setSelectedIntern(
+																	internInfo.find(
+																		(currIntern) =>
+																			currIntern.profile.Email_ID ===
+																			intern.profile.Email_ID
+																	)
+																);
+															}}
+															color="primary"
+															className={classes.linkText}
+														>
+															{intern.name}
+														</Typography>
+														<Popover
+															open={popOverIndex === index}
+															anchorEl={anchorEl}
+															onClose={handlePopOverClose}
+															disableRestoreFocus
+															className={classes.popOver}
+															classes={{
+																paper: classes.paper,
+															}}
+															anchorOrigin={{
+																vertical: "bottom",
+																horizontal: "right",
+															}}
+															transformOrigin={{
+																vertical: "top",
+																horizontal: "left",
+															}}
+														>
+															<List>
+																<Typography variant="subtitle1">Contact</Typography>
+																<ListItem>
+																	<ListItemText
+																		secondary="Email"
+																		primary={intern.profile.Email_ID}
+																	/>
+																</ListItem>
+																<ListItem>
+																	<ListItemText
+																		secondary="Contact No."
+																		primary={intern.profile.Contact_no}
+																	/>
+																</ListItem>
 
-																	<Typography variant="subtitle1">Mentors</Typography>
-																	<ListItem>
-																		<ListItemText
-																			secondary="Mentor"
-																			primary={intern.profile.Mentor}
-																		/>
-																	</ListItem>
-																	<ListItem>
-																		<ListItemText
-																			secondary="Co-mentor"
-																			primary={intern.profile.Co_mentor}
-																		/>
-																	</ListItem>
+																<Typography variant="subtitle1">Mentors</Typography>
+																<ListItem>
+																	<ListItemText
+																		secondary="Mentor"
+																		primary={intern.profile.Mentor}
+																	/>
+																</ListItem>
+																<ListItem>
+																	<ListItemText
+																		secondary="Co-mentor"
+																		primary={intern.profile.Co_mentor}
+																	/>
+																</ListItem>
 
-																	<Typography variant="subtitle1">
-																		Internship Period
-																	</Typography>
-																	<ListItem>
-																		<ListItemText
-																			secondary="Joined Date"
-																			primary={intern.profile.Joined_date}
-																		/>
-																	</ListItem>
-																	<ListItem>
-																		<ListItemText
-																			secondary="Leaving Date"
-																			primary={intern.profile.Leaving_date}
-																		/>
-																	</ListItem>
+																<Typography variant="subtitle1">
+																	Internship Period
+																</Typography>
+																<ListItem>
+																	<ListItemText
+																		secondary="Joined Date"
+																		primary={intern.profile.Joined_date}
+																	/>
+																</ListItem>
+																<ListItem>
+																	<ListItemText
+																		secondary="Leaving Date"
+																		primary={intern.profile.Leaving_date}
+																	/>
+																</ListItem>
 
-																	<Typography variant="subtitle1">From</Typography>
-																	<ListItem>
-																		<ListItemText
-																			secondary="University"
-																			primary={intern.profile.University}
-																		/>
-																	</ListItem>
+																<Typography variant="subtitle1">From</Typography>
+																<ListItem>
+																	<ListItemText
+																		secondary="University"
+																		primary={intern.profile.University}
+																	/>
+																</ListItem>
 
-																	<Typography variant="subtitle1">Career</Typography>
-																	<ListItem>
-																		<ListItemText
-																			secondary="Project"
-																			primary={
-																				intern.projects instanceof Array &&
-																				intern.projects
-																					.map(
-																						(project: Project) =>
-																							project.Title
-																					)
-																					.join("\n")
-																			}
-																		/>
-																	</ListItem>
-																</List>
-															</Popover>
-														</Grid>
-														<Grid container alignItems="center" item xs={2}>
-															<Typography>{intern.blogs}</Typography>
-														</Grid>
-														<Grid container alignItems="center" item xs={2}>
-															<Typography>{intern.gitIssues}</Typography>
-														</Grid>
-														<Grid container alignItems="center" item xs={2}>
-															<Typography>{intern.presentationsOrWebinars}</Typography>
-														</Grid>
-														<Grid container alignItems="center" item xs={2}>
-															<Typography>
-																{intern.projectTasksCompletion * 100}%
-															</Typography>
-														</Grid>
-														<Grid container alignItems="center" item xs={2}>
-															<Typography>{intern.pullRequests}</Typography>
-														</Grid>
+																<Typography variant="subtitle1">Career</Typography>
+																<ListItem>
+																	<ListItemText
+																		secondary="Project"
+																		primary={
+																			intern.projects instanceof Array &&
+																			intern.projects
+																				.map(
+																					(project: Project) => project.Title
+																				)
+																				.join("\n")
+																		}
+																	/>
+																</ListItem>
+															</List>
+														</Popover>
 													</Grid>
-												</ListItem>
-												{paginatedInterns.length - 1 !== index && <Divider />}
-											</React.Fragment>
-										);
-								  })}
-							{!isLoading && interns.length > 10 && (
+													<Grid container alignItems="center" item xs={2}>
+														<Typography>{intern.blogs}</Typography>
+													</Grid>
+													<Grid container alignItems="center" item xs={2}>
+														<Typography>{intern.gitIssues}</Typography>
+													</Grid>
+													<Grid container alignItems="center" item xs={2}>
+														<Typography>{intern.presentationsOrWebinars}</Typography>
+													</Grid>
+													<Grid container alignItems="center" item xs={2}>
+														<Typography>{intern.projectTasksCompletion * 100}%</Typography>
+													</Grid>
+													<Grid container alignItems="center" item xs={2}>
+														<Typography>{intern.pullRequests}</Typography>
+													</Grid>
+												</Grid>
+											</ListItem>
+											{paginatedInterns.length - 1 !== index && <Divider />}
+										</React.Fragment>
+									);
+								})
+							)}
+							{!isLoading && filteredInterns.length > 10 && (
 								<Pagination
 									count={Math.ceil(filteredInterns.length / itemsPerPage)}
 									page={page}
