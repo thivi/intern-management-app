@@ -10,3 +10,4 @@ export * from "./project-tasks";
 export * from "./roles";
 export * from "./interns";
 export * from "./notification";
+export * from "./time-of-the-day";
