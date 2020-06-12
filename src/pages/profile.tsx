@@ -112,7 +112,7 @@ export const ProfilePage = (): ReactElement => {
 			if (values.blog && !validator.isURL(values.blog))
 				errors["blog"] = "Blog link should be a url. " + (errors["blog"] ?? "");
 			if (values.gantt_chart && !validator.isURL(values.gantt_chart))
-				errors["gantt_chart"] = "Gannt Chart should be a link. " + (errors["gantt_chart"] ?? "");
+				errors["gantt_chart"] = "Gantt Chart should be a link. " + (errors["gantt_chart"] ?? "");
 			if (
 				values.leaving_date &&
 				values.joined_date &&
