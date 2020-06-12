@@ -4,6 +4,7 @@ import { GitIssue } from "../../models";
 import { Close, Sort, Search } from "@material-ui/icons";
 import { Pagination } from "@material-ui/lab";
 import useStyles from "../../theme";
+import { NoResultPlaceholder, EmptyPlaceholder } from "../../components";
 
 const SORT_BY: {
 	key: keyof GitIssue;
@@ -170,23 +171,34 @@ export const GitIssuesTab = (props: GitIssuesTabPropsInterface): ReactElement =>
 						</Grid>
 					</Grid>
 				</ListItem>
-				{paginatedGitIssues?.map((gitIssue: GitIssue, index: number) => {
-					return (
-						<React.Fragment key={index}>
-							<ListItem>
-								<Grid container spacing={2}>
-									<Grid container alignItems="center" item xs={12}>
-										<Link target="_blank" href={gitIssue.Link} className={classes.noButtonList}>
-											<Typography>{gitIssue.Issue_Title}</Typography>
-										</Link>
+				{gitIssues?.length === 0 ? (
+					<EmptyPlaceholder
+						title="The are no git issues to show here"
+						subtitle="Why not add a new git issue to show here?"
+					/>
+				) : filteredGitIssues?.length === 0 ? (
+					<div>
+						<NoResultPlaceholder title="No results found" subtitle="Try something else?" />
+					</div>
+				) : (
+					paginatedGitIssues?.map((gitIssue: GitIssue, index: number) => {
+						return (
+							<React.Fragment key={index}>
+								<ListItem>
+									<Grid container spacing={2}>
+										<Grid container alignItems="center" item xs={12}>
+											<Link target="_blank" href={gitIssue.Link} className={classes.noButtonList}>
+												<Typography>{gitIssue.Issue_Title}</Typography>
+											</Link>
+										</Grid>
 									</Grid>
-								</Grid>
-							</ListItem>
-							{paginatedGitIssues.length - 1 !== index && <Divider />}
-						</React.Fragment>
-					);
-				})}
-				{gitIssues.length > 10 && (
+								</ListItem>
+								{paginatedGitIssues.length - 1 !== index && <Divider />}
+							</React.Fragment>
+						);
+					})
+				)}
+				{filteredGitIssues.length > 10 && (
 					<Pagination
 						count={Math.ceil(filteredGitIssues.length / itemsPerPage)}
 						page={page}
