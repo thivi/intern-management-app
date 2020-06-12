@@ -26,6 +26,7 @@ import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
 import { Notify } from "../utils";
+import { EmptyPlaceholder, NoResultPlaceholder } from "../components";
 
 const SORT_BY: {
 	key: keyof Blog;
@@ -42,7 +43,6 @@ export const Blogs = (): ReactElement => {
 	const [paginatedBlogs, setPaginatedBlogs] = useState<Blog[]>([]);
 	const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
 	const [range, setRange] = useState<string[]>([]);
-	const { authState } = useContext(AuthContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [editIndex, setEditIndex] = useState(-1);
 	const [page, setPage] = useState(1);
@@ -60,6 +60,7 @@ export const Blogs = (): ReactElement => {
 	const init = useRef(true);
 
 	const { dispatch } = useContext(NotificationContext);
+	const { authState } = useContext(AuthContext);
 
 	const getBlogsCall = useCallback(() => {
 		setIsLoading(true);
@@ -420,118 +421,120 @@ export const Blogs = (): ReactElement => {
 							</Grid>
 						</Grid>
 					</ListItem>
-					{isLoading
-						? listSkeletons()
-						: paginatedBlogs?.map((gitIssue: Blog, index: number) => {
-								return (
-									<React.Fragment key={index}>
-										<ListItem>
-											<Grid container spacing={2}>
-												{editIndex === index ? (
-													<Grid container item xs={10}>
-														<form
-															onSubmit={editForm.handleSubmit}
-															className={classes.gridForm}
-														>
-															<Grid xs={6} item className={classes.gridRightMargin}>
-																<TextField
-																	variant="standard"
-																	name="title"
-																	label="Title"
-																	fullWidth
-																	value={editForm.values.title}
-																	onBlur={editForm.handleBlur}
-																	onChange={editForm.handleChange}
-																	helperText={
-																		editForm.touched.title &&
-																		editForm.errors.title &&
-																		editForm.errors.title
-																	}
-																	error={
-																		!!(
-																			editForm.touched.title &&
-																			editForm.errors.title
-																		)
-																	}
-																/>
-															</Grid>
-															<Grid xs={6} item>
-																<TextField
-																	variant="standard"
-																	name="link"
-																	label="Link"
-																	fullWidth
-																	value={editForm.values.link}
-																	onBlur={editForm.handleBlur}
-																	onChange={editForm.handleChange}
-																	helperText={
-																		editForm.touched.link &&
-																		editForm.errors.link &&
-																		editForm.errors.link
-																	}
-																	error={
-																		!!(
-																			editForm.touched.link &&
-																			editForm.errors.link
-																		)
-																	}
-																/>
-															</Grid>
-														</form>
-													</Grid>
-												) : (
-													<Grid container alignItems="center" item xs={10}>
-														<Link target="_blank" href={gitIssue.Link}>
-															<Typography>{gitIssue.Title}</Typography>
-														</Link>
-													</Grid>
-												)}
-												<Grid container justify="flex-end" item xs={2}>
-													{editIndex !== index && (
-														<IconButton
-															aria-label="edit"
-															onClick={() => {
-																setEditIndex(index);
-															}}
-														>
-															<Edit />
-														</IconButton>
-													)}
-													{editIndex === index && (
-														<IconButton
-															onClick={() => editForm.handleSubmit()}
-															type="submit"
-															aria-label="save"
-														>
-															<Save />
-														</IconButton>
-													)}
-													{editIndex === index && (
-														<IconButton
-															aria-label="close"
-															onClick={() => {
-																setEditIndex(-1);
-															}}
-														>
-															<Close />
-														</IconButton>
-													)}
+					{isLoading ? (
+						listSkeletons()
+					) : blogs?.length === 0 ? (
+						<EmptyPlaceholder
+							title="The are no blogs to show here"
+							subtitle="Why not add a new blog to show here?"
+						/>
+					) : filteredBlogs?.length === 0 ? (
+						<div>
+							<NoResultPlaceholder title="No results found" subtitle="Try something else?" />
+						</div>
+					) : (
+						paginatedBlogs?.map((gitIssue: Blog, index: number) => {
+							return (
+								<React.Fragment key={index}>
+									<ListItem>
+										<Grid container spacing={2}>
+											{editIndex === index ? (
+												<Grid container item xs={10}>
+													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
+														<Grid xs={6} item className={classes.gridRightMargin}>
+															<TextField
+																variant="standard"
+																name="title"
+																label="Title"
+																fullWidth
+																value={editForm.values.title}
+																onBlur={editForm.handleBlur}
+																onChange={editForm.handleChange}
+																helperText={
+																	editForm.touched.title &&
+																	editForm.errors.title &&
+																	editForm.errors.title
+																}
+																error={
+																	!!(editForm.touched.title && editForm.errors.title)
+																}
+															/>
+														</Grid>
+														<Grid xs={6} item>
+															<TextField
+																variant="standard"
+																name="link"
+																label="Link"
+																fullWidth
+																value={editForm.values.link}
+																onBlur={editForm.handleBlur}
+																onChange={editForm.handleChange}
+																helperText={
+																	editForm.touched.link &&
+																	editForm.errors.link &&
+																	editForm.errors.link
+																}
+																error={
+																	!!(editForm.touched.link && editForm.errors.link)
+																}
+															/>
+														</Grid>
+													</form>
+												</Grid>
+											) : (
+												<Grid container alignItems="center" item xs={10}>
+													<Link target="_blank" href={gitIssue.Link}>
+														<Typography>{gitIssue.Title}</Typography>
+													</Link>
+												</Grid>
+											)}
+											<Grid container justify="flex-end" item xs={2}>
+												{editIndex !== index && (
 													<IconButton
-														aria-label="delete"
+														aria-label="edit"
 														onClick={() => {
-															setDeleteIndex(parseInt(gitIssue.id));
+															setEditIndex(index);
 														}}
 													>
-														<Delete />
+														<Edit />
 													</IconButton>
-												</Grid>
+												)}
+												{editIndex === index && (
+													<IconButton
+														onClick={() => editForm.handleSubmit()}
+														type="submit"
+														aria-label="save"
+													>
+														<Save />
+													</IconButton>
+												)}
+												{editIndex === index && (
+													<IconButton
+														aria-label="close"
+														onClick={() => {
+															setEditIndex(-1);
+														}}
+													>
+														<Close />
+													</IconButton>
+												)}
+												<IconButton
+													aria-label="delete"
+													onClick={() => {
+														setDeleteIndex(parseInt(gitIssue.id));
+													}}
+												>
+													<Delete />
+												</IconButton>
 											</Grid>
-										</ListItem>
-										{paginatedBlogs.length - 1 !== index && <Divider />}
-									</React.Fragment>
-								);
-						  })}
-					{!isLoading && blogs.length > 10 && (
+										</Grid>
+									</ListItem>
+									{paginatedBlogs.length - 1 !== index && <Divider />}
+								</React.Fragment>
+							);
+						})
+					)}
+					{!isLoading && filteredBlogs.length > 10 && (
 						<Pagination
 							count={Math.ceil(filteredBlogs.length / itemsPerPage)}
 							page={page}
