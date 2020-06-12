@@ -4,6 +4,7 @@ import { Project } from "../../models";
 import { Close, Sort, Search } from "@material-ui/icons";
 import { Pagination } from "@material-ui/lab";
 import useStyles from "../../theme";
+import { EmptyPlaceholder, NoResultPlaceholder } from "../../components";
 
 const SORT_BY: {
 	key: keyof Project;
@@ -214,26 +215,37 @@ export const ProjectsTab = (props: ProjectsTabPropsInterface): ReactElement => {
 						</Grid>
 					</Grid>
 				</ListItem>
-				{paginatedProjects?.map((gitIssue: Project, index: number) => {
-					return (
-						<React.Fragment key={index}>
-							<ListItem>
-								<Grid container spacing={2}>
-									<Grid container alignItems="center" item xs={6}>
-										<Typography component="h4" className={classes.noButtonList}>
-											{gitIssue.Title}
-										</Typography>
+				{projects?.length === 0 ? (
+					<EmptyPlaceholder
+						title="The are no projects to show here"
+						subtitle="Why not add a new project to show here?"
+					/>
+				) : filteredProjects?.length === 0 ? (
+					<div>
+						<NoResultPlaceholder title="No results found" subtitle="Try something else?" />
+					</div>
+				) : (
+					paginatedProjects?.map((gitIssue: Project, index: number) => {
+						return (
+							<React.Fragment key={index}>
+								<ListItem>
+									<Grid container spacing={2}>
+										<Grid container alignItems="center" item xs={6}>
+											<Typography component="h4" className={classes.noButtonList}>
+												{gitIssue.Title}
+											</Typography>
+										</Grid>
+										<Grid container alignItems="center" item xs={6}>
+											<Typography component="h4">{gitIssue.Mentor}</Typography>
+										</Grid>
 									</Grid>
-									<Grid container alignItems="center" item xs={6}>
-										<Typography component="h4">{gitIssue.Mentor}</Typography>
-									</Grid>
-								</Grid>
-							</ListItem>
-							{paginatedProjects.length - 1 !== index && <Divider />}
-						</React.Fragment>
-					);
-				})}
-				{projects.length > 10 && (
+								</ListItem>
+								{paginatedProjects.length - 1 !== index && <Divider />}
+							</React.Fragment>
+						);
+					})
+				)}
+				{filteredProjects.length > 10 && (
 					<Pagination
 						count={Math.ceil(filteredProjects.length / itemsPerPage)}
 						page={page}
