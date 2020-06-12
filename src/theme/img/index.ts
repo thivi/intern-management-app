@@ -10,6 +10,7 @@ import PullRequest from "./exercise.svg";
 import Presentation from "./chart.svg";
 import Project from "./project.svg";
 import Blog from "./blog.svg";
+import NotFound from "./404.svg";
 
 export const BoxGraphic = Box;
 export const SearchGraphic = Search;
@@ -23,3 +24,4 @@ export const PullRequestGraphic = PullRequest;
 export const PresentationGraphic = Presentation;
 export const ProjectGraphic = Project;
 export const BlogGraphic = Blog;
+export const NotFoundGraphic = NotFound;
