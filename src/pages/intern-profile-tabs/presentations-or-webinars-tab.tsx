@@ -180,7 +180,7 @@ export const PresentationsOrWebinarsTabs = (props: PresentationOrWebinarsTabProp
 				{presentationsOrWebinars?.length === 0 ? (
 					<EmptyPlaceholder
 						title="The are no presentations/webinars to show here"
-						subtitle="Why not add a new presentation/webinar to show here?"
+						subtitle=""
 					/>
 				) : filteredPresentationsOrWebinars?.length === 0 ? (
 					<div>

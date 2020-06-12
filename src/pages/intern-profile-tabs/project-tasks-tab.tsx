@@ -256,7 +256,7 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 				{projectTasks?.length === 0 ? (
 					<EmptyPlaceholder
 						title="The are no project tasks to show here"
-						subtitle="Why not add a new project task to show here?"
+						subtitle=""
 					/>
 				) : filteredProjectTasks?.length === 0 ? (
 					<div>

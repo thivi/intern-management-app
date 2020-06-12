@@ -174,7 +174,7 @@ export const PullRequestsTab = (props: PullRequestsTabPropsInterface): ReactElem
 				{pullRequests?.length === 0 ? (
 					<EmptyPlaceholder
 						title="The are no pull requests to show here"
-						subtitle="Why not add a new pull request to show here?"
+						subtitle=""
 					/>
 				) : filteredPullRequests?.length === 0 ? (
 					<div>

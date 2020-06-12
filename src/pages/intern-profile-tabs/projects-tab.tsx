@@ -218,7 +218,7 @@ export const ProjectsTab = (props: ProjectsTabPropsInterface): ReactElement => {
 				{projects?.length === 0 ? (
 					<EmptyPlaceholder
 						title="The are no projects to show here"
-						subtitle="Why not add a new project to show here?"
+						subtitle=""
 					/>
 				) : filteredProjects?.length === 0 ? (
 					<div>

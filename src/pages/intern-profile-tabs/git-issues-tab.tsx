@@ -174,7 +174,7 @@ export const GitIssuesTab = (props: GitIssuesTabPropsInterface): ReactElement =>
 				{gitIssues?.length === 0 ? (
 					<EmptyPlaceholder
 						title="The are no git issues to show here"
-						subtitle="Why not add a new git issue to show here?"
+						subtitle=""
 					/>
 				) : filteredGitIssues?.length === 0 ? (
 					<div>

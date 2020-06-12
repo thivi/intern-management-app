@@ -175,7 +175,7 @@ export const BlogsTab = (props: BlogsTabPropsInterface): ReactElement => {
 				{blogs?.length === 0 ? (
 					<EmptyPlaceholder
 						title="The are no blogs to show here"
-						subtitle="Why not add a new blog to show here?"
+						subtitle=""
 					/>
 				) : filteredBlogs?.length === 0 ? (
 					<div>
