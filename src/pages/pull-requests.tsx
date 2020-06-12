@@ -16,15 +16,16 @@ import {
 	Typography,
 	InputBase,
 } from "@material-ui/core";
-import { PullRequest } from "../models";
+import { PullRequest, NotificationType } from "../models";
 import { getPullRequests, addPullRequests, updatePullRequests, deletePullRequest } from "../apis";
-import { AuthContext } from "../helpers";
+import { AuthContext, NotificationContext } from "../helpers";
 import { PULL_REQUESTS } from "../constants";
 import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
+import { Notify } from "../utils";
 
 const SORT_BY: {
 	key: keyof PullRequest;
@@ -41,7 +42,6 @@ export const PullRequests = (): ReactElement => {
 	const [paginatedPullRequests, setPaginatedPullRequests] = useState<PullRequest[]>([]);
 	const [filteredPullRequests, setFilteredPullRequests] = useState<PullRequest[]>([]);
 	const [range, setRange] = useState<string[]>([]);
-	const { authState } = useContext(AuthContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [editIndex, setEditIndex] = useState(-1);
 	const [page, setPage] = useState(1);
@@ -55,6 +55,9 @@ export const PullRequests = (): ReactElement => {
 	const itemsPerPage = 10;
 
 	const classes = useStyles();
+
+	const { authState } = useContext(AuthContext);
+	const { dispatch } = useContext(NotificationContext);
 
 	const init = useRef(true);
 
@@ -115,12 +118,17 @@ export const PullRequests = (): ReactElement => {
 				setPaginatedPullRequests(paginateIssues);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page]);
+	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page, dispatch]);
 
 	useEffect(() => {
 		if (init.current && getPullRequestsCall && authState.authData) {
@@ -192,10 +200,20 @@ export const PullRequests = (): ReactElement => {
 				.then((response) => {
 					getPullRequestsCall();
 					resetForm();
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Pull Request was successfully added.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error,
+						})
+					);
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -227,10 +245,20 @@ export const PullRequests = (): ReactElement => {
 				.then((response) => {
 					setEditIndex(-1);
 					getPullRequestsCall();
-					//TODO Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Pull Request was successfully updated.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO Notify
+					dispatch(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error,
+						})
+					);
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -262,10 +290,20 @@ export const PullRequests = (): ReactElement => {
 		deletePullRequest(range[deleteIndex])
 			.then((response) => {
 				getPullRequestsCall();
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.SUCCESS,
+						message: "Pull Request was successfully deleted.",
+					})
+				);
 			})
 			.catch((error) => {
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			});
 	};
 
