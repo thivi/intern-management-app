@@ -1,5 +1,5 @@
 import React, { ReactElement, useContext, useState, useCallback, useEffect } from "react";
-import { Typography, Button, Paper, Grid, List, ListItem, ListItemIcon } from "@material-ui/core";
+import { Typography, Button, Paper, Grid, List, ListItem, ListItemIcon, Box } from "@material-ui/core";
 import { AuthContext, NotificationContext } from "../../helpers";
 import {
 	Blog,
@@ -37,6 +37,7 @@ import useStyles from "../../theme";
 import { findTimeOfTheDay, Notify } from "../../utils";
 import { Skeleton } from "@material-ui/lab";
 import { WorkOutlineOutlined } from "@material-ui/icons";
+import { MorningGraphic, NoonGraphic, EveningGraphic, NightGraphic } from "../../theme/img";
 
 export const DashboardIntern = (): ReactElement => {
 	const { authState } = useContext(AuthContext);
@@ -166,12 +167,32 @@ export const DashboardIntern = (): ReactElement => {
 		getInternsCall();
 	}, [getInternsCall]);
 
+	const findIllustration = (): string => {
+		switch (findTimeOfTheDay().image) {
+			case "morning":
+				return MorningGraphic;
+			case "noon":
+				return NoonGraphic;
+			case "evening":
+				return EveningGraphic;
+			case "night":
+				return NightGraphic;
+		}
+	};
+
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
-				<Typography variant="h4">
-					Good {findTimeOfTheDay()}, {authState.authData.name}!
-				</Typography>
+				<Box display="flex" alignItems="center" marginBottom={3}>
+					<Box marginRight={3}>
+						<img width={100} src={findIllustration()} alt="good-morning" />
+					</Box>
+					<Box display="flex" alignItems="center">
+						<Typography variant="h4">
+							Good {findTimeOfTheDay().text}, {authState.authData.name}!
+						</Typography>
+					</Box>
+				</Box>
 			</Grid>
 			<Grid item xs={6}>
 				<Paper className={`${classes.tile} ${classes.centeredTile}`}>
