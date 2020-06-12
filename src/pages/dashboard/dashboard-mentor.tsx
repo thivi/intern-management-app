@@ -153,7 +153,7 @@ export const DashboardMentor = (): ReactElement => {
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, []);
+	}, [dispatch]);
 
 	useEffect(() => {
 		getInternsCall();
