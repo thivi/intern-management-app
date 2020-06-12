@@ -1,15 +1,15 @@
 import React, { ReactElement, useEffect, useState, useCallback, useContext } from "react";
 import { getProfile, updateProfile, addProfile } from "../apis";
-import { Profile } from "../models";
+import { Profile, NotificationType } from "../models";
 import { Grid, Avatar, Typography, TextField, Button, Paper } from "@material-ui/core";
 import { useFormik } from "formik";
-import { convertKeyToLabel } from "../utils";
+import { convertKeyToLabel, Notify } from "../utils";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import { Moment } from "moment";
 import { Skeleton } from "@material-ui/lab";
 import validator from "validator";
-import { AuthContext } from "../helpers";
+import { AuthContext, NotificationContext } from "../helpers";
 import { INTERN_PROFILE } from "../constants";
 import useStyles from "../theme";
 
@@ -19,6 +19,7 @@ export const ProfilePage = (): ReactElement => {
 	const [range, setRange] = useState("");
 
 	const { authState } = useContext(AuthContext);
+	const { dispatch } = useContext(NotificationContext);
 
 	const classes = useStyles();
 
@@ -41,10 +42,20 @@ export const ProfilePage = (): ReactElement => {
 				updateProfile(range, rows)
 					.then((response) => {
 						getProfileCall();
-						//TODO Notify
+						dispatch(
+							Notify({
+								status: NotificationType.SUCCESS,
+								message: "Profile was successfully added.",
+							})
+						);
 					})
 					.catch((error) => {
-						//TODO Notify
+						dispatch(
+							Notify({
+								status: NotificationType.ERROR,
+								message: error,
+							})
+						);
 					})
 					.finally(() => {
 						setSubmitting(true);
@@ -53,10 +64,20 @@ export const ProfilePage = (): ReactElement => {
 				addProfile(rows)
 					.then((response) => {
 						getProfileCall();
-						//TODO: Notify
+						dispatch(
+							Notify({
+								status: NotificationType.SUCCESS,
+								message: "Profile was successfully added.",
+							})
+						);
 					})
 					.catch((error) => {
-						//TODO: Notify
+						dispatch(
+							Notify({
+								status: NotificationType.ERROR,
+								message: error,
+							})
+						);
 					})
 					.finally(() => {
 						setSubmitting(true);
@@ -135,12 +156,17 @@ export const ProfilePage = (): ReactElement => {
 				setProfile(profile);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [authState.authData]);
+	}, [authState.authData, dispatch]);
 
 	useEffect(() => {
 		getProfileCall();
