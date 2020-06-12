@@ -20,6 +20,7 @@ import {
 import { popOver, primaryButton, leftAlignedGrid, centerAlign } from "./generic";
 import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
 import { tile, tileRow, tileGrid, tileColumn, centeredTile } from "./dashboard";
+import { placeholderImage } from "./placeholders";
 
 const useStyles = makeStyles((theme: Theme) => ({
 	appBar: appBar(theme),
@@ -59,6 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	switchLabel: switchLabel(theme),
 	centeredTile: centeredTile(theme),
 	centerAlign: centerAlign(theme),
+	placeholderImage: placeholderImage(theme),
 }));
 
 export default useStyles;
