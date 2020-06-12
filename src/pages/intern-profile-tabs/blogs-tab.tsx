@@ -4,6 +4,7 @@ import { Grid, List, ListItem, Link, Divider, IconButton, Paper, Typography, Inp
 import { Close, Sort, Search } from "@material-ui/icons";
 import { Pagination } from "@material-ui/lab";
 import useStyles from "../../theme";
+import { NoResultPlaceholder, EmptyPlaceholder } from "../../components";
 
 interface BlogsTabPropsInterface {
 	blogs: Blog[];
@@ -171,23 +172,34 @@ export const BlogsTab = (props: BlogsTabPropsInterface): ReactElement => {
 						</Grid>
 					</Grid>
 				</ListItem>
-				{paginatedBlogs?.map((gitIssue: Blog, index: number) => {
-					return (
-						<React.Fragment key={index}>
-							<ListItem>
-								<Grid container spacing={2}>
-									<Grid container alignItems="center" item xs={12}>
-										<Link target="_blank" href={gitIssue.Link} className={classes.noButtonList}>
-											<Typography>{gitIssue.Title}</Typography>
-										</Link>
+				{blogs?.length === 0 ? (
+					<EmptyPlaceholder
+						title="The are no blogs to show here"
+						subtitle="Why not add a new blog to show here?"
+					/>
+				) : filteredBlogs?.length === 0 ? (
+					<div>
+						<NoResultPlaceholder title="No results found" subtitle="Try something else?" />
+					</div>
+				) : (
+					paginatedBlogs?.map((gitIssue: Blog, index: number) => {
+						return (
+							<React.Fragment key={index}>
+								<ListItem>
+									<Grid container spacing={2}>
+										<Grid container alignItems="center" item xs={12}>
+											<Link target="_blank" href={gitIssue.Link} className={classes.noButtonList}>
+												<Typography>{gitIssue.Title}</Typography>
+											</Link>
+										</Grid>
 									</Grid>
-								</Grid>
-							</ListItem>
-							{paginatedBlogs.length - 1 !== index && <Divider />}
-						</React.Fragment>
-					);
-				})}
-				{blogs.length > 10 && (
+								</ListItem>
+								{paginatedBlogs.length - 1 !== index && <Divider />}
+							</React.Fragment>
+						);
+					})
+				)}
+				{filteredBlogs.length > 10 && (
 					<Pagination
 						count={Math.ceil(filteredBlogs.length / itemsPerPage)}
 						page={page}
