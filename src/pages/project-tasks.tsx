@@ -18,15 +18,16 @@ import {
 	InputBase,
 	Switch,
 } from "@material-ui/core";
-import { ProjectTask } from "../models";
+import { ProjectTask, NotificationType } from "../models";
 import { getProjectTasks, addProjectTasks, updateProjectTasks, deleteProject } from "../apis";
-import { AuthContext } from "../helpers";
+import { AuthContext, NotificationContext } from "../helpers";
 import { PROJECT_TASKS } from "../constants";
 import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
+import { Notify } from "../utils";
 
 const SORT_BY: {
 	key: keyof ProjectTask;
@@ -53,7 +54,6 @@ export const ProjectTasks = (): ReactElement => {
 	const [paginatedProjectTasks, setPaginatedProjectTasks] = useState<ProjectTask[]>([]);
 	const [filteredProjectTasks, setFilteredProjectTasks] = useState<ProjectTask[]>([]);
 	const [range, setRange] = useState<string[]>([]);
-	const { authState } = useContext(AuthContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [editIndex, setEditIndex] = useState(-1);
 	const [page, setPage] = useState(1);
@@ -64,6 +64,9 @@ export const ProjectTasks = (): ReactElement => {
 	const [deleteIndex, setDeleteIndex] = useState(-1);
 	const [sorted, setSorted] = useState<Sort>({ Title: false, PullRequest: false });
 	const [hideCompleted, setHideCompleted] = useState(false);
+
+	const { authState } = useContext(AuthContext);
+	const { dispatch } = useContext(NotificationContext);
 
 	const itemsPerPage = 10;
 
@@ -132,12 +135,17 @@ export const ProjectTasks = (): ReactElement => {
 				setPaginatedProjectTasks(paginateIssues);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page, hideCompleted]);
+	}, [authState.authData, searchQuery, sortOrder, sorted, sortBy, page, hideCompleted, dispatch]);
 
 	useEffect(() => {
 		if (init.current && getProjectTasksCall && authState.authData) {
@@ -222,10 +230,20 @@ export const ProjectTasks = (): ReactElement => {
 				.then((response) => {
 					getProjectTasksCall();
 					resetForm();
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Project Task was successfully added.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error,
+						})
+					);
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -259,10 +277,20 @@ export const ProjectTasks = (): ReactElement => {
 				.then((response) => {
 					setEditIndex(-1);
 					getProjectTasksCall();
-					//TODO Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Project Task was successfully updated.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO Notify
+					dispatch(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error,
+						})
+					);
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -295,10 +323,20 @@ export const ProjectTasks = (): ReactElement => {
 		deleteProject(range[deleteIndex])
 			.then((response) => {
 				getProjectTasksCall();
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.SUCCESS,
+						message: "Project Task was successfully deleted.",
+					})
+				);
 			})
 			.catch((error) => {
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			});
 	};
 
@@ -348,10 +386,20 @@ export const ProjectTasks = (): ReactElement => {
 		updateProjectTasks(range[parseInt(projectTask.id)], rows)
 			.then((response) => {
 				getProjectTasksCall();
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.SUCCESS,
+						message: "Project Task was successfully updated.",
+					})
+				);
 			})
 			.catch((error) => {
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			});
 	};
 
