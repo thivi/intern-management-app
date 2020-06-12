@@ -31,7 +31,18 @@ import { findTimeOfTheDay, Notify } from "../../utils";
 import { AuthContext, NotificationContext } from "../../helpers";
 import { Skeleton } from "@material-ui/lab";
 import { WorkOutlineOutlined, EditOutlined } from "@material-ui/icons";
-import { MorningGraphic, NoonGraphic, EveningGraphic, NightGraphic } from "../../theme/img";
+import {
+	MorningGraphic,
+	NoonGraphic,
+	EveningGraphic,
+	NightGraphic,
+	InternGraphic,
+	GitIssueGraphic,
+	PullRequestGraphic,
+	PresentationGraphic,
+	ProjectGraphic,
+	BlogGraphic,
+} from "../../theme/img";
 
 export const DashboardMentor = (): ReactElement => {
 	const [internInfo, setInternInfo] = useState<InternInfo>(null);
@@ -222,171 +233,201 @@ export const DashboardMentor = (): ReactElement => {
 				<Grid container item xs={12} className={classes.tileRow}>
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
-							{isLoading ? (
-								<div className={classes.centerAlign}>
-									<Skeleton variant="text" height={100} width={50} />
-								</div>
-							) : (
-								<Typography variant="h3" align="center">
-									{intern?.profiles}
+							<Box padding={3}>
+								<Box display="flex" justifyContent="center">
+									<img src={InternGraphic} alt="intern" width={80} />
+								</Box>
+								{isLoading ? (
+									<div className={classes.centerAlign}>
+										<Skeleton variant="text" height={80} width={50} />
+									</div>
+								) : (
+									<Typography variant="h3" align="center">
+										{intern?.profiles}
+									</Typography>
+								)}
+								<Typography variant="h6" color="textSecondary" align="center">
+									Active Interns
 								</Typography>
-							)}
-							<Typography variant="h6" color="textSecondary" align="center">
-								Active Interns
-							</Typography>
-							<Button
-								onClick={() => {
-									history.push(INTERNS);
-								}}
-							>
-								More
-							</Button>
+								<Button
+									onClick={() => {
+										history.push(INTERNS);
+									}}
+								>
+									More
+								</Button>
+							</Box>
 						</Paper>
 					</Grid>
 
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
-							{isLoading ? (
-								<div className={classes.centerAlign}>
-									<Skeleton variant="text" height={100} width={50} />
-								</div>
-							) : (
-								<Typography variant="h3" align="center">
-									{intern?.gitIssues}
+							<Box padding={3}>
+								<Box display="flex" justifyContent="center">
+									<img src={GitIssueGraphic} alt="intern" width={60} />
+								</Box>
+								{isLoading ? (
+									<div className={classes.centerAlign}>
+										<Skeleton variant="text" height={80} width={50} />
+									</div>
+								) : (
+									<Typography variant="h3" align="center">
+										{intern?.gitIssues}
+									</Typography>
+								)}
+								<Typography variant="h6" color="textSecondary" align="center">
+									Git Issues Raised
 								</Typography>
-							)}
-							<Typography variant="h6" color="textSecondary" align="center">
-								Git Issues Raised
-							</Typography>
+							</Box>
 						</Paper>
 					</Grid>
 				</Grid>
 				<Grid container item xs={12} className={classes.tileRow}>
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
-							{isLoading ? (
-								<div className={classes.centerAlign}>
-									<Skeleton variant="text" height={100} width={50} />
-								</div>
-							) : (
-								<Typography variant="h3" align="center">
-									{intern?.pullRequests}
+							<Box padding={3}>
+								<Box display="flex" justifyContent="center">
+									<img src={PullRequestGraphic} alt="intern" width={80} />
+								</Box>
+								{isLoading ? (
+									<div className={classes.centerAlign}>
+										<Skeleton variant="text" height={80} width={50} />
+									</div>
+								) : (
+									<Typography variant="h3" align="center">
+										{intern?.pullRequests}
+									</Typography>
+								)}
+								<Typography variant="h6" color="textSecondary" align="center">
+									Pull Requests Raised
 								</Typography>
-							)}
-							<Typography variant="h6" color="textSecondary" align="center">
-								Pull Requests Raised
-							</Typography>
+							</Box>
 						</Paper>
 					</Grid>
 
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
-							{isLoading ? (
-								<div className={classes.centerAlign}>
-									<Skeleton variant="text" height={100} width={50} />
-								</div>
-							) : (
-								<Typography variant="h3" align="center">
-									{intern?.presentationsOrWebinars}
+							<Box padding={3}>
+								<Box display="flex" justifyContent="center">
+									<img src={PresentationGraphic} alt="intern" width={60} />
+								</Box>
+								{isLoading ? (
+									<div className={classes.centerAlign}>
+										<Skeleton variant="text" height={80} width={50} />
+									</div>
+								) : (
+									<Typography variant="h3" align="center">
+										{intern?.presentationsOrWebinars}
+									</Typography>
+								)}
+								<Typography variant="h6" color="textSecondary" align="center">
+									Presentations/Webinars Done
 								</Typography>
-							)}
-							<Typography variant="h6" color="textSecondary" align="center">
-								Presentations/Webinars Done
-							</Typography>
+							</Box>
 						</Paper>
 					</Grid>
 				</Grid>
 			</Grid>
 			<Grid item xs={6}>
 				<Paper className={classes.tile}>
-					{isLoading ? (
-						<div className={classes.centerAlign}>
-							<Skeleton variant="text" height={100} width={50} />
-						</div>
-					) : (
-						<Typography variant="h3" align="center">
-							{intern?.projects}
-						</Typography>
-					)}
-					<Typography variant="h6" color="textSecondary" align="center">
-						Projects
-					</Typography>
-					<Typography variant="subtitle1">Latest: </Typography>
-					<List>
+					<Box padding={3}>
+						<Box display="flex" justifyContent="center">
+							<img src={ProjectGraphic} alt="intern" width={80} />
+						</Box>
 						{isLoading ? (
-							<>
-								<Skeleton variant="text" height={50} />
-								<Skeleton variant="text" height={50} />
-								<Skeleton variant="text" height={50} />
-								<Skeleton variant="text" height={50} />
-								<Skeleton variant="text" height={50} />
-							</>
+							<div className={classes.centerAlign}>
+								<Skeleton variant="text" height={80} width={50} />
+							</div>
 						) : (
-							internInfo?.projects.map((project: Project, index: number) => {
-								if (index < 4) {
-									return (
-										<ListItem>
-											<ListItemIcon>
-												<WorkOutlineOutlined />
-											</ListItemIcon>
-											<Typography>{project.Title}</Typography>
-										</ListItem>
-									);
-								}
-
-								return null;
-							})
+							<Typography variant="h3" align="center">
+								{intern?.projects}
+							</Typography>
 						)}
-					</List>
+						<Typography variant="h6" color="textSecondary" align="center">
+							Projects
+						</Typography>
+						<Typography variant="subtitle1">Latest: </Typography>
+						<List>
+							{isLoading ? (
+								<>
+									<Skeleton variant="text" height={50} />
+									<Skeleton variant="text" height={50} />
+									<Skeleton variant="text" height={50} />
+									<Skeleton variant="text" height={50} />
+									<Skeleton variant="text" height={50} />
+								</>
+							) : (
+								internInfo?.projects.map((project: Project, index: number) => {
+									if (index < 4) {
+										return (
+											<ListItem>
+												<ListItemIcon>
+													<WorkOutlineOutlined />
+												</ListItemIcon>
+												<Typography>{project.Title}</Typography>
+											</ListItem>
+										);
+									}
+
+									return null;
+								})
+							)}
+						</List>
+					</Box>
 				</Paper>
 			</Grid>
 			<Grid item xs={6} container spacing={2} className={classes.tileColumn}>
 				<Grid container item xs={12}>
 					<Grid item xs={12} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
-							{isLoading ? (
-								<div className={classes.centerAlign}>
-									<Skeleton variant="text" height={100} width={50} />
-								</div>
-							) : (
-								<Typography variant="h3" align="center">
-									{intern?.blogs}
+							<Box padding={3}>
+								<Box display="flex" justifyContent="center">
+									<img src={BlogGraphic} alt="intern" width={80} />
+								</Box>
+								{isLoading ? (
+									<div className={classes.centerAlign}>
+										<Skeleton variant="text" height={80} width={50} />
+									</div>
+								) : (
+									<Typography variant="h3" align="center">
+										{intern?.blogs}
+									</Typography>
+								)}
+								<Typography variant="h6" color="textSecondary" align="center">
+									Blogs Written
 								</Typography>
-							)}
-							<Typography variant="h6" color="textSecondary" align="center">
-								Blogs Written
-							</Typography>
-							<div>
-								<Typography variant="subtitle1">Latest: </Typography>
-								<List>
-									{isLoading ? (
-										<>
-											<Skeleton variant="text" height={50} />
-											<Skeleton variant="text" height={50} />
-											<Skeleton variant="text" height={50} />
-											<Skeleton variant="text" height={50} />
-											<Skeleton variant="text" height={50} />
-										</>
-									) : (
-										internInfo?.blogs.map((blog: Blog, index: number) => {
-											if (index < 4) {
-												return (
-													<ListItem>
-														<ListItemIcon>
-															<EditOutlined />
-														</ListItemIcon>
-														<Link target="_blank" href={blog.Link}>
-															<Typography>{blog.Title}</Typography>
-														</Link>
-													</ListItem>
-												);
-											}
+								<div>
+									<Typography variant="subtitle1">Latest: </Typography>
+									<List>
+										{isLoading ? (
+											<>
+												<Skeleton variant="text" height={50} />
+												<Skeleton variant="text" height={50} />
+												<Skeleton variant="text" height={50} />
+												<Skeleton variant="text" height={50} />
+												<Skeleton variant="text" height={50} />
+											</>
+										) : (
+											internInfo?.blogs.map((blog: Blog, index: number) => {
+												if (index < 4) {
+													return (
+														<ListItem>
+															<ListItemIcon>
+																<EditOutlined />
+															</ListItemIcon>
+															<Link target="_blank" href={blog.Link}>
+																<Typography>{blog.Title}</Typography>
+															</Link>
+														</ListItem>
+													);
+												}
 
-											return null;
-										})
-									)}
-								</List>
-							</div>
+												return null;
+											})
+										)}
+									</List>
+								</div>
+							</Box>
 						</Paper>
 					</Grid>
 				</Grid>
