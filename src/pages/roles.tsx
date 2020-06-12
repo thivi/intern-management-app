@@ -20,15 +20,16 @@ import {
 	Typography,
 	InputBase,
 } from "@material-ui/core";
-import { Role, RoleType } from "../models";
+import { Role, RoleType, NotificationType } from "../models";
 import { getRoles, addRoles, updateRoles, deleteRole } from "../apis";
-import { AuthContext } from "../helpers";
+import { AuthContext, NotificationContext } from "../helpers";
 import { ROLES } from "../constants";
 import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
+import { Notify } from "../utils";
 
 const SORT_BY: {
 	key: keyof Role;
@@ -79,7 +80,6 @@ export const Roles = (): ReactElement => {
 	const [paginatedRoles, setPaginatedRoles] = useState<Role[]>([]);
 	const [filteredRoles, setFilteredRoles] = useState<Role[]>([]);
 	const [range, setRange] = useState<string[]>([]);
-	const { authState } = useContext(AuthContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [editIndex, setEditIndex] = useState(-1);
 	const [page, setPage] = useState(1);
@@ -97,6 +97,9 @@ export const Roles = (): ReactElement => {
 
 	const init = useRef(true);
 	const showInit = useRef(true);
+
+	const { authState } = useContext(AuthContext);
+	const { dispatch } = useContext(NotificationContext);
 
 	const getRolesCall = useCallback(() => {
 		setIsLoading(true);
@@ -156,12 +159,17 @@ export const Roles = (): ReactElement => {
 				setPaginatedRoles(paginateIssues);
 			})
 			.catch((error) => {
-				//TODO: Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [searchQuery, sortOrder, sorted, sortBy, page]);
+	}, [searchQuery, sortOrder, sorted, sortBy, page, dispatch]);
 
 	useEffect(() => {
 		if (init.current && getRolesCall && authState.authData) {
@@ -246,10 +254,20 @@ export const Roles = (): ReactElement => {
 				.then((response) => {
 					getRolesCall();
 					resetForm();
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Role was successfully added.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO: Notify
+					dispatch(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error,
+						})
+					);
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -280,10 +298,20 @@ export const Roles = (): ReactElement => {
 				.then((response) => {
 					setEditIndex(-1);
 					getRolesCall();
-					//TODO Notify
+					dispatch(
+						Notify({
+							status: NotificationType.SUCCESS,
+							message: "Role was successfully updated.",
+						})
+					);
 				})
 				.catch((error) => {
-					//TODO Notify
+					dispatch(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error,
+						})
+					);
 				})
 				.finally(() => {
 					setSubmitting(false);
@@ -315,10 +343,20 @@ export const Roles = (): ReactElement => {
 		deleteRole(range[deleteIndex])
 			.then((response) => {
 				getRolesCall();
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.SUCCESS,
+						message: "Roles was successfully deleted.",
+					})
+				);
 			})
 			.catch((error) => {
-				//TODO Notify
+				dispatch(
+					Notify({
+						status: NotificationType.ERROR,
+						message: error,
+					})
+				);
 			});
 	};
 
