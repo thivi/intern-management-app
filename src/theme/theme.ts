@@ -10,4 +10,26 @@ export const theme = createMuiTheme({
 			main: purple[600],
 		},
 	},
+	overrides: {
+		MuiButton: {
+			root: {
+				borderRadius: "40px",
+			},
+		},
+		MuiInputBase: {
+			root: {
+				borderRadius: "40px",
+			},
+		},
+		MuiOutlinedInput: {
+			root: {
+				borderRadius: "40px",
+			},
+		},
+		MuiPaper: {
+			rounded: {
+				borderRadius: "40px",
+			},
+		},
+	},
 });
