@@ -49,4 +49,4 @@ jobs:
         git config --global user.name "GitHub Action Version Bumping"
         npm version minor
         git push
-      if: github.event.action=="released"
+      if: github.event.action=='released'
