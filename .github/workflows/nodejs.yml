@@ -26,6 +26,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: npm ci
     - run: REACT_APP_CLIENT_ID="%REACT_APP_CLIENT_ID" REACT_APP_API_KEY="%REACT_APP_API_KEY" npm run build --if-present
       
     - name: Bump version
