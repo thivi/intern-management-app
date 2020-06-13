@@ -21,11 +21,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        token: ${{secrets.GIT_TOKEN_ACTON}}
+      
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-        token: "wdwed"
         
     - name: Bump version
       run: |
