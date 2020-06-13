@@ -37,6 +37,7 @@ jobs:
         FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
       run: |
         npm install -g firebase-tools
+        cd intern-project-management
         firebase deploy --token "%FIREBASE_TOKEN" --only hosting --non-interactive
         if: github.event_name=='push'
         
