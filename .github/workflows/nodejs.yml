@@ -38,11 +38,11 @@ jobs:
       run: |
         sudo npm install -g firebase-tools
         firebase deploy --token $FIREBASE_TOKEN --only hosting --non-interactive
-        if: github.event_name=='push' 
+      if: github.event_name=='push' 
         
     - name: Bump version
       run: |
         git config --global user.email "theviyanthan@outlook.com"
         git config --global user.name "Thivi"
         npm version patch
-        if: github.event_name=='push'
+      if: github.event_name=='push'
