@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "intern-management-app-277919"
+  },
+  "targets": {
+    "intern-management-app-277919": {
+      "hosting": {
+        "staging": [
+          "staging-intern-management"
+        ]
+      }
+    }
   }
 }
