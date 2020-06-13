@@ -23,16 +23,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    
-    - name: Install Firebase
-      env: 
-        FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
-      run: |
-        npm install -g firebase-tools
-        pwd
-        ls -al
-        firebase deploy --token "%FIREBASE_TOKEN" --only hosting --non-interactive
-        if: github.event_name=='push' 
             
     - name: Build Project
       env:
@@ -41,6 +31,14 @@ jobs:
       run: |
         npm ci
         REACT_APP_CLIENT_ID="%REACT_APP_CLIENT_ID" REACT_APP_API_KEY="%REACT_APP_API_KEY" npm run build --if-present
+   
+    - name: Install Firebase
+      env: 
+        FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
+      run: |
+        sudo npm install -g firebase-tools
+        firebase deploy --token "%FIREBASE_TOKEN" --only hosting --non-interactive
+        if: github.event_name=='push' 
         
     - name: Bump version
       run: |
