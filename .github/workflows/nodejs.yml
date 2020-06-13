@@ -8,6 +8,8 @@ on:
     branches: [ master ]
   push:
     branches: [master]
+    paths-ignore: 
+      - 'package.json'
 jobs:
   build:
 
@@ -23,6 +25,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+        token: ${{secrets.GIT_TOKEN_ACTON}}
             
     - name: Build Project
       env:
