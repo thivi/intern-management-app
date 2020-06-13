@@ -1,3 +1,6 @@
+![Staging CI](https://github.com/thivi/intern-management-app/workflows/Staging%20CI/badge.svg)
+![Production CI](https://github.com/thivi/intern-management-app/workflows/Production%20CI/badge.svg)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
