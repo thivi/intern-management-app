@@ -30,7 +30,8 @@ jobs:
         REACT_APP_API_KEY: ${{secrets.GAPI_API_KEY}}
       run: |
         npm ci
-        REACT_APP_CLIENT_ID="%REACT_APP_CLIENT_ID" REACT_APP_API_KEY="%REACT_APP_API_KEY" npm run build --if-present
+        REACT_APP_CLIENT_ID=${{secrets.GAPI_CLIENT_ID}} REACT_APP_API_KEY="%REACT_APP_API_KEY" npm run build --if-present
+        ls -al
    
     - name: Install Firebase
       env: 
