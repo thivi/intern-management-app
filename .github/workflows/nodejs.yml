@@ -47,8 +47,8 @@ jobs:
         
     - name: Bump version
       run: |
-        git config --global user.email "theviyanthan@outlook.com"
-        git config --global user.name "Thivi"
+        git config --global user.email "version.bump@github.action.com"
+        git config --global user.name "GitHub Action Version Bumping"
         npm version patch
         git push
       if: github.event_name=='push'
