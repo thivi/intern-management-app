@@ -5,7 +5,7 @@ name: Production CI
 
 on:
   release:
-    types: [released]
+    types: [released, prereleased]
     
 jobs:
   build:
@@ -49,3 +49,4 @@ jobs:
         git config --global user.name "GitHub Action Version Bumping"
         npm version minor
         git push
+      if: github.event.action=="released"
