@@ -47,4 +47,5 @@ jobs:
         git config --global user.email "theviyanthan@outlook.com"
         git config --global user.name "Thivi"
         npm version patch
+        git push
       if: github.event_name=='push'
