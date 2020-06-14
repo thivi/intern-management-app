@@ -9,7 +9,10 @@ export const useProgressLoader = (): number => {
 	useEffect(() => {
 		if (loading && percent === 0) {
 			setPercent(1);
-		} else if (!loading && percent === 1) {
+			setTimeout(() => {
+				setPercent(50);
+			}, 500);
+		} else if (!loading && percent === 50) {
 			setPercent(100);
 			setTimeout(() => {
 				setPercent(0);
