@@ -11,3 +11,4 @@ export * from "./roles";
 export * from "./interns";
 export * from "./notification";
 export * from "./time-of-the-day";
+export * from "./progress-loader";
