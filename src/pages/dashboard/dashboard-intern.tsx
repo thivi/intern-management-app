@@ -392,7 +392,7 @@ export const DashboardIntern = (): ReactElement => {
 									internInfo?.projects.map((project: Project, index: number) => {
 										if (index < 4) {
 											return (
-												<ListItem>
+												<ListItem key={index}>
 													<ListItemIcon>
 														<WorkOutlineOutlined />
 													</ListItemIcon>
