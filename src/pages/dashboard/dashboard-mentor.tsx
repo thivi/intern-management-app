@@ -363,7 +363,7 @@ export const DashboardMentor = (): ReactElement => {
 								internInfo?.projects.map((project: Project, index: number) => {
 									if (index < 4) {
 										return (
-											<ListItem>
+											<ListItem key={index}>
 												<ListItemIcon>
 													<WorkOutlineOutlined />
 												</ListItemIcon>
@@ -414,7 +414,7 @@ export const DashboardMentor = (): ReactElement => {
 											internInfo?.blogs.map((blog: Blog, index: number) => {
 												if (index < 4) {
 													return (
-														<ListItem>
+														<ListItem key={index}>
 															<ListItemIcon>
 																<EditOutlined />
 															</ListItemIcon>
