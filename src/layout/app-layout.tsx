@@ -10,12 +10,14 @@ import {
 	ListItemText,
 	CssBaseline,
 	Avatar,
+	LinearProgress,
+	Box,
 } from "@material-ui/core";
 import useStyles from "../theme";
 import { routes } from "../configs";
 import { RouteInterface } from "../models/routes";
 import { useHistory, useLocation } from "react-router-dom";
-import { AuthContext } from "../helpers";
+import { AuthContext, useProgressLoader } from "../helpers";
 
 export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactElement => {
 	const classes = useStyles();
@@ -24,8 +26,10 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 
 	const { authState } = useContext(AuthContext);
 
+	const progress = useProgressLoader();
+
 	return (
-		<div>
+		<Box>
 			<CssBaseline />
 			<AppBar position="static" className={classes.appBar}>
 				<Toolbar>
@@ -64,6 +68,11 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 					<div className={classes.paper}>{props.children}</div>
 				</main>
 			</div>
-		</div>
+			{progress !== 0 && (
+				<Box position="fixed" bottom={0} zIndex={10000} width="100%">
+					<LinearProgress variant="determinate" value={progress} />
+				</Box>
+			)}
+		</Box>
 	);
 };
