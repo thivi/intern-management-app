@@ -11,6 +11,7 @@ import Presentation from "./chart.svg";
 import Project from "./project.svg";
 import Blog from "./blog.svg";
 import NotFound from "./404.svg";
+import Login from "./mobile-login.svg";
 
 export const BoxGraphic = Box;
 export const SearchGraphic = Search;
@@ -25,3 +26,4 @@ export const PresentationGraphic = Presentation;
 export const ProjectGraphic = Project;
 export const BlogGraphic = Blog;
 export const NotFoundGraphic = NotFound;
+export const LoginGraphic = Login;
