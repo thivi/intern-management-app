@@ -16,6 +16,7 @@ import {
 	noButtonList,
 	customSwitch,
 	switchLabel,
+	selectMenu,
 } from "./list-page";
 import { popOver, primaryButton, leftAlignedGrid, centerAlign } from "./generic";
 import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
@@ -61,6 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	centeredTile: centeredTile(theme),
 	centerAlign: centerAlign(theme),
 	placeholderImage: placeholderImage(theme),
+	selectMenu: selectMenu(theme),
 }));
 
 export default useStyles;

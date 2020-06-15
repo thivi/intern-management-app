@@ -1,4 +1,5 @@
 import { Theme } from "@material-ui/core";
+import { BORDER_RADIUS } from "./constants";
 
 export const gridForm = (theme: Theme) => ({
 	width: "100%",
@@ -55,6 +56,7 @@ export const search = (theme: Theme) => ({
 	border: "none",
 	color: theme.palette.getContrastText(theme.palette.primary.light),
 	maxHeight: theme.spacing(6),
+	borderRadius: BORDER_RADIUS,
 });
 
 export const filterGrid = (theme: Theme) => ({
@@ -85,4 +87,8 @@ export const customSwitch = (theme: Theme) => ({
 
 export const switchLabel = (theme: Theme) => ({
 	textAlign: "center" as const,
+});
+
+export const selectMenu = (theme: Theme) => ({
+	backgroundColor: theme.palette.primary.light,
 });
