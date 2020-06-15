@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 	coloredBackground: coloredBackground(theme),
 	primaryTextOnColoredBackground: primaryTextOnColoredBackground(theme),
 	secondaryTextOnColoredBackground: secondaryTextOnColoredBackground(theme),
-}));
+}),{index:1});
 
 export default useStyles;
 export * from "./theme";
