@@ -1,16 +1,24 @@
-import React, { useContext, useEffect, useCallback } from "react";
+import React, { useContext, useEffect, useCallback, useState } from "react";
 import { AuthContext, NotificationContext } from "../../helpers";
 import { useHistory } from "react-router-dom";
 import { getCallbackUrl, Notify } from "../../utils";
 import { SIGN_IN, ADD_DETAILS } from "../../constants";
 import { getGoogleProfile, getRoles } from "../../apis";
 import { GoogleProfile, NotificationType } from "../../models";
+import { Box, Typography, List, ListItem, ListItemText, ListItemIcon, Slide, LinearProgress } from "@material-ui/core";
+import { CheckCircleOutline } from "@material-ui/icons";
+import useStyles from "../../theme";
+import { LoginGraphic } from "../../theme/img";
 
 export const SignIn = (): React.ReactElement => {
 	const { dispatch } = useContext(AuthContext);
 	const { dispatch: dispatchNotification } = useContext(NotificationContext);
 
 	const history = useHistory();
+
+	const [showTip, setShowTip] = useState(false);
+
+	const classes = useStyles();
 
 	const signIn = useCallback(
 		(GoogleAuth: gapi.auth2.GoogleAuth) => {
@@ -62,6 +70,16 @@ export const SignIn = (): React.ReactElement => {
 	);
 
 	useEffect(() => {
+		const timer = setTimeout(() => {
+			setShowTip(true);
+		}, 5000);
+
+		return () => {
+			clearTimeout(timer);
+		};
+	}, []);
+
+	useEffect(() => {
 		gapi.load("client:auth2", () => {
 			gapi.client
 				.init({
@@ -80,5 +98,64 @@ export const SignIn = (): React.ReactElement => {
 		});
 	}, [signIn]);
 
-	return null;
+	return (
+		<Box
+			width="100%"
+			height="100vh"
+			display="flex"
+			justifyContent="center"
+			alignItems="center"
+			flexDirection="column"
+			className={classes.coloredBackground}
+		>
+			<img src={LoginGraphic} alt="login" width="500px" />
+			<Typography variant="h4" align="center" className={classes.primaryTextOnColoredBackground}>
+				<Box width="100%" marginBottom={4}>
+					<LinearProgress color="secondary" />
+				</Box>
+				Hold on! You are being logged in...
+			</Typography>
+
+			<Slide direction="up" in={showTip}>
+				<Box marginTop={4}>
+					<Typography
+						variant="h5"
+						color="textSecondary"
+						align="center"
+						className={classes.secondaryTextOnColoredBackground}
+					>
+						Have trouble logging in?
+					</Typography>
+					<Box marginTop={4}>
+						<Typography
+							variant="h6"
+							color="textSecondary"
+							align="center"
+							className={classes.secondaryTextOnColoredBackground}
+						>
+							Please make sure
+							<List>
+								<ListItem>
+									<ListItemIcon>
+										<CheckCircleOutline className={classes.secondaryTextOnColoredBackground} />
+									</ListItemIcon>
+									<ListItemText className={classes.secondaryTextOnColoredBackground}>
+										You have enabled cookies for this site
+									</ListItemText>
+								</ListItem>
+								<ListItem>
+									<ListItemIcon>
+										<CheckCircleOutline className={classes.secondaryTextOnColoredBackground} />
+									</ListItemIcon>
+									<ListItemText className={classes.secondaryTextOnColoredBackground}>
+										You have enabled pop-ups for this site
+									</ListItemText>
+								</ListItem>
+							</List>
+						</Typography>
+					</Box>
+				</Box>
+			</Slide>
+		</Box>
+	);
 };
