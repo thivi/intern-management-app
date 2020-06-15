@@ -469,6 +469,9 @@ export const Roles = (): ReactElement => {
 										}}
 										label="Show Role"
 										fullWidth
+										classes={{
+											root: classes.selectMenu,
+										}}
 									>
 										{SHOW_ROLE_OPTIONS.map((option, index: number) => {
 											return (
