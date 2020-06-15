@@ -22,3 +22,15 @@ export const centerAlign = (theme: Theme) => ({
 	display: "flex",
 	justifyContent: "center",
 });
+
+export const coloredBackground = (theme: Theme) => ({
+	backgroundColor: theme.palette.primary.main,
+});
+
+export const primaryTextOnColoredBackground = (theme: Theme) => ({
+	color: theme.palette.getContrastText(theme.palette.primary.main),
+});
+
+export const secondaryTextOnColoredBackground = (theme: Theme) => ({
+	color: theme.palette.getContrastText(theme.palette.secondary.light),
+});
