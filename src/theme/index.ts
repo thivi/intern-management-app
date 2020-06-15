@@ -18,7 +18,15 @@ import {
 	switchLabel,
 	selectMenu,
 } from "./list-page";
-import { popOver, primaryButton, leftAlignedGrid, centerAlign } from "./generic";
+import {
+	popOver,
+	primaryButton,
+	leftAlignedGrid,
+	centerAlign,
+	coloredBackground,
+	primaryTextOnColoredBackground,
+	secondaryTextOnColoredBackground,
+} from "./generic";
 import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
 import { tile, tileRow, tileGrid, tileColumn, centeredTile } from "./dashboard";
 import { placeholderImage } from "./placeholders";
@@ -63,6 +71,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 	centerAlign: centerAlign(theme),
 	placeholderImage: placeholderImage(theme),
 	selectMenu: selectMenu(theme),
+	coloredBackground: coloredBackground(theme),
+	primaryTextOnColoredBackground: primaryTextOnColoredBackground(theme),
+	secondaryTextOnColoredBackground: secondaryTextOnColoredBackground(theme),
 }));
 
 export default useStyles;
