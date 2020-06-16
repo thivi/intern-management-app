@@ -11,13 +11,14 @@ import {
 	CssBaseline,
 	Avatar,
 	LinearProgress,
-	Box,
+	Box
 } from "@material-ui/core";
 import useStyles from "../theme";
 import { routes } from "../configs";
 import { RouteInterface } from "../models/routes";
 import { useHistory, useLocation } from "react-router-dom";
 import { AuthContext, useProgressLoader } from "../helpers";
+import { hasPermission } from "../utils";
 
 export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactElement => {
 	const classes = useStyles();
@@ -44,23 +45,22 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 				<Drawer variant="permanent" className={classes.drawer} classes={{ paper: classes.drawerPaper }}>
 					<List component="nav">
 						{routes.map((route: RouteInterface, index: number) => {
-							return route.showOnMenu &&
-								((route.permission instanceof Array &&
-									route.permission.includes(authState?.authData?.role)) ||
-									route.permission === "all" ||
-									route.permission === authState?.authData?.role) ? (
-								<ListItem
-									button
-									key={index}
-									onClick={() => {
-										history.push(route.path);
-									}}
-									selected={route.path === location.pathname}
-								>
-									{route.icon ? <ListItemIcon>{route.icon}</ListItemIcon> : null}
-									<ListItemText primary={route.name} />
-								</ListItem>
-							) : null;
+							return (
+								route.showOnMenu &&
+								(hasPermission(route.permission, authState.authData.role) ? (
+									<ListItem
+										button
+										key={index}
+										onClick={() => {
+											history.push(route.path);
+										}}
+										selected={route.path === location.pathname}
+									>
+										{route.icon ? <ListItemIcon>{route.icon}</ListItemIcon> : null}
+										<ListItemText primary={route.name} />
+									</ListItem>
+								) : null)
+							);
 						})}
 					</List>
 				</Drawer>
