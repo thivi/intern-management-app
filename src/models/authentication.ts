@@ -3,7 +3,7 @@ import { GoogleProfile } from "./profile";
 import { RoleType } from ".";
 
 interface AuthData extends GoogleProfile {
-	role: RoleType;
+	role: RoleType[];
 }
 
 export interface AuthState {
@@ -24,7 +24,7 @@ export interface SignOut {
 
 export interface AddDetails {
 	type: typeof ADD_DETAILS;
-	payload: GoogleProfile | { role: RoleType };
+	payload: GoogleProfile | { role: RoleType[] };
 }
 
 export type AuthAction = AddDetails | SignIn | SignOut;
