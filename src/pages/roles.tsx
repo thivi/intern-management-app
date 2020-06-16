@@ -19,12 +19,12 @@ import {
 	Paper,
 	Typography,
 	InputBase,
-	Box,
+	Box
 } from "@material-ui/core";
 import { Role, RoleType, NotificationType } from "../models";
 import { getRoles, addRoles, updateRoles, deleteRole } from "../apis";
 import { AuthContext, NotificationContext } from "../helpers";
-import { ROLES } from "../constants";
+import { ROLES, ADMIN, INTERN, MENTOR, ALL, ANONYMOUS } from "../constants";
 import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
 import { Skeleton, Pagination } from "@material-ui/lab";
 import useStyles from "../theme";
@@ -39,42 +39,50 @@ const SORT_BY: {
 }[] = [
 	{
 		key: "Email_ID",
-		text: "Email",
-	},
+		text: "Email"
+	}
 ];
 
 const ROLES_OPTIONS = [
 	{
-		key: "admin",
-		text: "Admin",
+		key: ADMIN,
+		text: "Admin"
 	},
 	{
-		key: "intern",
-		text: "Intern",
+		key: INTERN,
+		text: "Intern"
 	},
 	{
-		key: "mentor",
-		text: "Mentor",
+		key: MENTOR,
+		text: "Mentor"
 	},
+	{
+		key: ANONYMOUS,
+		text: "Anonymous"
+	}
 ];
 
 const SHOW_ROLE_OPTIONS = [
 	{
-		key: "all",
-		text: "All",
+		key: ALL,
+		text: "All"
 	},
 	{
-		key: "admin",
-		text: "Admin",
+		key: ADMIN,
+		text: "Admin"
 	},
 	{
-		key: "intern",
-		text: "Intern",
+		key: INTERN,
+		text: "Intern"
 	},
 	{
-		key: "mentor",
-		text: "Mentor",
+		key: MENTOR,
+		text: "Mentor"
 	},
+	{
+		key: ANONYMOUS,
+		text: "Anonymous"
+	}
 ];
 
 export const Roles = (): ReactElement => {
@@ -118,8 +126,8 @@ export const Roles = (): ReactElement => {
 					ranges.push(`${ROLES}!A${index + 1}:AA${index + 1}`);
 					issues.push({
 						Email_ID: issue[0],
-						role: issue[1] as RoleType,
-						id: id.toString(),
+						role: issue[1].split(" ") as RoleType[],
+						id: id.toString()
 					});
 					id++;
 				});
@@ -134,6 +142,9 @@ export const Roles = (): ReactElement => {
 
 				if (sorted) {
 					let sortedArray = [...filteredIssues].sort((a: Role, b: Role) => {
+						if (sortBy === "role") {
+							return 0;
+						}
 						if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 						else return -1;
 					});
@@ -164,7 +175,7 @@ export const Roles = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					})
 				);
 			})
@@ -199,6 +210,9 @@ export const Roles = (): ReactElement => {
 
 	const sort = (sortBy: keyof Role, order?: boolean) => {
 		let sortedArray = [...filteredRoles].sort((a: Role, b: Role) => {
+			if (sortBy === "role") {
+				return 0;
+			}
 			if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 			else return -1;
 		});
@@ -217,13 +231,20 @@ export const Roles = (): ReactElement => {
 			const filteredIssues = roles.filter((issue: Role) => {
 				const query = roleFilter ? searchQuery.toLowerCase() : search.toLowerCase();
 				const matchesQuery = issue.Email_ID.toLowerCase().includes(query);
-				const show = roleFilter ? (showRole === "all" ? true : issue.role === showRole) : true;
+				const show = roleFilter
+					? showRole === "all"
+						? true
+						: issue.role.includes(showRole as RoleType)
+					: true;
 				return matchesQuery && show;
 			});
 
 			let sortedArray = [...filteredIssues];
 			if (sorted) {
 				sortedArray = [...filteredIssues].sort((a: Role, b: Role) => {
+					if (sortBy === "role") {
+						return 0;
+					}
 					if (a[sortBy].toLowerCase() > b[sortBy].toLowerCase()) return 1;
 					else return -1;
 				});
@@ -250,7 +271,7 @@ export const Roles = (): ReactElement => {
 		onSubmit: (values, { setSubmitting, resetForm }) => {
 			const rows = [];
 			rows.push(values.email);
-			rows.push(values.role);
+			rows.push(values.role.join(" "));
 
 			addRoles(rows)
 				.then((response) => {
@@ -259,7 +280,7 @@ export const Roles = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.SUCCESS,
-							message: "Role was successfully added.",
+							message: "Role was successfully added."
 						})
 					);
 				})
@@ -267,7 +288,7 @@ export const Roles = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.ERROR,
-							message: error,
+							message: error
 						})
 					);
 				})
@@ -277,7 +298,7 @@ export const Roles = (): ReactElement => {
 		},
 		initialValues: {
 			email: "",
-			role: "intern",
+			role: []
 		},
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
@@ -287,14 +308,14 @@ export const Roles = (): ReactElement => {
 				errors["email"] = "The email is invalid. " + (errors["email"] ?? "");
 
 			return errors;
-		},
+		}
 	});
 
 	const editForm = useFormik({
 		onSubmit: (values, { setSubmitting }) => {
 			const rows = [];
 			rows.push(values.email);
-			rows.push(values.role);
+			rows.push((values.role as RoleType[]).join(" "));
 
 			updateRoles(range[parseInt(paginatedRoles[editIndex].id)], rows)
 				.then((response) => {
@@ -303,7 +324,7 @@ export const Roles = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.SUCCESS,
-							message: "Role was successfully updated.",
+							message: "Role was successfully updated."
 						})
 					);
 				})
@@ -311,7 +332,7 @@ export const Roles = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.ERROR,
-							message: error,
+							message: error
 						})
 					);
 				})
@@ -321,18 +342,18 @@ export const Roles = (): ReactElement => {
 		},
 		initialValues: {
 			email: paginatedRoles[editIndex]?.Email_ID ?? "",
-			role: paginatedRoles[editIndex]?.role ?? "",
+			role: paginatedRoles[editIndex]?.role ?? []
 		},
 		enableReinitialize: true,
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
 			if (!values.email) errors["email"] = "Email is required.";
-			if (!values.role) errors["role"] = "Role is required.";
+			if (!(values.role.length>0)) errors["role"] = "Role is required.";
 			if (values.email && !validator.isEmail(values.email))
 				errors["email"] = "The email is invalid. " + (errors["email"] ?? "");
 
 			return errors;
-		},
+		}
 	});
 
 	const handlePageChange = (event: ChangeEvent, value: number) => {
@@ -348,7 +369,7 @@ export const Roles = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.SUCCESS,
-						message: "Roles was successfully deleted.",
+						message: "Roles was successfully deleted."
 					})
 				);
 			})
@@ -356,7 +377,7 @@ export const Roles = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					})
 				);
 			});
@@ -427,6 +448,7 @@ export const Roles = (): ReactElement => {
 									onChange={addForm.handleChange}
 									error={!!(addForm.touched.role && addForm.errors.role)}
 									fullWidth
+									multiple
 								>
 									{ROLES_OPTIONS.map((option, index: number) => {
 										return (
@@ -470,7 +492,7 @@ export const Roles = (): ReactElement => {
 										label="Show Role"
 										fullWidth
 										classes={{
-											root: classes.selectMenu,
+											root: classes.selectMenu
 										}}
 									>
 										{SHOW_ROLE_OPTIONS.map((option, index: number) => {
@@ -533,11 +555,7 @@ export const Roles = (): ReactElement => {
 								>
 									<Sort
 										style={{
-											transform: sorted
-												? !sortOrder
-													? "scaleY(-1)"
-													: "scaleY(1)"
-												: "scaleY(-1)",
+											transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)"
 										}}
 									/>
 								</IconButton>
@@ -603,6 +621,7 @@ export const Roles = (): ReactElement => {
 																		)
 																	}
 																	fullWidth
+																	multiple
 																>
 																	{ROLES_OPTIONS.map((option, index: number) => {
 																		return (
@@ -627,7 +646,7 @@ export const Roles = (): ReactElement => {
 														<Typography>{gitIssue.Email_ID}</Typography>
 													</Grid>
 													<Grid container alignItems="center" item xs={5}>
-														<Typography>{gitIssue.role}</Typography>
+														<Typography>{gitIssue.role.map(role=>role+" ")}</Typography>
 													</Grid>
 												</>
 											)}
