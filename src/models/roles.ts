@@ -1,9 +1,13 @@
+import { ADMIN, INTERN, MENTOR, ANONYMOUS, ALL } from "../constants";
+
 export interface Role {
 	Email_ID: string;
-	role: RoleType;
+	role: RoleType[];
 	id?: string;
 }
 
-export type RoleType = "admin" | "intern" | "mentor" | "none";
+export type RoleType = typeof ADMIN | typeof INTERN | typeof MENTOR | typeof ANONYMOUS;
 
-export type Permissions = "admin" | "intern" | "mentor" | "all" | "none";
+export type Permissions = typeof ADMIN | typeof INTERN | typeof MENTOR | typeof ALL;
+
+export type RoleAndPermission = typeof ADMIN | typeof INTERN | typeof MENTOR;
