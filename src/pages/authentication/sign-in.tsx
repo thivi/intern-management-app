@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useCallback, useState } from "react";
 import { AuthContext, NotificationContext } from "../../helpers";
 import { useHistory } from "react-router-dom";
 import { getCallbackUrl, Notify } from "../../utils";
-import { SIGN_IN, ADD_DETAILS } from "../../constants";
+import { SIGN_IN, ADD_DETAILS, ANONYMOUS } from "../../constants";
 import { getGoogleProfile, getRoles } from "../../apis";
 import { GoogleProfile, NotificationType } from "../../models";
 import { Box, Typography, List, ListItem, ListItemText, ListItemIcon, Slide, LinearProgress } from "@material-ui/core";
@@ -39,7 +39,7 @@ export const SignIn = (): React.ReactElement => {
 								const role = responseRoles?.values.find((role: string[]) => role[0] === response.email);
 								dispatch({
 									type: ADD_DETAILS,
-									payload: { role: role?.length > 0 ? role[1] : "none" },
+									payload: { role: role?.length > 0 ? role[1].split(" ") : [ANONYMOUS] },
 								});
 							})
 							.catch((error) => {
