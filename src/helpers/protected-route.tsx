@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { AuthContext } from ".";
-import { updateCallbackUrl } from "../utils";
+import { updateCallbackUrl, hasPermission } from "../utils";
 import { AppLayout } from "../layout";
 import { LOGIN, NOT_FOUND } from "../constants";
 import { Permissions } from "../models";
@@ -20,11 +20,7 @@ export const ProtectedRoute = (props: ProtectedRoutePropsInterface): React.React
 	updateCallbackUrl(path);
 
 	if (authState?.authenticated) {
-		if (
-			(permission instanceof Array && permission.includes(authState?.authData?.role)) ||
-			authState?.authData?.role === permission ||
-			permission === "all"
-		) {
+		if (hasPermission(permission, authState.authData.role)) {
 			const route = <Route path={path} component={component} exact={exact} />;
 			return appLayout ? <AppLayout>{route}</AppLayout> : route;
 		} else if (path === NOT_FOUND) {
