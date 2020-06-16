@@ -1,12 +1,13 @@
-import { ROLES_PATH, NOT_FOUND, DASHBOARD } from "../constants";
+import { ROLES_PATH, NOT_FOUND, DASHBOARD, MENTOR, INTERN, ADMIN } from "../constants";
+import { RoleType } from "../models";
 
-export const findHome = (role: string): string => {
-	switch (role) {
-		case "mentor":
+export const findHome = (role: RoleType[]): string => {
+	switch (true) {
+		case role.includes(MENTOR):
 			return DASHBOARD;
-		case "intern":
+		case role.includes(INTERN):
 			return DASHBOARD;
-		case "admin":
+		case role.includes(ADMIN):
 			return ROLES_PATH;
 		default:
 			return NOT_FOUND;
