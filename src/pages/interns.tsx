@@ -11,7 +11,7 @@ import {
 	FormControlLabel,
 	Switch,
 	Paper,
-	InputBase,
+	InputBase
 } from "@material-ui/core";
 import {
 	Intern,
@@ -23,7 +23,7 @@ import {
 	InternInfo,
 	Blog,
 	Project,
-	NotificationType,
+	NotificationType
 } from "../models";
 import {
 	getBlogs,
@@ -32,7 +32,7 @@ import {
 	getPullRequests,
 	getPresentationsOrWebinars,
 	getProjectTasks,
-	getProjects,
+	getProjects
 } from "../apis";
 import { AuthContext, NotificationContext } from "../helpers";
 import { Close, Sort, Search } from "@material-ui/icons";
@@ -41,6 +41,7 @@ import useStyles from "../theme";
 import { InternProfile } from ".";
 import { Notify } from "../utils";
 import { EmptyPlaceholder, NoResultPlaceholder } from "../components";
+import { MENTOR } from "../constants";
 
 const SORT_BY: {
 	key: keyof Intern;
@@ -48,32 +49,32 @@ const SORT_BY: {
 }[] = [
 	{
 		key: "name",
-		text: "Name",
+		text: "Name"
 	},
 	{
 		key: "blogs",
-		text: "No. of Blogs",
+		text: "No. of Blogs"
 	},
 	{
 		key: "email",
-		text: "Email",
+		text: "Email"
 	},
 	{
 		key: "gitIssues",
-		text: "No. of GitIssues",
+		text: "No. of GitIssues"
 	},
 	{
 		key: "presentationsOrWebinars",
-		text: "No. of Presentations/Webinars",
+		text: "No. of Presentations/Webinars"
 	},
 	{
 		key: "projectTasksCompletion",
-		text: "Project Completion",
+		text: "Project Completion"
 	},
 	{
 		key: "pullRequests",
-		text: "No. of Pull Requests",
-	},
+		text: "No. of Pull Requests"
+	}
 ];
 
 interface Sort {
@@ -90,7 +91,6 @@ interface Sort {
 export const Interns = (): ReactElement => {
 	const [paginatedInterns, setPaginatedInterns] = useState<Intern[]>([]);
 	const [filteredInterns, setFilteredInterns] = useState<Intern[]>([]);
-	const { authState } = useContext(AuthContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [page, setPage] = useState(1);
 	const [sortBy, setSortBy] = useState(SORT_BY[0].key);
@@ -102,7 +102,7 @@ export const Interns = (): ReactElement => {
 		gitIssues: true,
 		presentationsOrWebinars: true,
 		projectTasksCompletion: true,
-		pullRequests: true,
+		pullRequests: true
 	});
 	const [searchQuery, setSearchQuery] = useState("");
 	const [sorted, setSorted] = useState<Sort>({
@@ -112,7 +112,7 @@ export const Interns = (): ReactElement => {
 		gitIssues: false,
 		presentationsOrWebinars: false,
 		projectTasksCompletion: false,
-		pullRequests: false,
+		pullRequests: false
 	});
 	const [internInfo, setInternInfo] = useState<InternInfo[]>([]);
 	const [interns, setInterns] = useState<Intern[]>([]);
@@ -133,6 +133,9 @@ export const Interns = (): ReactElement => {
 		return new Date(intern.profile.Leaving_date) >= new Date();
 	}, []);
 
+	const { dispatch } = useContext(NotificationContext);
+	const { authState } = useContext(AuthContext);
+
 	const isMentee = useCallback(
 		(intern: Intern): boolean => {
 			return (
@@ -142,8 +145,6 @@ export const Interns = (): ReactElement => {
 		},
 		[authState]
 	);
-
-	const { dispatch } = useContext(NotificationContext);
 
 	const getInternsCall = useCallback(() => {
 		setIsLoading(true);
@@ -175,26 +176,26 @@ export const Interns = (): ReactElement => {
 					const internBlogs: Blog[] = blogs.map((blog: string[]) => ({
 						Email_ID: blog[0],
 						Title: blog[1],
-						Link: blog[2],
+						Link: blog[2]
 					}));
 
 					const internGitIssues: GitIssue[] = gitIssues.map((gitIssue: string[]) => ({
 						Email_ID: gitIssue[0],
 						Issue_Title: gitIssue[1],
-						Link: gitIssue[2],
+						Link: gitIssue[2]
 					}));
 
 					const internPullRequests: PullRequest[] = pullRequests.map((pullRequest: string[]) => ({
 						Email_ID: pullRequest[0],
 						Title: pullRequest[1],
-						Link: pullRequest[2],
+						Link: pullRequest[2]
 					}));
 
 					const internPresentationsOrWebinars: PresentationOrWebinar[] = presentationsOrWebinars.map(
 						(presentationsOrWebinar: string[]) => ({
 							Email_ID: presentationsOrWebinar[0],
 							Title: presentationsOrWebinar[1],
-							Link: presentationsOrWebinar[2],
+							Link: presentationsOrWebinar[2]
 						})
 					);
 
@@ -202,13 +203,13 @@ export const Interns = (): ReactElement => {
 						Email_ID: projectTask[0],
 						Title: projectTask[1],
 						PullRequest: projectTask[2],
-						Completed: projectTask[3],
+						Completed: projectTask[3]
 					}));
 
 					const internProjects: Project[] = projects.map((project: string[]) => ({
 						Email_ID: project[0],
 						Title: project[1],
-						Mentor: project[2],
+						Mentor: project[2]
 					}));
 
 					const internProfile: Profile = {
@@ -222,7 +223,7 @@ export const Interns = (): ReactElement => {
 						Mentor: profile[7],
 						Co_mentor: profile[8],
 						Blog: profile[9],
-						Gantt_chart: profile[10],
+						Gantt_chart: profile[10]
 					};
 
 					internInfos.push({
@@ -232,7 +233,7 @@ export const Interns = (): ReactElement => {
 						pullRequests: internPullRequests,
 						presentationsOrWebinars: internPresentationsOrWebinars,
 						projectTasks: internProjectTasks,
-						projects: internProjects,
+						projects: internProjects
 					});
 
 					const completedTasks =
@@ -248,7 +249,7 @@ export const Interns = (): ReactElement => {
 							Math.round((completedTasks / (internProjectTasks.length ?? 0) || 0) * 100) / 100,
 						name: internProfile.Name,
 						blogs: internBlogs.length,
-						projects: internProjects,
+						projects: internProjects
 					});
 				});
 				setInternInfo(internInfos);
@@ -302,7 +303,7 @@ export const Interns = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					})
 				);
 			})
@@ -440,37 +441,45 @@ export const Interns = (): ReactElement => {
 													onChange={() => search("", true, false)}
 													color="secondary"
 													classes={{
-														switchBase: classes.customSwitch,
+														switchBase: classes.customSwitch
 													}}
 												/>
 											}
 											label="Show Only Active Interns"
 											labelPlacement="bottom"
 											classes={{
-												root: classes.switchLabel,
+												root: classes.switchLabel
 											}}
 										/>
 									</Grid>
-									<Grid item xs={2}>
-										<FormControlLabel
-											control={
-												<Switch
-													checked={showOnlyMentees}
-													onChange={() => search("", false, true)}
-													color="secondary"
-													classes={{
-														switchBase: classes.customSwitch,
-													}}
-												/>
-											}
-											label="Show Only My Mentees"
-											labelPlacement="bottom"
-											classes={{
-												root: classes.switchLabel,
-											}}
-										/>
-									</Grid>
-									<Grid item xs={8} container justify="flex-end" alignItems="center">
+									{authState.authData.role.includes(MENTOR) && (
+										<Grid item xs={2}>
+											<FormControlLabel
+												control={
+													<Switch
+														checked={showOnlyMentees}
+														onChange={() => search("", false, true)}
+														color="secondary"
+														classes={{
+															switchBase: classes.customSwitch
+														}}
+													/>
+												}
+												label="Show Only My Mentees"
+												labelPlacement="bottom"
+												classes={{
+													root: classes.switchLabel
+												}}
+											/>
+										</Grid>
+									)}
+									<Grid
+										item
+										xs={authState.authData.role.includes(MENTOR) ? 8 : 10}
+										container
+										justify="flex-end"
+										alignItems="center"
+									>
 										<Paper className={classes.search} variant="outlined">
 											<InputBase
 												placeholder="Search by name"
@@ -524,7 +533,7 @@ export const Interns = (): ReactElement => {
 														? !sortOrder["name"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
-														: "scaleY(-1)",
+														: "scaleY(-1)"
 												}}
 											/>
 										</IconButton>
@@ -550,7 +559,7 @@ export const Interns = (): ReactElement => {
 														? !sortOrder["blogs"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
-														: "scaleY(-1)",
+														: "scaleY(-1)"
 												}}
 											/>
 										</IconButton>
@@ -576,7 +585,7 @@ export const Interns = (): ReactElement => {
 														? !sortOrder["gitIssues"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
-														: "scaleY(-1)",
+														: "scaleY(-1)"
 												}}
 											/>
 										</IconButton>
@@ -608,7 +617,7 @@ export const Interns = (): ReactElement => {
 														? !sortOrder["presentationsOrWebinars"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
-														: "scaleY(-1)",
+														: "scaleY(-1)"
 												}}
 											/>
 										</IconButton>
@@ -637,7 +646,7 @@ export const Interns = (): ReactElement => {
 														? !sortOrder["projectTasksCompletion"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
-														: "scaleY(-1)",
+														: "scaleY(-1)"
 												}}
 											/>
 										</IconButton>
@@ -663,7 +672,7 @@ export const Interns = (): ReactElement => {
 														? !sortOrder["pullRequests"]
 															? "scaleY(-1)"
 															: "scaleY(1)"
-														: "scaleY(-1)",
+														: "scaleY(-1)"
 												}}
 											/>
 										</IconButton>
@@ -719,15 +728,15 @@ export const Interns = (): ReactElement => {
 															disableRestoreFocus
 															className={classes.popOver}
 															classes={{
-																paper: classes.paper,
+																paper: classes.paper
 															}}
 															anchorOrigin={{
 																vertical: "bottom",
-																horizontal: "right",
+																horizontal: "right"
 															}}
 															transformOrigin={{
 																vertical: "top",
-																horizontal: "left",
+																horizontal: "left"
 															}}
 														>
 															<List>
@@ -738,12 +747,14 @@ export const Interns = (): ReactElement => {
 																		primary={intern.profile.Email_ID}
 																	/>
 																</ListItem>
-																<ListItem>
-																	<ListItemText
-																		secondary="Contact No."
-																		primary={intern.profile.Contact_no}
-																	/>
-																</ListItem>
+																{authState.authData.role.includes(MENTOR) && (
+																	<ListItem>
+																		<ListItemText
+																			secondary="Contact No."
+																			primary={intern.profile.Contact_no}
+																		/>
+																	</ListItem>
+																)}
 
 																<Typography variant="subtitle1">Mentors</Typography>
 																<ListItem>
