@@ -13,7 +13,7 @@ import {
 	NotFound,
 	Interns,
 	Roles,
-	Home,
+	Home
 } from "../pages";
 import {
 	LOGOUT,
@@ -30,6 +30,10 @@ import {
 	ROLES_PATH,
 	DASHBOARD,
 	HOME,
+	MENTOR,
+	INTERN,
+	ALL,
+	ADMIN
 } from "../constants";
 import {
 	AccountCircleOutlined,
@@ -41,7 +45,7 @@ import {
 	WorkOutlineOutlined,
 	LowPriorityOutlined,
 	PeopleOutlineOutlined,
-	AssignmentIndOutlined,
+	AssignmentIndOutlined
 } from "@material-ui/icons";
 import React from "react";
 
@@ -54,8 +58,8 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Dashboard",
 		appLayout: true,
-		permission: ["mentor", "intern"],
-		icon: <DashboardOutlined />,
+		permission: [MENTOR, INTERN],
+		icon: <DashboardOutlined />
 	},
 	{
 		component: SignIn,
@@ -65,7 +69,7 @@ export const routes: RouteInterface[] = [
 		exact: true,
 		name: "Login",
 		appLayout: false,
-		permission: "all",
+		permission: ALL
 	},
 	{
 		component: SignOut,
@@ -75,7 +79,7 @@ export const routes: RouteInterface[] = [
 		name: "Logout",
 		showOnMenu: false,
 		appLayout: false,
-		permission: "all",
+		permission: ALL
 	},
 	{
 		component: ProfilePage,
@@ -85,8 +89,8 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Profile",
 		appLayout: true,
-		permission: "intern",
-		icon: <AccountCircleOutlined />,
+		permission: INTERN,
+		icon: <AccountCircleOutlined />
 	},
 	{
 		component: GitIssues,
@@ -96,8 +100,8 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Git Issues",
 		appLayout: true,
-		permission: "intern",
-		icon: <ErrorOutline />,
+		permission: INTERN,
+		icon: <ErrorOutline />
 	},
 	{
 		component: PullRequests,
@@ -107,8 +111,8 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Pull Requests",
 		appLayout: true,
-		permission: "intern",
-		icon: <LowPriorityOutlined />,
+		permission: INTERN,
+		icon: <LowPriorityOutlined />
 	},
 	{
 		component: PresentationsOrWebinars,
@@ -118,8 +122,8 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Presentations/Webinars",
 		appLayout: true,
-		permission: "intern",
-		icon: <SlideshowOutlined />,
+		permission: INTERN,
+		icon: <SlideshowOutlined />
 	},
 	{
 		component: Blogs,
@@ -129,8 +133,8 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Blogs",
 		appLayout: true,
-		permission: "intern",
-		icon: <CreateOutlined />,
+		permission: INTERN,
+		icon: <CreateOutlined />
 	},
 	{
 		component: Projects,
@@ -140,8 +144,8 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Projects",
 		appLayout: true,
-		permission: "intern",
-		icon: <WorkOutlineOutlined />,
+		permission: INTERN,
+		icon: <WorkOutlineOutlined />
 	},
 	{
 		component: ProjectTasks,
@@ -151,8 +155,8 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Project Tasks",
 		appLayout: true,
-		permission: "intern",
-		icon: <PlaylistAddCheckOutlined />,
+		permission: INTERN,
+		icon: <PlaylistAddCheckOutlined />
 	},
 	{
 		component: NotFound,
@@ -162,7 +166,7 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Not Found",
 		appLayout: true,
-		permission: "all",
+		permission: ALL
 	},
 	{
 		component: Interns,
@@ -172,8 +176,8 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Interns",
 		appLayout: true,
-		permission: "mentor",
-		icon: <PeopleOutlineOutlined />,
+		permission: ALL,
+		icon: <PeopleOutlineOutlined />
 	},
 	{
 		component: Roles,
@@ -183,8 +187,8 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Roles",
 		appLayout: true,
-		permission: "admin",
-		icon: <AssignmentIndOutlined />,
+		permission: ADMIN,
+		icon: <AssignmentIndOutlined />
 	},
 	{
 		component: Home,
@@ -194,6 +198,6 @@ export const routes: RouteInterface[] = [
 		exact: false,
 		name: "Home",
 		appLayout: true,
-		permission: "all",
-	},
+		permission: ALL
+	}
 ];
