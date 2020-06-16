@@ -3,14 +3,15 @@ import { AuthContext } from "../../helpers";
 import { DashboardIntern } from "./dashboard-intern";
 import { DashboardMentor } from "./dashboard-mentor";
 import { Redirect } from "react-router-dom";
+import { INTERN, MENTOR } from "../../constants";
 
 export const Dashboard = (): React.ReactElement => {
 	const { authState } = useContext(AuthContext);
 
-	switch (authState.authData.role) {
-		case "intern":
+	switch (true) {
+		case authState.authData.role.includes(INTERN):
 			return <DashboardIntern />;
-		case "mentor":
+		case authState.authData.role.includes(MENTOR):
 			return <DashboardMentor />;
 		default:
 			return <Redirect to="/" />;
