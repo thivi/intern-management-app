@@ -39,14 +39,14 @@ export const SignIn = (): React.ReactElement => {
 								const role = responseRoles?.values.find((role: string[]) => role[0] === response.email);
 								dispatch({
 									type: ADD_DETAILS,
-									payload: { role: role?.length > 0 ? role[1].split(" ") : [ANONYMOUS] },
+									payload: { role: role?.length > 0 ? role[1].split(" ") : [ANONYMOUS] }
 								});
 							})
 							.catch((error) => {
 								dispatchNotification(
 									Notify({
 										status: NotificationType.ERROR,
-										message: error,
+										message: error
 									})
 								);
 							})
@@ -58,7 +58,7 @@ export const SignIn = (): React.ReactElement => {
 						dispatchNotification(
 							Notify({
 								status: NotificationType.ERROR,
-								message: error,
+								message: error
 							})
 						);
 					});
@@ -86,7 +86,7 @@ export const SignIn = (): React.ReactElement => {
 					clientId: process.env.REACT_APP_CLIENT_ID,
 					scope:
 						"https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.profile",
-					discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
+					discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"]
 				})
 				.then(() => {
 					let GoogleAuth = gapi.auth2.getAuthInstance();
@@ -108,7 +108,9 @@ export const SignIn = (): React.ReactElement => {
 			flexDirection="column"
 			className={classes.coloredBackground}
 		>
-			<img src={LoginGraphic} alt="login" width="500px" />
+			<Box marginBottom={4}>
+				<img src={LoginGraphic} alt="login" width="400px" />
+			</Box>
 			<Typography variant="h4" align="center" className={classes.primaryTextOnColoredBackground}>
 				<Box width="100%" marginBottom={4}>
 					<LinearProgress color="secondary" />
