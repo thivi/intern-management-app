@@ -19,7 +19,8 @@ import {
 	Paper,
 	Typography,
 	InputBase,
-	Box
+	Box,
+	Chip
 } from "@material-ui/core";
 import { Role, RoleType, NotificationType } from "../models";
 import { getRoles, addRoles, updateRoles, deleteRole } from "../apis";
@@ -126,7 +127,7 @@ export const Roles = (): ReactElement => {
 					ranges.push(`${ROLES}!A${index + 1}:AA${index + 1}`);
 					issues.push({
 						Email_ID: issue[0],
-						role: issue[1].split(" ") as RoleType[],
+						role: issue[1]?.split(" ") as RoleType[],
 						id: id.toString()
 					});
 					id++;
@@ -303,7 +304,7 @@ export const Roles = (): ReactElement => {
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
 			if (!values.email) errors["email"] = "Email is required.";
-			if (!values.role) errors["role"] = "Role is required.";
+			if (values.role.length === 0) errors["role"] = "Role is required.";
 			if (values.email && !validator.isEmail(values.email))
 				errors["email"] = "The email is invalid. " + (errors["email"] ?? "");
 
@@ -348,7 +349,7 @@ export const Roles = (): ReactElement => {
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
 			if (!values.email) errors["email"] = "Email is required.";
-			if (!(values.role.length>0)) errors["role"] = "Role is required.";
+			if (!(values.role.length > 0)) errors["role"] = "Role is required.";
 			if (values.email && !validator.isEmail(values.email))
 				errors["email"] = "The email is invalid. " + (errors["email"] ?? "");
 
@@ -438,8 +439,12 @@ export const Roles = (): ReactElement => {
 							/>
 						</Grid>
 						<Grid xs={5} item>
-							<FormControl variant="outlined" fullWidth>
-								<InputLabel>Role</InputLabel>
+							<FormControl variant="outlined" fullWidth className={classes.roleSelect}>
+								<InputLabel
+									className={addForm.touched.role && addForm.errors.role && classes.roleErrorLabel}
+								>
+									Role
+								</InputLabel>
 								<Select
 									label="Role"
 									name="role"
@@ -449,10 +454,20 @@ export const Roles = (): ReactElement => {
 									error={!!(addForm.touched.role && addForm.errors.role)}
 									fullWidth
 									multiple
+									renderValue={(selected) => {
+										const selectedValues = selected as RoleType[];
+										return (
+											<div>
+												{selectedValues.map((value: RoleType, index: number) => {
+													return <Chip key={index} label={value} />;
+												})}
+											</div>
+										);
+									}}
 								>
 									{ROLES_OPTIONS.map((option, index: number) => {
 										return (
-											<MenuItem key={index} value={option.key}>
+											<MenuItem key={index} value={option.key} className={classes.roleSelectList}>
 												{option.text}
 											</MenuItem>
 										);
@@ -595,6 +610,7 @@ export const Roles = (): ReactElement => {
 																value={editForm.values.email}
 																onBlur={editForm.handleBlur}
 																onChange={editForm.handleChange}
+																className={classes.roleEmail}
 																helperText={
 																	editForm.touched.email &&
 																	editForm.errors.email &&
@@ -606,8 +622,20 @@ export const Roles = (): ReactElement => {
 															/>
 														</Grid>
 														<Grid xs={6} item>
-															<FormControl variant="standard" fullWidth>
-																<InputLabel>Role</InputLabel>
+															<FormControl
+																variant="standard"
+																fullWidth
+																className={classes.roleSelect}
+															>
+																<InputLabel
+																	className={
+																		editForm.touched.role &&
+																		editForm.errors.role &&
+																		classes.roleErrorLabel
+																	}
+																>
+																	Role
+																</InputLabel>
 																<Select
 																	label="Role"
 																	name="role"
@@ -622,10 +650,34 @@ export const Roles = (): ReactElement => {
 																	}
 																	fullWidth
 																	multiple
+																	renderValue={(selected) => {
+																		const selectedValues = selected as RoleType[];
+																		return (
+																			<div>
+																				{selectedValues.map(
+																					(
+																						value: RoleType,
+																						index: number
+																					) => {
+																						return (
+																							<Chip
+																								key={index}
+																								label={value}
+																							/>
+																						);
+																					}
+																				)}
+																			</div>
+																		);
+																	}}
 																>
 																	{ROLES_OPTIONS.map((option, index: number) => {
 																		return (
-																			<MenuItem key={index} value={option.key}>
+																			<MenuItem
+																				key={index}
+																				value={option.key}
+																				className={classes.roleSelectList}
+																			>
 																				{option.text}
 																			</MenuItem>
 																		);
@@ -646,13 +698,22 @@ export const Roles = (): ReactElement => {
 														<Typography>{gitIssue.Email_ID}</Typography>
 													</Grid>
 													<Grid container alignItems="center" item xs={5}>
-														<Typography>{gitIssue.role.map(role=>role+" ")}</Typography>
+														<Typography>
+															{gitIssue?.role?.map((role: string, index: number) => (
+																<Chip
+																	key={index}
+																	label={role}
+																	className={classes.roleChip}
+																/>
+															))}
+														</Typography>
 													</Grid>
 												</>
 											)}
 											<Grid container justify="flex-end" item xs={2}>
 												{editIndex !== index && (
 													<IconButton
+														className={classes.roleButton}
 														aria-label="edit"
 														onClick={() => {
 															setEditIndex(index);
@@ -663,6 +724,7 @@ export const Roles = (): ReactElement => {
 												)}
 												{editIndex === index && (
 													<IconButton
+														className={classes.roleButton}
 														onClick={() => editForm.handleSubmit()}
 														type="submit"
 														aria-label="save"
@@ -672,6 +734,7 @@ export const Roles = (): ReactElement => {
 												)}
 												{editIndex === index && (
 													<IconButton
+														className={classes.roleButton}
 														aria-label="close"
 														onClick={() => {
 															setEditIndex(-1);
@@ -681,6 +744,7 @@ export const Roles = (): ReactElement => {
 													</IconButton>
 												)}
 												<IconButton
+													className={classes.roleButton}
 													aria-label="delete"
 													onClick={() => {
 														setDeleteIndex(parseInt(gitIssue.id));
