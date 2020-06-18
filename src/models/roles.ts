@@ -10,4 +10,4 @@ export type RoleType = typeof ADMIN | typeof INTERN | typeof MENTOR | typeof ANO
 
 export type Permissions = typeof ADMIN | typeof INTERN | typeof MENTOR | typeof ALL;
 
-export type RoleAndPermission = typeof ADMIN | typeof INTERN | typeof MENTOR;
+export type RoleAndPermission = RoleType & Permissions;
