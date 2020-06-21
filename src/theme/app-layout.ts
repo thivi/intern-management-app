@@ -48,6 +48,7 @@ export const paper = (theme: Theme) => ({
 export const floatingMenu = (theme: Theme) => ({
 	top: toolbarHeight(theme)+"!important"
 });
+
 export const menuIcon = (theme: Theme) => ({
 	color: theme.palette.common.white
 });
