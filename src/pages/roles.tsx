@@ -101,8 +101,8 @@ export const Roles = (): ReactElement => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [deleteIndex, setDeleteIndex] = useState(-1);
 	const [sorted, setSorted] = useState(false);
-	const [ showRole, setShowRole ] = useState(SHOW_ROLE_OPTIONS[ 0 ].key);
-	const [ speedDialIndex, setSpeedDialIndex ] = useState(-1);
+	const [showRole, setShowRole] = useState(SHOW_ROLE_OPTIONS[0].key);
+	const [speedDialIndex, setSpeedDialIndex] = useState(-1);
 
 	const itemsPerPage = 10;
 
@@ -522,7 +522,7 @@ export const Roles = (): ReactElement => {
 									</Select>
 								</FormControl>
 							</Grid>
-							<Grid item xs={ 8 } md={ 4 } container justify="flex-end">
+							<Grid item xs={8} md={4} container justify="flex-end">
 								<Paper className={classes.search} variant="outlined">
 									<InputBase
 										placeholder="Search by email"
@@ -700,15 +700,13 @@ export const Roles = (): ReactElement => {
 														<Typography>{gitIssue.Email_ID}</Typography>
 													</Grid>
 													<Grid container alignItems="center" item xs={5} md={4}>
-														<Typography>
-															{gitIssue?.role?.map((role: string, index: number) => (
-																<Chip
-																	key={index}
-																	label={role}
-																	className={classes.roleChip}
-																/>
-															))}
-														</Typography>
+														{gitIssue?.role?.map((role: string, index: number) => (
+															<Chip
+																key={index}
+																label={role}
+																className={classes.roleChip}
+															/>
+														))}
 													</Grid>
 												</>
 											)}
