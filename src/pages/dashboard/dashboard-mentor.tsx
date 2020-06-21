@@ -10,7 +10,7 @@ import {
 	Profile,
 	InternInfo,
 	Intern,
-	NotificationType,
+	NotificationType
 } from "../../models";
 import {
 	getProfile,
@@ -19,7 +19,7 @@ import {
 	getPullRequests,
 	getPresentationsOrWebinars,
 	getProjectTasks,
-	getProjects,
+	getProjects
 } from "../../apis";
 import { useHistory } from "react-router-dom";
 import { INTERNS } from "../../constants";
@@ -41,7 +41,7 @@ import {
 	PullRequestGraphic,
 	PresentationGraphic,
 	ProjectGraphic,
-	BlogGraphic,
+	BlogGraphic
 } from "../../theme/img";
 
 export const DashboardMentor = (): ReactElement => {
@@ -82,26 +82,26 @@ export const DashboardMentor = (): ReactElement => {
 				const internBlogs: Blog[] = blogs.map((blog: string[]) => ({
 					Email_ID: blog[0],
 					Title: blog[1],
-					Link: blog[2],
+					Link: blog[2]
 				}));
 
 				const internGitIssues: GitIssue[] = gitIssues.map((gitIssue: string[]) => ({
 					Email_ID: gitIssue[0],
 					Issue_Title: gitIssue[1],
-					Link: gitIssue[2],
+					Link: gitIssue[2]
 				}));
 
 				const internPullRequests: PullRequest[] = pullRequests.map((pullRequest: string[]) => ({
 					Email_ID: pullRequest[0],
 					Title: pullRequest[1],
-					Link: pullRequest[2],
+					Link: pullRequest[2]
 				}));
 
 				const internPresentationsOrWebinars: PresentationOrWebinar[] = presentationsOrWebinars.map(
 					(presentationsOrWebinar: string[]) => ({
 						Email_ID: presentationsOrWebinar[0],
 						Title: presentationsOrWebinar[1],
-						Link: presentationsOrWebinar[2],
+						Link: presentationsOrWebinar[2]
 					})
 				);
 
@@ -109,13 +109,13 @@ export const DashboardMentor = (): ReactElement => {
 					Email_ID: projectTask[0],
 					Title: projectTask[1],
 					PullRequest: projectTask[2],
-					Completed: projectTask[3],
+					Completed: projectTask[3]
 				}));
 
 				const internProjects: Project[] = projects.map((project: string[]) => ({
 					Email_ID: project[0],
 					Title: project[1],
-					Mentor: project[2],
+					Mentor: project[2]
 				}));
 
 				const internProfiles: Profile[] = profiles.map((profile: string[]) => ({
@@ -129,7 +129,7 @@ export const DashboardMentor = (): ReactElement => {
 					Mentor: profile[7],
 					Co_mentor: profile[8],
 					Blog: profile[9],
-					Gantt_chart: profile[10],
+					Gantt_chart: profile[10]
 				}));
 
 				const internInfoObj = {
@@ -139,7 +139,7 @@ export const DashboardMentor = (): ReactElement => {
 					pullRequests: internPullRequests,
 					presentationsOrWebinars: internPresentationsOrWebinars,
 					projectTasks: internProjectTasks,
-					projects: internProjects,
+					projects: internProjects
 				};
 
 				const completedTasks =
@@ -153,7 +153,7 @@ export const DashboardMentor = (): ReactElement => {
 					projectTasksCompletion:
 						Math.round((completedTasks / (internProjectTasks.length ?? 0) || 0) * 100) / 100,
 					blogs: internBlogs.length,
-					projects: internProjects.length,
+					projects: internProjects.length
 				};
 
 				setIntern(internObj);
@@ -198,7 +198,7 @@ export const DashboardMentor = (): ReactElement => {
 					</Box>
 				</Box>
 			</Grid>
-			<Grid item xs={6}>
+			<Grid item xs={12} md={6}>
 				<Paper className={`${classes.tile} ${classes.centeredTile}`}>
 					{!isLoading ? (
 						<Box padding={3}>
@@ -206,12 +206,12 @@ export const DashboardMentor = (): ReactElement => {
 								data={[
 									{
 										type: `Completed (${intern.projectTasksCompletion * 100}%)`,
-										value: intern?.projectTasksCompletion * 100,
+										value: intern?.projectTasksCompletion * 100
 									},
 									{
 										type: `Incomplete (${100 - intern?.projectTasksCompletion * 100}%)`,
-										value: 100 - intern?.projectTasksCompletion * 100,
-									},
+										value: 100 - intern?.projectTasksCompletion * 100
+									}
 								]}
 								width={500}
 							>
@@ -231,7 +231,7 @@ export const DashboardMentor = (): ReactElement => {
 					)}
 				</Paper>
 			</Grid>
-			<Grid container spacing={2} item xs={6} className={classes.tileColumn}>
+			<Grid container spacing={2} item xs={12} md={12} className={classes.tileColumn}>
 				<Grid container item xs={12} className={classes.tileRow}>
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
@@ -324,14 +324,14 @@ export const DashboardMentor = (): ReactElement => {
 									</Typography>
 								)}
 								<Typography variant="h6" color="textSecondary" align="center">
-									Presentations/Webinars Done
+									Presentations / Webinars Done
 								</Typography>
 							</Box>
 						</Paper>
 					</Grid>
 				</Grid>
 			</Grid>
-			<Grid item xs={6}>
+			<Grid item xs={12} md={12}>
 				<Paper className={classes.tile}>
 					<Box padding={3}>
 						<Box display="flex" justifyContent="center">
@@ -379,7 +379,7 @@ export const DashboardMentor = (): ReactElement => {
 					</Box>
 				</Paper>
 			</Grid>
-			<Grid item xs={6} container spacing={2} className={classes.tileColumn}>
+			<Grid item xs={12} md={6} container spacing={2} className={classes.tileColumn}>
 				<Grid container item xs={12}>
 					<Grid item xs={12} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
