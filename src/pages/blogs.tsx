@@ -489,7 +489,14 @@ export const Blogs = (): ReactElement => {
 													</Link>
 												</Grid>
 											)}
-											<Grid container justify="flex-end" item xs={2} md={3}>
+											<Grid
+												container
+												justify="flex-end"
+												item
+												xs={2}
+												md={3}
+												className={classes.speedDialGrid}
+											>
 												<Hidden mdUp>
 													<SpeedDial
 														direction="left"

@@ -37,7 +37,8 @@ import {
 	roleChip,
 	speedDial,
 	broadList,
-	broadListWrapper
+	broadListWrapper,
+	speedDialGrid
 } from "./list-page";
 import {
 	popOver,
@@ -106,7 +107,8 @@ const useStyles = makeStyles(
 		floatingMenu: floatingMenu(theme),
 		speedDial: speedDial(theme),
 		broadList: broadList(theme),
-		broadListWrapper: broadListWrapper(theme)
+		broadListWrapper: broadListWrapper(theme),
+		speedDialGrid: speedDialGrid(theme)
 	}),
 	{ index: 1 }
 );

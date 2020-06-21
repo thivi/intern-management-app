@@ -511,7 +511,14 @@ export const GitIssues = (): ReactElement => {
 													</Link>
 												</Grid>
 											)}
-											<Grid container justify="flex-end" item xs={2} md={3}>
+											<Grid
+												container
+												justify="flex-end"
+												item
+												xs={2}
+												md={3}
+												className={classes.speedDialGrid}
+											>
 												<Hidden mdUp>
 													<SpeedDial
 														direction="left"
@@ -523,7 +530,7 @@ export const GitIssues = (): ReactElement => {
 														}
 														ariaLabel="more options"
 														open={speedDialIndex === index}
-														onClose={ () => {
+														onClose={() => {
 															setSpeedDialIndex(-1);
 														}}
 														onOpen={() => {
