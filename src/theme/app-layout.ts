@@ -1,8 +1,6 @@
 import { Theme } from "@material-ui/core";
 import { DRAWER_WIDTH, TOP_BAR_HEIGHT_SM_UP, TOP_BAR_HEIGHT_SM_DOWN } from "./constants";
 
-const toolbarHeight = (theme: Theme) => (theme.breakpoints.up("sm") ? TOP_BAR_HEIGHT_SM_UP : TOP_BAR_HEIGHT_SM_DOWN);
-
 export const appBar = (theme: Theme) => ({
 	zIndex: theme.zIndex.drawer + 1
 });
@@ -17,7 +15,10 @@ export const avatar = (theme: Theme) => ({
 
 export const drawerPaper = (theme: Theme) => ({
 	width: DRAWER_WIDTH,
-	minHeight: "calc(100vh - " + toolbarHeight(theme) + "px)",
+	minHeight: "calc(100vh - " + TOP_BAR_HEIGHT_SM_UP + "px)",
+	[`${theme.breakpoints.down("sm")}`]: {
+		minHeight: "calc(100vh - " + TOP_BAR_HEIGHT_SM_DOWN + "px)"
+	},
 	position: "absolute" as const
 });
 
@@ -26,7 +27,10 @@ export const drawer = (theme: Theme) => ({
 	flexShrink: 0,
 	position: "relative" as const,
 	"& .MuiBackdrop-root": {
-		top: toolbarHeight(theme)
+		top: TOP_BAR_HEIGHT_SM_UP,
+		[`${theme.breakpoints.down("sm")}`]: {
+			top: TOP_BAR_HEIGHT_SM_DOWN
+		}
 	}
 });
 
@@ -38,15 +42,24 @@ export const root = (theme: Theme) => ({
 
 export const content = (theme: Theme) => ({
 	flexGrow: 1,
-	padding: theme.spacing(3)
+	padding: theme.spacing(3),
+	[`${theme.breakpoints.down("md")}`]: {
+		padding: theme.spacing()
+	}
 });
 
 export const paper = (theme: Theme) => ({
-	padding: theme.spacing(3)
+	padding: theme.spacing(3),
+	[`${theme.breakpoints.down("md")}`]: {
+		padding: theme.spacing()
+	}
 });
 
 export const floatingMenu = (theme: Theme) => ({
-	top: toolbarHeight(theme)+"!important"
+	top: TOP_BAR_HEIGHT_SM_UP + "!important",
+	[`${theme.breakpoints.down("sm")}`]: {
+		top: TOP_BAR_HEIGHT_SM_DOWN + "!important"
+	}
 });
 
 export const menuIcon = (theme: Theme) => ({
