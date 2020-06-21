@@ -15,14 +15,15 @@ import {
 	Paper,
 	Typography,
 	InputBase,
-	Box
+	Box,
+	Hidden
 } from "@material-ui/core";
 import { GitIssue, NotificationType } from "../models";
 import { getIssues, addIssues, updateIssues, deleteIssue } from "../apis";
 import { AuthContext, NotificationContext } from "../helpers";
 import { GIT_ISSUES } from "../constants";
-import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
-import { Skeleton, Pagination } from "@material-ui/lab";
+import { Delete, Edit, Save, Close, Sort, Search, Add, MoreVertOutlined } from "@material-ui/icons";
+import { Skeleton, Pagination, SpeedDial, SpeedDialAction, SpeedDialIcon } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
@@ -54,6 +55,7 @@ export const GitIssues = (): ReactElement => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [deleteIndex, setDeleteIndex] = useState(-1);
 	const [sorted, setSorted] = useState(false);
+	const [speedDialIndex, setSpeedDialIndex] = useState(-1);
 
 	const itemsPerPage = 10;
 
@@ -460,7 +462,7 @@ export const GitIssues = (): ReactElement => {
 									<ListItem>
 										<Grid container spacing={2}>
 											{editIndex === index ? (
-												<Grid container item xs={8} md={10}>
+												<Grid container item xs={10} md={9}>
 													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
 														<Grid xs={6} item className={classes.gridRightMargin}>
 															<TextField
@@ -503,50 +505,115 @@ export const GitIssues = (): ReactElement => {
 													</form>
 												</Grid>
 											) : (
-												<Grid container alignItems="center" item xs={8} md={10}>
+												<Grid container alignItems="center" item xs={10} md={9}>
 													<Link target="_blank" href={gitIssue.Link}>
 														<Typography>{gitIssue.Issue_Title}</Typography>
 													</Link>
 												</Grid>
 											)}
-											<Grid container justify="flex-end" item xs={4} md={2}>
-												{editIndex !== index && (
+											<Grid container justify="flex-end" item xs={2} md={3}>
+												<Hidden mdUp>
+													<SpeedDial
+														direction="left"
+														icon={
+															<SpeedDialIcon
+																openIcon={<Close />}
+																icon={<MoreVertOutlined />}
+															/>
+														}
+														ariaLabel="more options"
+														open={speedDialIndex === index}
+														onClose={ () => {
+															setSpeedDialIndex(-1);
+														}}
+														onOpen={() => {
+															setSpeedDialIndex(index);
+														}}
+														className={classes.speedDial}
+													>
+														{editIndex !== index && (
+															<SpeedDialAction
+																aria-label="edit"
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	setEditIndex(index);
+																}}
+																icon={<Edit />}
+																tooltipTitle="Edit"
+															/>
+														)}
+														{editIndex === index && (
+															<SpeedDialAction
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	editForm.handleSubmit();
+																}}
+																aria-label="save"
+																tooltipTitle="Save"
+																icon={<Save />}
+															/>
+														)}
+														{editIndex === index && (
+															<SpeedDialAction
+																aria-label="close"
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	setEditIndex(-1);
+																}}
+																tooltipTitle="Close"
+																icon={<Close />}
+															/>
+														)}
+														<SpeedDialAction
+															aria-label="delete"
+															onClick={() => {
+																setSpeedDialIndex(-1);
+																setDeleteIndex(parseInt(gitIssue.id));
+															}}
+															tooltipTitle="Delete"
+															icon={<Delete />}
+														/>
+													</SpeedDial>
+												</Hidden>
+												<Hidden smDown>
+													{editIndex !== index && (
+														<IconButton
+															aria-label="edit"
+															onClick={() => {
+																setEditIndex(index);
+															}}
+														>
+															<Edit />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															onClick={() => editForm.handleSubmit()}
+															type="submit"
+															aria-label="save"
+														>
+															<Save />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															aria-label="close"
+															onClick={() => {
+																setEditIndex(-1);
+															}}
+														>
+															<Close />
+														</IconButton>
+													)}
 													<IconButton
-														aria-label="edit"
+														aria-label="delete"
 														onClick={() => {
-															setEditIndex(index);
+															setDeleteIndex(parseInt(gitIssue.id));
 														}}
 													>
-														<Edit />
+														<Delete />
 													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														onClick={() => editForm.handleSubmit()}
-														type="submit"
-														aria-label="save"
-													>
-														<Save />
-													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														aria-label="close"
-														onClick={() => {
-															setEditIndex(-1);
-														}}
-													>
-														<Close />
-													</IconButton>
-												)}
-												<IconButton
-													aria-label="delete"
-													onClick={() => {
-														setDeleteIndex(parseInt(gitIssue.id));
-													}}
-												>
-													<Delete />
-												</IconButton>
+												</Hidden>
 											</Grid>
 										</Grid>
 									</ListItem>
