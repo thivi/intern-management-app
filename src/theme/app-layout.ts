@@ -45,7 +45,8 @@ export const content = (theme: Theme) => ({
 	padding: theme.spacing(3),
 	[`${theme.breakpoints.down("md")}`]: {
 		padding: theme.spacing()
-	}
+	},
+	overflow: "auto"
 });
 
 export const paper = (theme: Theme) => ({
