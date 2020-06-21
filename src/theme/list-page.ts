@@ -38,7 +38,8 @@ export const listPaper = (theme: Theme) => ({
 });
 
 export const list = (theme: Theme) => ({
-	paddingTop: 0
+	paddingTop: 0,
+	paddingBottom: 0
 });
 
 export const sortButton = (theme: Theme) => ({
@@ -104,7 +105,7 @@ export const roleSelect = (theme: Theme) => ({
 
 export const roleSelectList = (theme: Theme) => ({
 	"&.Mui-selected ::before": {
-		content:'"\u2713"',
+		content: '"\u2713"',
 		color: theme.palette.primary.main,
 		display: "flex",
 		alignItems: "center",
@@ -134,8 +135,29 @@ export const roleErrorLabel = (theme: Theme) => ({
 
 export const roleChip = (theme: Theme) => ({
 	marginRight: theme.spacing(),
+	marginBottom: theme.spacing(),
 	borderColor: theme.palette.primary.main,
 	backgroundColor: "unset",
 	border: "1px solid",
 	color: theme.palette.primary.main
+});
+
+export const speedDial = (theme: Theme) => ({
+	"& >.MuiFab-root": {
+		boxShadow: "none",
+		color: theme.palette.text.primary,
+		backgroundColor: theme.palette.common.white,
+
+		"&:hover": {
+			backgroundColor: theme.palette.grey
+		}
+	}
+});
+
+export const broadList = (theme: Theme) => ({
+	minWidth: "1130px"
+});
+
+export const broadListWrapper = (theme: Theme) => ({
+	overflow: "auto"
 });
