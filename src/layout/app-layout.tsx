@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
 	AppBar,
 	Toolbar,
@@ -11,7 +11,11 @@ import {
 	CssBaseline,
 	Avatar,
 	LinearProgress,
-	Box
+	Box,
+	Hidden,
+	IconButton,
+	useMediaQuery,
+	Theme
 } from "@material-ui/core";
 import useStyles from "../theme";
 import { routes } from "../configs";
@@ -19,6 +23,7 @@ import { RouteInterface } from "../models/routes";
 import { useHistory, useLocation } from "react-router-dom";
 import { AuthContext, useProgressLoader } from "../helpers";
 import { hasPermission } from "../utils";
+import { Menu } from "@material-ui/icons";
 
 export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactElement => {
 	const classes = useStyles();
@@ -29,11 +34,24 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 
 	const progress = useProgressLoader();
 
+	const isMdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
+
+	const [showMenu, setShowMenu] = useState(isMdUp);
+
+	useEffect(() => {
+		isMdUp ? setShowMenu(true) : setShowMenu(false);
+	}, [isMdUp]);
+
 	return (
 		<Box>
 			<CssBaseline />
 			<AppBar position="static" className={classes.appBar}>
 				<Toolbar>
+					<Hidden mdUp>
+						<IconButton className={classes.menuIcon} onClick={() => setShowMenu(!showMenu)}>
+							<Menu />
+						</IconButton>
+					</Hidden>
 					<Typography variant="h6" className={classes.appBarTitle}>
 						Intern Management
 					</Typography>
@@ -42,7 +60,16 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 				</Toolbar>
 			</AppBar>
 			<div className={classes.root}>
-				<Drawer variant="permanent" className={classes.drawer} classes={{ paper: classes.drawerPaper }}>
+				<Drawer
+					open={showMenu}
+					onClose={() => setShowMenu(!showMenu)}
+					variant={isMdUp ? "permanent" : "temporary"}
+					className={classes.drawer}
+					classes={{
+						paper: `${classes.drawerPaper}`,
+						root: `${isMdUp ? "" : classes.floatingMenu}`
+					}}
+				>
 					<List component="nav">
 						{routes.map((route: RouteInterface, index: number) => {
 							return (

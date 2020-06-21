@@ -1,5 +1,17 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { appBar, drawer, drawerPaper, appBarTitle, toolbar, root, content, paper, avatar } from "./app-layout";
+import {
+	appBar,
+	drawer,
+	drawerPaper,
+	appBarTitle,
+	toolbar,
+	root,
+	content,
+	paper,
+	avatar,
+	menuIcon,
+	floatingMenu
+} from "./app-layout";
 import {
 	gridForm,
 	gridRightMargin,
@@ -86,7 +98,9 @@ const useStyles = makeStyles(
 		roleEmail: roleEmail(theme),
 		roleButton: roleButton(theme),
 		roleErrorLabel: roleErrorLabel(theme),
-		roleChip: roleChip(theme)
+		roleChip: roleChip(theme),
+		menuIcon: menuIcon(theme),
+		floatingMenu: floatingMenu(theme)
 	}),
 	{ index: 1 }
 );
