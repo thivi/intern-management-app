@@ -34,20 +34,20 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 
 	const progress = useProgressLoader();
 
-	const isMdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
+	const isLgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
-	const [showMenu, setShowMenu] = useState(isMdUp);
+	const [showMenu, setShowMenu] = useState(isLgUp);
 
 	useEffect(() => {
-		isMdUp ? setShowMenu(true) : setShowMenu(false);
-	}, [isMdUp]);
+		isLgUp ? setShowMenu(true) : setShowMenu(false);
+	}, [isLgUp]);
 
 	return (
 		<Box>
 			<CssBaseline />
 			<AppBar position="static" className={classes.appBar}>
 				<Toolbar>
-					<Hidden mdUp>
+					<Hidden lgUp>
 						<IconButton className={classes.menuIcon} onClick={() => setShowMenu(!showMenu)}>
 							<Menu />
 						</IconButton>
@@ -63,11 +63,11 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 				<Drawer
 					open={showMenu}
 					onClose={() => setShowMenu(!showMenu)}
-					variant={isMdUp ? "permanent" : "temporary"}
+					variant={isLgUp ? "permanent" : "temporary"}
 					className={classes.drawer}
 					classes={{
 						paper: `${classes.drawerPaper}`,
-						root: `${isMdUp ? "" : classes.floatingMenu}`
+						root: `${isLgUp ? "" : classes.floatingMenu}`
 					}}
 				>
 					<List component="nav">
