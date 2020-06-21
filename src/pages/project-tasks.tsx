@@ -18,13 +18,17 @@ import {
 	InputBase,
 	Switch,
 	Box,
+	useMediaQuery,
+	Theme,
+	Link,
+	Hidden
 } from "@material-ui/core";
 import { ProjectTask, NotificationType } from "../models";
 import { getProjectTasks, addProjectTasks, updateProjectTasks, deleteProject } from "../apis";
 import { AuthContext, NotificationContext } from "../helpers";
 import { PROJECT_TASKS } from "../constants";
-import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
-import { Skeleton, Pagination } from "@material-ui/lab";
+import { Delete, Edit, Save, Close, Sort, Search, Add, MoreVertOutlined } from "@material-ui/icons";
+import { Skeleton, Pagination, SpeedDial, SpeedDialIcon, SpeedDialAction } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
@@ -37,12 +41,12 @@ const SORT_BY: {
 }[] = [
 	{
 		key: "Title",
-		text: "Title",
+		text: "Title"
 	},
 	{
 		key: "PullRequest",
-		text: "PullRequest",
-	},
+		text: "PullRequest"
+	}
 ];
 
 interface Sort {
@@ -66,9 +70,12 @@ export const ProjectTasks = (): ReactElement => {
 	const [deleteIndex, setDeleteIndex] = useState(-1);
 	const [sorted, setSorted] = useState<Sort>({ Title: false, PullRequest: false });
 	const [hideCompleted, setHideCompleted] = useState(false);
+	const [speedDialIndex, setSpeedDialIndex] = useState(-1);
 
 	const { authState } = useContext(AuthContext);
 	const { dispatch } = useContext(NotificationContext);
+
+	const isMdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
 	const itemsPerPage = 10;
 
@@ -91,7 +98,7 @@ export const ProjectTasks = (): ReactElement => {
 							Title: issue[1],
 							PullRequest: issue[2],
 							Completed: issue[3],
-							id: id.toString(),
+							id: id.toString()
 						});
 						id++;
 					}
@@ -140,7 +147,7 @@ export const ProjectTasks = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					})
 				);
 			})
@@ -235,7 +242,7 @@ export const ProjectTasks = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.SUCCESS,
-							message: "Project Task was successfully added.",
+							message: "Project Task was successfully added."
 						})
 					);
 				})
@@ -243,7 +250,7 @@ export const ProjectTasks = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.ERROR,
-							message: error,
+							message: error
 						})
 					);
 				})
@@ -254,17 +261,17 @@ export const ProjectTasks = (): ReactElement => {
 		initialValues: {
 			title: "",
 			pullRequest: "",
-			completed: false,
+			completed: false
 		},
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
 			if (!values.pullRequest) errors["pullRequest"] = "PullRequest is required.";
-			if (validator.isURL(values.pullRequest))
+			if (!validator.isURL(values.pullRequest))
 				errors["pullRequest"] = "Pull Request must be a valid URL. " + (errors["pullRequest"] ?? "");
 			if (!values.title) errors["title"] = "Title is required.";
 
 			return errors;
-		},
+		}
 	});
 
 	const editForm = useFormik({
@@ -282,7 +289,7 @@ export const ProjectTasks = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.SUCCESS,
-							message: "Project Task was successfully updated.",
+							message: "Project Task was successfully updated."
 						})
 					);
 				})
@@ -290,7 +297,7 @@ export const ProjectTasks = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.ERROR,
-							message: error,
+							message: error
 						})
 					);
 				})
@@ -301,18 +308,18 @@ export const ProjectTasks = (): ReactElement => {
 		initialValues: {
 			title: paginatedProjectTasks[editIndex]?.Title ?? "",
 			pullRequest: paginatedProjectTasks[editIndex]?.PullRequest ?? "",
-			completed: paginatedProjectTasks[editIndex]?.Completed === "yes",
+			completed: paginatedProjectTasks[editIndex]?.Completed === "yes"
 		},
 		enableReinitialize: true,
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
 			if (!values.pullRequest) errors["pullRequest"] = "PullRequest is required.";
-			if (validator.isURL(values.pullRequest))
+			if (!validator.isURL(values.pullRequest))
 				errors["pullRequest"] = "Pull Request must be a valid URL. " + (errors["pullRequest"] ?? "");
 			if (!values.title) errors["title"] = "Title is required.";
 
 			return errors;
-		},
+		}
 	});
 
 	const handlePageChange = (event: ChangeEvent, value: number) => {
@@ -328,7 +335,7 @@ export const ProjectTasks = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.SUCCESS,
-						message: "Project Task was successfully deleted.",
+						message: "Project Task was successfully deleted."
 					})
 				);
 			})
@@ -336,7 +343,7 @@ export const ProjectTasks = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					})
 				);
 			});
@@ -393,7 +400,7 @@ export const ProjectTasks = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.SUCCESS,
-						message: "Project Task was successfully updated.",
+						message: "Project Task was successfully updated."
 					})
 				);
 			})
@@ -401,7 +408,7 @@ export const ProjectTasks = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					})
 				);
 			});
@@ -413,7 +420,7 @@ export const ProjectTasks = (): ReactElement => {
 			<Paper className={classes.addPaper}>
 				<form noValidate onSubmit={addForm.handleSubmit}>
 					<Grid container spacing={2}>
-						<Grid xs={4} item>
+						<Grid xs={12} sm={6} md={4} item>
 							<TextField
 								variant="outlined"
 								name="title"
@@ -426,7 +433,7 @@ export const ProjectTasks = (): ReactElement => {
 								error={!!(addForm.touched.title && addForm.errors.title)}
 							/>
 						</Grid>
-						<Grid xs={4} item>
+						<Grid xs={12} sm={6} md={4} item>
 							<TextField
 								variant="outlined"
 								name="pullRequest"
@@ -443,7 +450,7 @@ export const ProjectTasks = (): ReactElement => {
 								error={!!(addForm.touched.pullRequest && addForm.errors.pullRequest)}
 							/>
 						</Grid>
-						<Grid item xs={2}>
+						<Grid item xs={12} md={2} className={classes.addButtonGrid}>
 							<FormControlLabel
 								control={
 									<Checkbox
@@ -454,10 +461,10 @@ export const ProjectTasks = (): ReactElement => {
 									/>
 								}
 								label="Completed?"
-								labelPlacement="bottom"
+								labelPlacement={isMdUp ? "bottom" : "start"}
 							/>
 						</Grid>
-						<Grid item xs={2}>
+						<Grid item xs={12} md={2} className={classes.addButtonGrid}>
 							<Button
 								className={classes.primaryButton}
 								startIcon={<Add />}
@@ -475,25 +482,25 @@ export const ProjectTasks = (): ReactElement => {
 				<List className={classes.list}>
 					<ListItem className={classes.listHeader}>
 						<Grid container spacing={2} className={classes.filterGrid}>
-							<Grid item xs={2}>
+							<Grid item xs={4} md={2} sm={3}>
 								<FormControlLabel
 									control={
 										<Switch
 											checked={hideCompleted}
 											onChange={() => search("", true)}
 											classes={{
-												switchBase: classes.customSwitch,
+												switchBase: classes.customSwitch
 											}}
 										/>
 									}
 									label="Hide Completed"
 									labelPlacement="bottom"
 									classes={{
-										root: classes.switchLabel,
+										root: classes.switchLabel
 									}}
 								/>
 							</Grid>
-							<Grid item xs={10} container justify="flex-end" alignItems="center">
+							<Grid item xs={8} md={10} sm={9} container justify="flex-end" alignItems="center">
 								<Paper className={classes.search} variant="outlined">
 									<InputBase
 										placeholder="Search by project task name"
@@ -527,7 +534,7 @@ export const ProjectTasks = (): ReactElement => {
 					</ListItem>
 					<ListItem className={classes.listHeader}>
 						<Grid container spacing={2}>
-							<Grid container item xs={6}>
+							<Grid container item xs={6} md={5}>
 								<IconButton
 									aria-label="sort order"
 									onClick={() => {
@@ -547,13 +554,13 @@ export const ProjectTasks = (): ReactElement => {
 												? !sortOrder["Title"]
 													? "scaleY(-1)"
 													: "scaleY(1)"
-												: "scaleY(-1)",
+												: "scaleY(-1)"
 										}}
 									/>
 								</IconButton>
 								<Typography variant="subtitle1">Task Name</Typography>
 							</Grid>
-							<Grid container item xs={4}>
+							<Grid container item xs={4} md={4}>
 								<IconButton
 									aria-label="sort order"
 									onClick={() => {
@@ -573,7 +580,7 @@ export const ProjectTasks = (): ReactElement => {
 												? !sortOrder["PullRequest"]
 													? "scaleY(-1)"
 													: "scaleY(1)"
-												: "scaleY(-1)",
+												: "scaleY(-1)"
 										}}
 									/>
 								</IconButton>
@@ -599,7 +606,7 @@ export const ProjectTasks = (): ReactElement => {
 									<ListItem>
 										<Grid container spacing={2}>
 											{editIndex === index ? (
-												<Grid container item xs={10}>
+												<Grid container item xs={10} md={9}>
 													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
 														<Grid xs={6} item className={classes.gridRightMargin}>
 															<TextField
@@ -660,52 +667,121 @@ export const ProjectTasks = (): ReactElement => {
 															label=""
 														/>
 													</Grid>
-													<Grid container alignItems="center" item xs={5}>
+													<Grid container alignItems="center" item xs={5} md={4}>
 														<Typography component="h4">{gitIssue.Title}</Typography>
 													</Grid>
-													<Grid container alignItems="center" item xs={4}>
-														<Typography component="h4">{gitIssue.PullRequest}</Typography>
+													<Grid container alignItems="center" item xs={4} md={4}>
+														<Link href={gitIssue.PullRequest}>
+															<Typography component="h4">
+																{gitIssue.PullRequest}
+															</Typography>
+														</Link>
 													</Grid>
 												</>
 											)}
-											<Grid container justify="flex-end" item xs={2}>
-												{editIndex !== index && (
+											<Grid container justify="flex-end" item xs={2} md={3}>
+												<Hidden mdUp>
+													<SpeedDial
+														direction="left"
+														icon={
+															<SpeedDialIcon
+																openIcon={<Close />}
+																icon={<MoreVertOutlined />}
+															/>
+														}
+														ariaLabel="more options"
+														open={speedDialIndex === index}
+														onClose={() => {
+															setSpeedDialIndex(-1);
+														}}
+														onOpen={() => {
+															setSpeedDialIndex(index);
+														}}
+														className={classes.speedDial}
+													>
+														{editIndex !== index && (
+															<SpeedDialAction
+																aria-label="edit"
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	setEditIndex(index);
+																}}
+																icon={<Edit />}
+																tooltipTitle="Edit"
+															/>
+														)}
+														{editIndex === index && (
+															<SpeedDialAction
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	editForm.handleSubmit();
+																}}
+																aria-label="save"
+																tooltipTitle="Save"
+																icon={<Save />}
+															/>
+														)}
+														{editIndex === index && (
+															<SpeedDialAction
+																aria-label="close"
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	setEditIndex(-1);
+																}}
+																tooltipTitle="Close"
+																icon={<Close />}
+															/>
+														)}
+														<SpeedDialAction
+															aria-label="delete"
+															onClick={() => {
+																setSpeedDialIndex(-1);
+																setDeleteIndex(parseInt(gitIssue.id));
+															}}
+															tooltipTitle="Delete"
+															icon={<Delete />}
+														/>
+													</SpeedDial>
+												</Hidden>
+												<Hidden smDown>
+													{editIndex !== index && (
+														<IconButton
+															aria-label="edit"
+															onClick={() => {
+																setEditIndex(index);
+															}}
+														>
+															<Edit />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															onClick={() => editForm.handleSubmit()}
+															type="submit"
+															aria-label="save"
+														>
+															<Save />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															aria-label="close"
+															onClick={() => {
+																setEditIndex(-1);
+															}}
+														>
+															<Close />
+														</IconButton>
+													)}
 													<IconButton
-														aria-label="edit"
+														aria-label="delete"
 														onClick={() => {
-															setEditIndex(index);
+															setDeleteIndex(parseInt(gitIssue.id));
 														}}
 													>
-														<Edit />
+														<Delete />
 													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														onClick={() => editForm.handleSubmit()}
-														type="submit"
-														aria-label="save"
-													>
-														<Save />
-													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														aria-label="close"
-														onClick={() => {
-															setEditIndex(-1);
-														}}
-													>
-														<Close />
-													</IconButton>
-												)}
-												<IconButton
-													aria-label="delete"
-													onClick={() => {
-														setDeleteIndex(parseInt(gitIssue.id));
-													}}
-												>
-													<Delete />
-												</IconButton>
+												</Hidden>
 											</Grid>
 										</Grid>
 									</ListItem>
