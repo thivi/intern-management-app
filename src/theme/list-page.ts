@@ -39,9 +39,17 @@ export const listPaper = (theme: Theme) => ({
 
 export const list = (theme: Theme) => ({
 	paddingTop: 0,
-	paddingBottom: 0
+	paddingBottom: 0,
+	"& .MuiGrid-root": {
+		overflow: "auto"
+	}
 });
 
+export const speedDialGrid = (theme: Theme) => ({
+	"& .MuiGrid-root": {
+		overflow: "unset"
+	}
+});
 export const sortButton = (theme: Theme) => ({
 	color: theme.palette.getContrastText(theme.palette.primary.main),
 	marginRight: theme.spacing(1)
