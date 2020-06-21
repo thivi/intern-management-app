@@ -15,7 +15,7 @@ import {
 	Paper,
 	Typography,
 	InputBase,
-	Box,
+	Box
 } from "@material-ui/core";
 import { GitIssue, NotificationType } from "../models";
 import { getIssues, addIssues, updateIssues, deleteIssue } from "../apis";
@@ -35,8 +35,8 @@ const SORT_BY: {
 }[] = [
 	{
 		key: "Issue_Title",
-		text: "Issue Title",
-	},
+		text: "Issue Title"
+	}
 ];
 
 export const GitIssues = (): ReactElement => {
@@ -77,7 +77,7 @@ export const GitIssues = (): ReactElement => {
 							Email_ID: authState.authData.email,
 							Issue_Title: issue[1],
 							Link: issue[2],
-							id: id.toString(),
+							id: id.toString()
 						});
 						id++;
 					}
@@ -122,7 +122,7 @@ export const GitIssues = (): ReactElement => {
 			.catch((error) => {
 				Notify({
 					status: NotificationType.ERROR,
-					message: error,
+					message: error
 				});
 			})
 			.finally(() => {
@@ -203,14 +203,14 @@ export const GitIssues = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.SUCCESS,
-							message: "Git Issue was successfully added.",
+							message: "Git Issue was successfully added."
 						})
 					);
 				})
 				.catch((error) => {
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					});
 				})
 				.finally(() => {
@@ -219,7 +219,7 @@ export const GitIssues = (): ReactElement => {
 		},
 		initialValues: {
 			title: "",
-			link: "",
+			link: ""
 		},
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
@@ -229,7 +229,7 @@ export const GitIssues = (): ReactElement => {
 				errors["link"] = "The link should be a valid URL. " + (errors["link"] ?? "");
 
 			return errors;
-		},
+		}
 	});
 
 	const editForm = useFormik({
@@ -245,13 +245,13 @@ export const GitIssues = (): ReactElement => {
 					getGitIssuesCall();
 					Notify({
 						status: NotificationType.SUCCESS,
-						message: "Git Issue was successfully updated.",
+						message: "Git Issue was successfully updated."
 					});
 				})
 				.catch((error) => {
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					});
 				})
 				.finally(() => {
@@ -260,7 +260,7 @@ export const GitIssues = (): ReactElement => {
 		},
 		initialValues: {
 			title: paginatedGitIssues[editIndex]?.Issue_Title ?? "",
-			link: paginatedGitIssues[editIndex]?.Link ?? "",
+			link: paginatedGitIssues[editIndex]?.Link ?? ""
 		},
 		enableReinitialize: true,
 		validate: (values) => {
@@ -271,7 +271,7 @@ export const GitIssues = (): ReactElement => {
 				errors["link"] = "The link should be a valid URL. " + (errors["link"] ?? "");
 
 			return errors;
-		},
+		}
 	});
 
 	const handlePageChange = (event: ChangeEvent, value: number) => {
@@ -287,14 +287,14 @@ export const GitIssues = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.SUCCESS,
-						message: "Git Issue was successfully deleted.",
+						message: "Git Issue was successfully deleted."
 					})
 				);
 			})
 			.catch((error) => {
 				Notify({
 					status: NotificationType.ERROR,
-					message: error,
+					message: error
 				});
 			});
 	};
@@ -340,7 +340,7 @@ export const GitIssues = (): ReactElement => {
 			<Paper className={classes.addPaper}>
 				<form noValidate onSubmit={addForm.handleSubmit}>
 					<Grid container spacing={2}>
-						<Grid xs={5} item>
+						<Grid md={5} xs={12} sm={6} item>
 							<TextField
 								variant="outlined"
 								name="title"
@@ -353,7 +353,7 @@ export const GitIssues = (): ReactElement => {
 								error={!!(addForm.touched.title && addForm.errors.title)}
 							/>
 						</Grid>
-						<Grid xs={5} item>
+						<Grid md={5} xs={12} sm={6} item>
 							<TextField
 								variant="outlined"
 								name="link"
@@ -366,7 +366,7 @@ export const GitIssues = (): ReactElement => {
 								error={!!(addForm.touched.link && addForm.errors.link)}
 							/>
 						</Grid>
-						<Grid item xs={2} className={classes.addButtonGrid}>
+						<Grid item md={2} xs={12} sm={12} className={classes.addButtonGrid}>
 							<Button
 								startIcon={<Add />}
 								className={classes.primaryButton}
@@ -434,11 +434,7 @@ export const GitIssues = (): ReactElement => {
 								>
 									<Sort
 										style={{
-											transform: sorted
-												? !sortOrder
-													? "scaleY(-1)"
-													: "scaleY(1)"
-												: "scaleY(-1)",
+											transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)"
 										}}
 									/>
 								</IconButton>
@@ -464,7 +460,7 @@ export const GitIssues = (): ReactElement => {
 									<ListItem>
 										<Grid container spacing={2}>
 											{editIndex === index ? (
-												<Grid container item xs={10}>
+												<Grid container item xs={8} md={10}>
 													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
 														<Grid xs={6} item className={classes.gridRightMargin}>
 															<TextField
@@ -507,13 +503,13 @@ export const GitIssues = (): ReactElement => {
 													</form>
 												</Grid>
 											) : (
-												<Grid container alignItems="center" item xs={10}>
+												<Grid container alignItems="center" item xs={8} md={10}>
 													<Link target="_blank" href={gitIssue.Link}>
 														<Typography>{gitIssue.Issue_Title}</Typography>
 													</Link>
 												</Grid>
 											)}
-											<Grid container justify="flex-end" item xs={2}>
+											<Grid container justify="flex-end" item xs={4} md={2}>
 												{editIndex !== index && (
 													<IconButton
 														aria-label="edit"
