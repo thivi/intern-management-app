@@ -7,7 +7,7 @@ import {
 	PresentationsOrWebinarsTabs,
 	ProjectTasksTab,
 	ProjectsTab,
-	PullRequestsTab,
+	PullRequestsTab
 } from "./intern-profile-tabs";
 import { InternInfo } from "../models";
 import { KeyboardBackspaceOutlined } from "@material-ui/icons";
@@ -42,6 +42,8 @@ export const InternProfile = (props: InternProfilePropsInterface): ReactElement 
 					onChange={(event, newIndex: number) => {
 						setIndex(newIndex);
 					}}
+					scrollButtons="auto"
+					variant="scrollable"
 				>
 					<Tab label="Profile" />
 					<Tab label="Git Issues" />
