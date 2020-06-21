@@ -16,18 +16,19 @@ import {
 	Typography,
 	InputBase,
 	Box,
+	Hidden
 } from "@material-ui/core";
 import { PresentationOrWebinar, NotificationType } from "../models";
 import {
 	getPresentationsOrWebinars,
 	addPresentationsOrWebinars,
 	updatePresentationsOrWebinars,
-	deletePresentationOrWebinar,
+	deletePresentationOrWebinar
 } from "../apis";
 import { AuthContext, NotificationContext } from "../helpers";
 import { PULL_REQUESTS } from "../constants";
-import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
-import { Skeleton, Pagination } from "@material-ui/lab";
+import { Delete, Edit, Save, Close, Sort, Search, Add, MoreVertOutlined } from "@material-ui/icons";
+import { Skeleton, Pagination, SpeedDialAction, SpeedDial, SpeedDialIcon } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
@@ -40,8 +41,8 @@ const SORT_BY: {
 }[] = [
 	{
 		key: "Title",
-		text: "Title",
-	},
+		text: "Title"
+	}
 ];
 
 export const PresentationsOrWebinars = (): ReactElement => {
@@ -60,6 +61,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [deleteIndex, setDeleteIndex] = useState(-1);
 	const [sorted, setSorted] = useState(false);
+	const [speedDialIndex, setSpeedDialIndex] = useState(-1);
 
 	const itemsPerPage = 10;
 
@@ -84,7 +86,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 							Email_ID: authState.authData.email,
 							Title: issue[1],
 							Link: issue[2],
-							id: id.toString(),
+							id: id.toString()
 						});
 						id++;
 					}
@@ -130,7 +132,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					})
 				);
 			})
@@ -214,7 +216,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.SUCCESS,
-							message: "Presentation/Webinar was successfully added.",
+							message: "Presentation/Webinar was successfully added."
 						})
 					);
 				})
@@ -222,7 +224,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.ERROR,
-							message: error,
+							message: error
 						})
 					);
 				})
@@ -232,7 +234,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 		},
 		initialValues: {
 			title: "",
-			link: "",
+			link: ""
 		},
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
@@ -242,7 +244,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 				errors["link"] = "The link should be a valid URL. " + (errors["link"] ?? "");
 
 			return errors;
-		},
+		}
 	});
 
 	const editForm = useFormik({
@@ -259,7 +261,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.SUCCESS,
-							message: "Presentation/Webinar was successfully updated.",
+							message: "Presentation/Webinar was successfully updated."
 						})
 					);
 				})
@@ -267,7 +269,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 					dispatch(
 						Notify({
 							status: NotificationType.ERROR,
-							message: error,
+							message: error
 						})
 					);
 				})
@@ -277,7 +279,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 		},
 		initialValues: {
 			title: paginatedPresentationsOrWebinars[editIndex]?.Title ?? "",
-			link: paginatedPresentationsOrWebinars[editIndex]?.Link ?? "",
+			link: paginatedPresentationsOrWebinars[editIndex]?.Link ?? ""
 		},
 		enableReinitialize: true,
 		validate: (values) => {
@@ -288,7 +290,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 				errors["link"] = "The link should be a valid URL. " + (errors["link"] ?? "");
 
 			return errors;
-		},
+		}
 	});
 
 	const handlePageChange = (event: ChangeEvent, value: number) => {
@@ -306,7 +308,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.SUCCESS,
-						message: "Presentation/Webinar was successfully deleted.",
+						message: "Presentation/Webinar was successfully deleted."
 					})
 				);
 			})
@@ -314,7 +316,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 				dispatch(
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					})
 				);
 			});
@@ -361,7 +363,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 			<Paper className={classes.addPaper}>
 				<form noValidate onSubmit={addForm.handleSubmit}>
 					<Grid container spacing={2}>
-						<Grid xs={5} item>
+						<Grid md={5} xs={12} sm={6} item>
 							<TextField
 								variant="outlined"
 								name="title"
@@ -374,7 +376,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 								error={!!(addForm.touched.title && addForm.errors.title)}
 							/>
 						</Grid>
-						<Grid xs={5} item>
+						<Grid md={5} xs={12} sm={6} item>
 							<TextField
 								variant="outlined"
 								name="link"
@@ -387,7 +389,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 								error={!!(addForm.touched.link && addForm.errors.link)}
 							/>
 						</Grid>
-						<Grid item xs={2} className={classes.addButtonGrid}>
+						<Grid item md={2} xs={12} sm={12} className={classes.addButtonGrid}>
 							<Button
 								className={classes.primaryButton}
 								startIcon={<Add />}
@@ -455,11 +457,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 								>
 									<Sort
 										style={{
-											transform: sorted
-												? !sortOrder
-													? "scaleY(-1)"
-													: "scaleY(1)"
-												: "scaleY(-1)",
+											transform: sorted ? (!sortOrder ? "scaleY(-1)" : "scaleY(1)") : "scaleY(-1)"
 										}}
 									/>
 								</IconButton>
@@ -485,7 +483,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 									<ListItem>
 										<Grid container spacing={2}>
 											{editIndex === index ? (
-												<Grid container item xs={10}>
+												<Grid container item xs={10} md={9}>
 													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
 														<Grid xs={6} item className={classes.gridRightMargin}>
 															<TextField
@@ -528,50 +526,115 @@ export const PresentationsOrWebinars = (): ReactElement => {
 													</form>
 												</Grid>
 											) : (
-												<Grid container alignItems="center" item xs={10}>
+												<Grid container alignItems="center" item xs={10} md={9}>
 													<Link target="_blank" href={gitIssue.Link}>
 														<Typography>{gitIssue.Title}</Typography>
 													</Link>
 												</Grid>
 											)}
-											<Grid container justify="flex-end" item xs={2}>
-												{editIndex !== index && (
+											<Grid container justify="flex-end" item xs={2} md={3}>
+												<Hidden mdUp>
+													<SpeedDial
+														direction="left"
+														icon={
+															<SpeedDialIcon
+																openIcon={<Close />}
+																icon={<MoreVertOutlined />}
+															/>
+														}
+														ariaLabel="more options"
+														open={speedDialIndex === index}
+														onClose={() => {
+															setSpeedDialIndex(-1);
+														}}
+														onOpen={() => {
+															setSpeedDialIndex(index);
+														}}
+														className={classes.speedDial}
+													>
+														{editIndex !== index && (
+															<SpeedDialAction
+																aria-label="edit"
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	setEditIndex(index);
+																}}
+																icon={<Edit />}
+																tooltipTitle="Edit"
+															/>
+														)}
+														{editIndex === index && (
+															<SpeedDialAction
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	editForm.handleSubmit();
+																}}
+																aria-label="save"
+																tooltipTitle="Save"
+																icon={<Save />}
+															/>
+														)}
+														{editIndex === index && (
+															<SpeedDialAction
+																aria-label="close"
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	setEditIndex(-1);
+																}}
+																tooltipTitle="Close"
+																icon={<Close />}
+															/>
+														)}
+														<SpeedDialAction
+															aria-label="delete"
+															onClick={() => {
+																setSpeedDialIndex(-1);
+																setDeleteIndex(parseInt(gitIssue.id));
+															}}
+															tooltipTitle="Delete"
+															icon={<Delete />}
+														/>
+													</SpeedDial>
+												</Hidden>
+												<Hidden smDown>
+													{editIndex !== index && (
+														<IconButton
+															aria-label="edit"
+															onClick={() => {
+																setEditIndex(index);
+															}}
+														>
+															<Edit />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															onClick={() => editForm.handleSubmit()}
+															type="submit"
+															aria-label="save"
+														>
+															<Save />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															aria-label="close"
+															onClick={() => {
+																setEditIndex(-1);
+															}}
+														>
+															<Close />
+														</IconButton>
+													)}
 													<IconButton
-														aria-label="edit"
+														aria-label="delete"
 														onClick={() => {
-															setEditIndex(index);
+															setDeleteIndex(parseInt(gitIssue.id));
 														}}
 													>
-														<Edit />
+														<Delete />
 													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														onClick={() => editForm.handleSubmit()}
-														type="submit"
-														aria-label="save"
-													>
-														<Save />
-													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														aria-label="close"
-														onClick={() => {
-															setEditIndex(-1);
-														}}
-													>
-														<Close />
-													</IconButton>
-												)}
-												<IconButton
-													aria-label="delete"
-													onClick={() => {
-														setDeleteIndex(parseInt(gitIssue.id));
-													}}
-												>
-													<Delete />
-												</IconButton>
+												</Hidden>
 											</Grid>
 										</Grid>
 									</ListItem>
