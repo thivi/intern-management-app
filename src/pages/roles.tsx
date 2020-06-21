@@ -20,14 +20,15 @@ import {
 	Typography,
 	InputBase,
 	Box,
-	Chip
+	Chip,
+	Hidden
 } from "@material-ui/core";
 import { Role, RoleType, NotificationType } from "../models";
 import { getRoles, addRoles, updateRoles, deleteRole } from "../apis";
 import { AuthContext, NotificationContext } from "../helpers";
 import { ROLES, ADMIN, INTERN, MENTOR, ALL, ANONYMOUS } from "../constants";
-import { Delete, Edit, Save, Close, Sort, Search, Add } from "@material-ui/icons";
-import { Skeleton, Pagination } from "@material-ui/lab";
+import { Delete, Edit, Save, Close, Sort, Search, Add, MoreVertOutlined } from "@material-ui/icons";
+import { Skeleton, Pagination, SpeedDialIcon, SpeedDial, SpeedDialAction } from "@material-ui/lab";
 import useStyles from "../theme";
 import { useFormik } from "formik";
 import validator from "validator";
@@ -100,7 +101,8 @@ export const Roles = (): ReactElement => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [deleteIndex, setDeleteIndex] = useState(-1);
 	const [sorted, setSorted] = useState(false);
-	const [showRole, setShowRole] = useState(SHOW_ROLE_OPTIONS[0].key);
+	const [ showRole, setShowRole ] = useState(SHOW_ROLE_OPTIONS[ 0 ].key);
+	const [ speedDialIndex, setSpeedDialIndex ] = useState(-1);
 
 	const itemsPerPage = 10;
 
@@ -231,11 +233,11 @@ export const Roles = (): ReactElement => {
 		(search: string, roleFilter?: boolean) => {
 			const filteredIssues = roles.filter((issue: Role) => {
 				const query = roleFilter ? searchQuery.toLowerCase() : search.toLowerCase();
-				const matchesQuery = issue.Email_ID.toLowerCase().includes(query);
+				const matchesQuery = issue.Email_ID?.toLowerCase()?.includes(query);
 				const show = roleFilter
 					? showRole === "all"
 						? true
-						: issue.role.includes(showRole as RoleType)
+						: issue.role?.includes(showRole as RoleType)
 					: true;
 				return matchesQuery && show;
 			});
@@ -425,7 +427,7 @@ export const Roles = (): ReactElement => {
 			<Paper className={classes.addPaper}>
 				<form noValidate onSubmit={addForm.handleSubmit}>
 					<Grid container spacing={2}>
-						<Grid xs={5} item>
+						<Grid md={5} xs={12} sm={6} item>
 							<TextField
 								variant="outlined"
 								name="email"
@@ -438,7 +440,7 @@ export const Roles = (): ReactElement => {
 								error={!!(addForm.touched.email && addForm.errors.email)}
 							/>
 						</Grid>
-						<Grid xs={5} item>
+						<Grid md={5} xs={12} sm={6} item>
 							<FormControl variant="outlined" fullWidth className={classes.roleSelect}>
 								<InputLabel
 									className={addForm.touched.role && addForm.errors.role && classes.roleErrorLabel}
@@ -478,7 +480,7 @@ export const Roles = (): ReactElement => {
 								)}
 							</FormControl>
 						</Grid>
-						<Grid item xs={2} className={classes.addButtonGrid}>
+						<Grid item md={2} xs={12} sm={12} className={classes.addButtonGrid}>
 							<Button
 								className={classes.primaryButton}
 								startIcon={<Add />}
@@ -496,7 +498,7 @@ export const Roles = (): ReactElement => {
 				<List className={classes.list}>
 					<ListItem className={classes.listHeader}>
 						<Grid container spacing={2} className={classes.filterGrid}>
-							<Grid item xs={2}>
+							<Grid item xs={4} md={2}>
 								<FormControl variant="filled" fullWidth>
 									<InputLabel>Show Role</InputLabel>
 									<Select
@@ -520,7 +522,7 @@ export const Roles = (): ReactElement => {
 									</Select>
 								</FormControl>
 							</Grid>
-							<Grid item xs={10} container justify="flex-end">
+							<Grid item xs={ 8 } md={ 4 } container justify="flex-end">
 								<Paper className={classes.search} variant="outlined">
 									<InputBase
 										placeholder="Search by email"
@@ -554,7 +556,7 @@ export const Roles = (): ReactElement => {
 					</ListItem>
 					<ListItem className={classes.listHeader}>
 						<Grid container spacing={2}>
-							<Grid container item xs={5}>
+							<Grid container item xs={5} md={5}>
 								<IconButton
 									aria-label="sort order"
 									onClick={() => {
@@ -576,7 +578,7 @@ export const Roles = (): ReactElement => {
 								</IconButton>
 								<Typography variant="subtitle1">Email</Typography>
 							</Grid>
-							<Grid container item xs={5}>
+							<Grid container item xs={5} md={4}>
 								<Typography variant="subtitle1">Role</Typography>
 							</Grid>
 						</Grid>
@@ -599,7 +601,7 @@ export const Roles = (): ReactElement => {
 									<ListItem>
 										<Grid container spacing={2}>
 											{editIndex === index ? (
-												<Grid container item xs={10}>
+												<Grid container item xs={10} md={9}>
 													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
 														<Grid xs={6} item className={classes.gridRightMargin}>
 															<TextField
@@ -694,10 +696,10 @@ export const Roles = (): ReactElement => {
 												</Grid>
 											) : (
 												<>
-													<Grid container alignItems="center" item xs={5}>
+													<Grid container alignItems="center" item xs={5} md={5}>
 														<Typography>{gitIssue.Email_ID}</Typography>
 													</Grid>
-													<Grid container alignItems="center" item xs={5}>
+													<Grid container alignItems="center" item xs={5} md={4}>
 														<Typography>
 															{gitIssue?.role?.map((role: string, index: number) => (
 																<Chip
@@ -710,48 +712,109 @@ export const Roles = (): ReactElement => {
 													</Grid>
 												</>
 											)}
-											<Grid container justify="flex-end" item xs={2}>
-												{editIndex !== index && (
+											<Grid container justify="flex-end" item xs={2} md={3}>
+												<Hidden mdUp>
+													<SpeedDial
+														direction="left"
+														icon={
+															<SpeedDialIcon
+																openIcon={<Close />}
+																icon={<MoreVertOutlined />}
+															/>
+														}
+														ariaLabel="more options"
+														open={speedDialIndex === index}
+														onClose={() => {
+															setSpeedDialIndex(-1);
+														}}
+														onOpen={() => {
+															setSpeedDialIndex(index);
+														}}
+														className={classes.speedDial}
+													>
+														{editIndex !== index && (
+															<SpeedDialAction
+																aria-label="edit"
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	setEditIndex(index);
+																}}
+																icon={<Edit />}
+																tooltipTitle="Edit"
+															/>
+														)}
+														{editIndex === index && (
+															<SpeedDialAction
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	editForm.handleSubmit();
+																}}
+																aria-label="save"
+																tooltipTitle="Save"
+																icon={<Save />}
+															/>
+														)}
+														{editIndex === index && (
+															<SpeedDialAction
+																aria-label="close"
+																onClick={() => {
+																	setSpeedDialIndex(-1);
+																	setEditIndex(-1);
+																}}
+																tooltipTitle="Close"
+																icon={<Close />}
+															/>
+														)}
+														<SpeedDialAction
+															aria-label="delete"
+															onClick={() => {
+																setSpeedDialIndex(-1);
+																setDeleteIndex(parseInt(gitIssue.id));
+															}}
+															tooltipTitle="Delete"
+															icon={<Delete />}
+														/>
+													</SpeedDial>
+												</Hidden>
+												<Hidden smDown>
+													{editIndex !== index && (
+														<IconButton
+															aria-label="edit"
+															onClick={() => {
+																setEditIndex(index);
+															}}
+														>
+															<Edit />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															onClick={() => editForm.handleSubmit()}
+															type="submit"
+															aria-label="save"
+														>
+															<Save />
+														</IconButton>
+													)}
+													{editIndex === index && (
+														<IconButton
+															aria-label="close"
+															onClick={() => {
+																setEditIndex(-1);
+															}}
+														>
+															<Close />
+														</IconButton>
+													)}
 													<IconButton
-														className={classes.roleButton}
-														aria-label="edit"
+														aria-label="delete"
 														onClick={() => {
-															setEditIndex(index);
+															setDeleteIndex(parseInt(gitIssue.id));
 														}}
 													>
-														<Edit />
+														<Delete />
 													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														className={classes.roleButton}
-														onClick={() => editForm.handleSubmit()}
-														type="submit"
-														aria-label="save"
-													>
-														<Save />
-													</IconButton>
-												)}
-												{editIndex === index && (
-													<IconButton
-														className={classes.roleButton}
-														aria-label="close"
-														onClick={() => {
-															setEditIndex(-1);
-														}}
-													>
-														<Close />
-													</IconButton>
-												)}
-												<IconButton
-													className={classes.roleButton}
-													aria-label="delete"
-													onClick={() => {
-														setDeleteIndex(parseInt(gitIssue.id));
-													}}
-												>
-													<Delete />
-												</IconButton>
+												</Hidden>
 											</Grid>
 										</Grid>
 									</ListItem>
