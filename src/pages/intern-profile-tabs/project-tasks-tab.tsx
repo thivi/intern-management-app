@@ -10,7 +10,7 @@ import {
 	Typography,
 	FormControlLabel,
 	Checkbox,
-	Switch,
+	Switch
 } from "@material-ui/core";
 import { ProjectTask } from "../../models";
 import { Close, Sort, Search } from "@material-ui/icons";
@@ -24,12 +24,12 @@ const SORT_BY: {
 }[] = [
 	{
 		key: "Title",
-		text: "Title",
+		text: "Title"
 	},
 	{
 		key: "PullRequest",
-		text: "PullRequest",
-	},
+		text: "PullRequest"
+	}
 ];
 
 interface Sort {
@@ -152,7 +152,7 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 			<List className={classes.list}>
 				<ListItem className={classes.listHeader}>
 					<Grid container spacing={2} className={classes.filterGrid}>
-						<Grid item xs={2}>
+						<Grid item xs={4} md={2}>
 							<FormControlLabel
 								control={
 									<Switch
@@ -165,7 +165,7 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 								labelPlacement="top"
 							/>
 						</Grid>
-						<Grid item xs={10} container justify="flex-end" alignItems="center">
+						<Grid item xs={8} md={10} container justify="flex-end" alignItems="center">
 							<Paper className={classes.search} variant="outlined">
 								<InputBase
 									placeholder="Search by project task name"
@@ -219,7 +219,7 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 											? !sortOrder["Title"]
 												? "scaleY(-1)"
 												: "scaleY(1)"
-											: "scaleY(-1)",
+											: "scaleY(-1)"
 									}}
 								/>
 							</IconButton>
@@ -245,7 +245,7 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 											? !sortOrder["PullRequest"]
 												? "scaleY(-1)"
 												: "scaleY(1)"
-											: "scaleY(-1)",
+											: "scaleY(-1)"
 									}}
 								/>
 							</IconButton>
@@ -254,10 +254,7 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 					</Grid>
 				</ListItem>
 				{projectTasks?.length === 0 ? (
-					<EmptyPlaceholder
-						title="The are no project tasks to show here"
-						subtitle=""
-					/>
+					<EmptyPlaceholder title="The are no project tasks to show here" subtitle="" />
 				) : filteredProjectTasks?.length === 0 ? (
 					<div>
 						<NoResultPlaceholder title="No results found" subtitle="Try something else?" />
