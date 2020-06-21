@@ -34,7 +34,10 @@ import {
 	roleEmail,
 	roleButton,
 	roleErrorLabel,
-	roleChip
+	roleChip,
+	speedDial,
+	broadList,
+	broadListWrapper
 } from "./list-page";
 import {
 	popOver,
@@ -100,7 +103,10 @@ const useStyles = makeStyles(
 		roleErrorLabel: roleErrorLabel(theme),
 		roleChip: roleChip(theme),
 		menuIcon: menuIcon(theme),
-		floatingMenu: floatingMenu(theme)
+		floatingMenu: floatingMenu(theme),
+		speedDial: speedDial(theme),
+		broadList: broadList(theme),
+		broadListWrapper: broadListWrapper(theme)
 	}),
 	{ index: 1 }
 );
