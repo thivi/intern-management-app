@@ -204,7 +204,7 @@ export const DashboardIntern = (): ReactElement => {
 					</Box>
 				</Box>
 			</Grid>
-			<Grid item xs={6}>
+			<Grid item xs={12} md={6}>
 				<Paper className={`${classes.tile} ${classes.centeredTile}`}>
 					{!isLoading ? (
 						<Box padding={3}>
@@ -219,7 +219,6 @@ export const DashboardIntern = (): ReactElement => {
 										value: 100 - intern?.projectTasksCompletion * 100,
 									},
 								]}
-								width={500}
 							>
 								<PieSeries valueField="value" argumentField="type" innerRadius={0.6} />
 								<Title text="Project Tasks Completed" />
@@ -237,7 +236,7 @@ export const DashboardIntern = (): ReactElement => {
 					)}
 				</Paper>
 			</Grid>
-			<Grid container spacing={2} item xs={6} className={classes.tileColumn}>
+			<Grid container spacing={2} item xs={12} md={6} className={classes.tileColumn}>
 				<Grid container item xs={12} className={classes.tileRow}>
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
@@ -344,7 +343,7 @@ export const DashboardIntern = (): ReactElement => {
 									</Typography>
 								)}
 								<Typography variant="h6" align="center" color="textSecondary">
-									Presentations/Webinars Done
+									Presentations / Webinars Done
 								</Typography>
 								<Button
 									onClick={() => {
