@@ -46,10 +46,9 @@ export const list = (theme: Theme) => ({
 });
 
 export const speedDialGrid = (theme: Theme) => ({
-	"& .MuiGrid-root": {
-		overflow: "unset"
-	}
+	overflow: "unset!important"
 });
+
 export const sortButton = (theme: Theme) => ({
 	color: theme.palette.getContrastText(theme.palette.primary.main),
 	marginRight: theme.spacing(1)
