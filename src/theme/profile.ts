@@ -1,8 +1,8 @@
 import { Theme } from "@material-ui/core";
 
 export const profileAvatar = (theme: Theme) => ({
-	width: theme.spacing(20),
-	height: theme.spacing(20),
+	width: "100%",
+	height: "auto",
 });
 
 export const fieldsHeader = (theme: Theme) => ({
