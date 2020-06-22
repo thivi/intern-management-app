@@ -231,7 +231,7 @@ export const DashboardMentor = (): ReactElement => {
 					)}
 				</Paper>
 			</Grid>
-			<Grid container spacing={2} item xs={12} md={12} className={classes.tileColumn}>
+			<Grid container spacing={2} item xs={12} md={6} className={classes.tileColumn}>
 				<Grid container item xs={12} className={classes.tileRow}>
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
@@ -331,7 +331,7 @@ export const DashboardMentor = (): ReactElement => {
 					</Grid>
 				</Grid>
 			</Grid>
-			<Grid item xs={12} md={12}>
+			<Grid item xs={12} md={6}>
 				<Paper className={classes.tile}>
 					<Box padding={3}>
 						<Box display="flex" justifyContent="center">
