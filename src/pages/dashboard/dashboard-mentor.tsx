@@ -1,5 +1,17 @@
 import React, { ReactElement, useState, useCallback, useEffect, useContext } from "react";
-import { Typography, Button, Grid, Paper, List, ListItem, ListItemIcon, Box, Link } from "@material-ui/core";
+import {
+	Typography,
+	Button,
+	Grid,
+	Paper,
+	List,
+	ListItem,
+	ListItemIcon,
+	Box,
+	Link,
+	useMediaQuery,
+	Theme
+} from "@material-ui/core";
 import {
 	Blog,
 	GitIssue,
@@ -55,6 +67,8 @@ export const DashboardMentor = (): ReactElement => {
 	const { dispatch } = useContext(NotificationContext);
 
 	const classes = useStyles();
+
+	const isSmDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
 
 	const getInternsCall = useCallback(() => {
 		setIsLoading(true);
@@ -187,11 +201,16 @@ export const DashboardMentor = (): ReactElement => {
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
-				<Box display="flex" alignItems="center" marginBottom={3}>
+				<Box
+					display="flex"
+					alignItems="center"
+					justifyContent={isSmDown ? "center" : "start"}
+					marginBottom={isSmDown ? 1 : 3}
+				>
 					<Box marginRight={3}>
 						<img width={100} src={findIllustration()} alt="good-morning" />
 					</Box>
-					<Box display="flex" alignItems="center">
+					<Box display="flex" alignItems="center" width={isSmDown ? "min-content" : "auto"}>
 						<Typography variant="h4">
 							Good {findTimeOfTheDay().text}, {authState.authData.name}!
 						</Typography>
