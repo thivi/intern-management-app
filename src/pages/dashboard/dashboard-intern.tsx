@@ -225,7 +225,7 @@ export const DashboardIntern = (): ReactElement => {
 			<Grid item xs={12} md={6}>
 				<Paper className={`${classes.tile} ${classes.centeredTile}`}>
 					{!isLoading ? (
-						<Box padding={3}>
+						<Box padding={3} width="100%" className={classes.donutChart}>
 							<Chart
 								data={[
 									{
@@ -254,7 +254,7 @@ export const DashboardIntern = (): ReactElement => {
 					)}
 				</Paper>
 			</Grid>
-			<Grid container spacing={2} item xs={12} md={6} className={classes.tileColumn}>
+			<Grid container spacing={2} item xs={12} md={6}>
 				<Grid container item xs={12} className={classes.tileRow}>
 					<Grid item xs={6} className={classes.tileGrid}>
 						<Paper className={classes.tile}>
