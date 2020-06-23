@@ -45,7 +45,7 @@ export const list = (theme: Theme) => ({
 	}
 });
 
-export const speedDialGrid = (theme: Theme) => ({
+export const noOverFlowScrollGrid = (theme: Theme) => ({
 	overflow: "unset!important"
 });
 
