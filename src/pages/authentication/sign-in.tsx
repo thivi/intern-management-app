@@ -79,7 +79,7 @@ export const SignIn = (): React.ReactElement => {
 		};
 	}, []);
 
-	useEffect(() => {
+ 	useEffect(() => {
 		gapi.load("client:auth2", () => {
 			gapi.client
 				.init({
@@ -101,7 +101,7 @@ export const SignIn = (): React.ReactElement => {
 	return (
 		<Box
 			width="100%"
-			height="100vh"
+			minHeight="100vh"
 			display="flex"
 			justifyContent="center"
 			alignItems="center"
