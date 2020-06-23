@@ -1,5 +1,16 @@
 import React, { ReactElement, useContext, useState, useCallback, useEffect } from "react";
-import { Typography, Button, Paper, Grid, List, ListItem, ListItemIcon, Box } from "@material-ui/core";
+import {
+	Typography,
+	Button,
+	Paper,
+	Grid,
+	List,
+	ListItem,
+	ListItemIcon,
+	Box,
+	useMediaQuery,
+	Theme
+} from "@material-ui/core";
 import { AuthContext, NotificationContext } from "../../helpers";
 import {
 	Blog,
@@ -11,7 +22,7 @@ import {
 	Profile,
 	InternInfo,
 	Intern,
-	NotificationType,
+	NotificationType
 } from "../../models";
 import {
 	getProfile,
@@ -20,7 +31,7 @@ import {
 	getPullRequests,
 	getPresentationsOrWebinars,
 	getProjectTasks,
-	getProjects,
+	getProjects
 } from "../../apis";
 import { useHistory } from "react-router-dom";
 import {
@@ -28,7 +39,7 @@ import {
 	PROJECTS_PATH,
 	PRESENTATIONS_OR_WEBINARS_PATH,
 	PULL_REQUESTS_PATH,
-	GIT_ISSUES_PATH,
+	GIT_ISSUES_PATH
 } from "../../constants";
 import { Chart, PieSeries, Title, Legend, Tooltip } from "@devexpress/dx-react-chart-material-ui";
 
@@ -46,7 +57,7 @@ import {
 	GitIssueGraphic,
 	ProjectGraphic,
 	PresentationGraphic,
-	PullRequestGraphic,
+	PullRequestGraphic
 } from "../../theme/img";
 
 export const DashboardIntern = (): ReactElement => {
@@ -60,6 +71,8 @@ export const DashboardIntern = (): ReactElement => {
 	const history = useHistory();
 
 	const classes = useStyles();
+
+	const isSmDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
 
 	const getInternsCall = useCallback(() => {
 		setIsLoading(true);
@@ -86,26 +99,26 @@ export const DashboardIntern = (): ReactElement => {
 				const internBlogs: Blog[] = blogs.map((blog: string[]) => ({
 					Email_ID: blog[0],
 					Title: blog[1],
-					Link: blog[2],
+					Link: blog[2]
 				}));
 
 				const internGitIssues: GitIssue[] = gitIssues.map((gitIssue: string[]) => ({
 					Email_ID: gitIssue[0],
 					Issue_Title: gitIssue[1],
-					Link: gitIssue[2],
+					Link: gitIssue[2]
 				}));
 
 				const internPullRequests: PullRequest[] = pullRequests.map((pullRequest: string[]) => ({
 					Email_ID: pullRequest[0],
 					Title: pullRequest[1],
-					Link: pullRequest[2],
+					Link: pullRequest[2]
 				}));
 
 				const internPresentationsOrWebinars: PresentationOrWebinar[] = presentationsOrWebinars.map(
 					(presentationsOrWebinar: string[]) => ({
 						Email_ID: presentationsOrWebinar[0],
 						Title: presentationsOrWebinar[1],
-						Link: presentationsOrWebinar[2],
+						Link: presentationsOrWebinar[2]
 					})
 				);
 
@@ -113,13 +126,13 @@ export const DashboardIntern = (): ReactElement => {
 					Email_ID: projectTask[0],
 					Title: projectTask[1],
 					PullRequest: projectTask[2],
-					Completed: projectTask[3],
+					Completed: projectTask[3]
 				}));
 
 				const internProjects: Project[] = projects.map((project: string[]) => ({
 					Email_ID: project[0],
 					Title: project[1],
-					Mentor: project[2],
+					Mentor: project[2]
 				}));
 
 				const internProfile: Profile = {
@@ -133,7 +146,7 @@ export const DashboardIntern = (): ReactElement => {
 					Mentor: profile[7],
 					Co_mentor: profile[8],
 					Blog: profile[9],
-					Gantt_chart: profile[10],
+					Gantt_chart: profile[10]
 				};
 
 				const internInfoObj = {
@@ -143,7 +156,7 @@ export const DashboardIntern = (): ReactElement => {
 					pullRequests: internPullRequests,
 					presentationsOrWebinars: internPresentationsOrWebinars,
 					projectTasks: internProjectTasks,
-					projects: internProjects,
+					projects: internProjects
 				};
 
 				const completedTasks =
@@ -159,7 +172,7 @@ export const DashboardIntern = (): ReactElement => {
 						Math.round((completedTasks / (internProjectTasks.length ?? 0) || 0) * 100) / 100,
 					name: internProfile.Name,
 					blogs: internBlogs.length,
-					projects: internProjects,
+					projects: internProjects
 				};
 
 				setIntern(internObj);
@@ -193,11 +206,16 @@ export const DashboardIntern = (): ReactElement => {
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
-				<Box display="flex" alignItems="center" marginBottom={3}>
+				<Box
+					display="flex"
+					alignItems="center"
+					justifyContent={isSmDown ? "center" : "start"}
+					marginBottom={isSmDown ? 1 : 3}
+				>
 					<Box marginRight={3}>
 						<img width={100} src={findIllustration()} alt="good-morning" />
 					</Box>
-					<Box display="flex" alignItems="center">
+					<Box display="flex" alignItems="center" width={isSmDown ? "min-content" : "auto"}>
 						<Typography variant="h4">
 							Good {findTimeOfTheDay().text}, {authState.authData.name}!
 						</Typography>
@@ -212,12 +230,12 @@ export const DashboardIntern = (): ReactElement => {
 								data={[
 									{
 										type: `Completed (${intern.projectTasksCompletion * 100}%)`,
-										value: intern?.projectTasksCompletion * 100,
+										value: intern?.projectTasksCompletion * 100
 									},
 									{
 										type: `Incomplete (${100 - intern?.projectTasksCompletion * 100}%)`,
-										value: 100 - intern?.projectTasksCompletion * 100,
-									},
+										value: 100 - intern?.projectTasksCompletion * 100
+									}
 								]}
 							>
 								<PieSeries valueField="value" argumentField="type" innerRadius={0.6} />
