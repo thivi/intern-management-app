@@ -55,7 +55,9 @@ export const AppLayout = (props: React.PropsWithChildren<any>): React.ReactEleme
 					<Typography variant="h6" className={classes.appBarTitle}>
 						Intern Management
 					</Typography>
-					<Typography variant="button">{authState?.authData?.given_name}</Typography>
+					<Hidden xsDown>
+						<Typography variant="button">{authState?.authData?.given_name}</Typography>
+					</Hidden>
 					<Avatar className={classes.avatar} src={authState?.authData?.picture} />
 				</Toolbar>
 			</AppBar>
