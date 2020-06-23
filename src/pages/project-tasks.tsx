@@ -482,7 +482,7 @@ export const ProjectTasks = (): ReactElement => {
 				<List className={classes.list}>
 					<ListItem className={classes.listHeader}>
 						<Grid container spacing={2} className={classes.filterGrid}>
-							<Grid item xs={4} md={2} sm={3}>
+							<Grid item xs={4} md={2} sm={3} className={classes.noOverFlowScrollGrid}>
 								<FormControlLabel
 									control={
 										<Switch
@@ -685,7 +685,7 @@ export const ProjectTasks = (): ReactElement => {
 												item
 												xs={2}
 												md={3}
-												className={classes.speedDialGrid}
+												className={classes.noOverFlowScrollGrid}
 											>
 												<Hidden mdUp>
 													<SpeedDial
