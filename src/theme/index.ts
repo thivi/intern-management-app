@@ -38,7 +38,7 @@ import {
 	speedDial,
 	broadList,
 	broadListWrapper,
-	speedDialGrid
+	noOverFlowScrollGrid
 } from "./list-page";
 import {
 	popOver,
@@ -108,7 +108,7 @@ const useStyles = makeStyles(
 		speedDial: speedDial(theme),
 		broadList: broadList(theme),
 		broadListWrapper: broadListWrapper(theme),
-		speedDialGrid: speedDialGrid(theme)
+		noOverFlowScrollGrid: noOverFlowScrollGrid(theme)
 	}),
 	{ index: 1 }
 );
