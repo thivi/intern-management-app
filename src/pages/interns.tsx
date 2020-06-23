@@ -437,8 +437,17 @@ export const Interns = (): ReactElement => {
 					<Paper variant="elevation" className={classes.listPaper}>
 						<List className={classes.list}>
 							<ListItem className={classes.listHeader}>
-								<Grid container spacing={2} className={classes.filterGrid}>
-									<Grid item xs={authState.authData.role.includes(MENTOR) ? 6 : 4} md={2}>
+								<Grid
+									container
+									spacing={2}
+									className={`${classes.filterGrid} ${classes.noOverFlowScrollGrid}`}
+								>
+									<Grid
+										item
+										xs={authState.authData.role.includes(MENTOR) ? 6 : 4}
+										md={2}
+										className={classes.noOverFlowScrollGrid}
+									>
 										<FormControlLabel
 											control={
 												<Switch
@@ -458,7 +467,7 @@ export const Interns = (): ReactElement => {
 										/>
 									</Grid>
 									{authState.authData.role.includes(MENTOR) && (
-										<Grid item xs={6} md={2}>
+										<Grid item xs={6} md={2} className={classes.noOverFlowScrollGrid}>
 											<FormControlLabel
 												control={
 													<Switch
@@ -485,6 +494,7 @@ export const Interns = (): ReactElement => {
 										container
 										justify="flex-end"
 										alignItems="center"
+										className={classes.noOverFlowScrollGrid}
 									>
 										<Paper className={classes.search} variant="outlined">
 											<InputBase
