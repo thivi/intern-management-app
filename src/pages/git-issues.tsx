@@ -517,7 +517,7 @@ export const GitIssues = (): ReactElement => {
 												item
 												xs={2}
 												md={3}
-												className={classes.speedDialGrid}
+												className={classes.noOverFlowScrollGrid}
 											>
 												<Hidden mdUp>
 													<SpeedDial
