@@ -50,7 +50,7 @@ import {
 	secondaryTextOnColoredBackground
 } from "./generic";
 import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
-import { tile, tileRow, tileGrid, tileColumn, centeredTile } from "./dashboard";
+import { tile, tileRow, tileGrid, donutChart, centeredTile } from "./dashboard";
 import { placeholderImage } from "./placeholders";
 
 const useStyles = makeStyles(
@@ -84,7 +84,7 @@ const useStyles = makeStyles(
 		tile: tile(theme),
 		tileRow: tileRow(theme),
 		tileGrid: tileGrid(theme),
-		tileColumn: tileColumn(theme),
+		donutChart: donutChart(theme),
 		linkText: linkText(theme),
 		backButton: backButton(theme),
 		noButtonList: noButtonList(theme),
