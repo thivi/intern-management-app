@@ -265,7 +265,7 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 							<React.Fragment key={index}>
 								<ListItem>
 									<Grid container spacing={2}>
-										<Grid item xs={1}>
+										<Grid item xs={1} className={classes.noOverFlowScrollGrid}>
 											<FormControlLabel
 												control={
 													<Checkbox

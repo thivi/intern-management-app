@@ -653,7 +653,7 @@ export const ProjectTasks = (): ReactElement => {
 												</Grid>
 											) : (
 												<>
-													<Grid item xs={1}>
+													<Grid item xs={1} className={classes.noOverFlowScrollGrid}>
 														<FormControlLabel
 															control={
 																<Checkbox
