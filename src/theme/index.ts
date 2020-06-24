@@ -51,7 +51,7 @@ import {
 	overflowHidden
 } from "./generic";
 import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
-import { tile, tileRow, tileGrid, donutChart, centeredTile } from "./dashboard";
+import { tile, tileRow, tileGrid, donutChart, centeredTile, tileContainer } from "./dashboard";
 import { placeholderImage } from "./placeholders";
 
 const useStyles = makeStyles(
@@ -110,7 +110,8 @@ const useStyles = makeStyles(
 		broadList: broadList(theme),
 		broadListWrapper: broadListWrapper(theme),
 		noOverFlowScrollGrid: noOverFlowScrollGrid(theme),
-		overflowHidden: overflowHidden(theme)
+		overflowHidden: overflowHidden(theme),
+		tileContainer: tileContainer(theme)
 	}),
 	{ index: 1 }
 );
