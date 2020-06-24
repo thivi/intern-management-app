@@ -3,22 +3,22 @@ import { TimeOfTheDay } from "../models";
 export const findTimeOfTheDay = (): TimeOfTheDay => {
 	const hour = new Date().getHours();
 
-	if (hour > 19)
+	if (hour > 18)
 		return {
 			text: "Evening",
 			image: "night",
 		};
-	if (hour > 16)
+	if (hour > 15)
 		return {
 			text: "Evening",
 			image: "evening",
 		};
-	if (hour > 12)
+	if (hour > 11)
 		return {
 			text: "Afternoon",
 			image: "noon",
 		};
-	if (hour > 6)
+	if (hour > 5)
 		return {
 			text: "Morning",
 			image: "morning",
