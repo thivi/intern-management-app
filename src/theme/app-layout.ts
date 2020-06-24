@@ -37,7 +37,11 @@ export const drawer = (theme: Theme) => ({
 export const toolbar = (theme: Theme) => theme.mixins.toolbar;
 
 export const root = (theme: Theme) => ({
-	display: "flex"
+	display: "flex",
+	minHeight: "calc(100vh - " + TOP_BAR_HEIGHT_SM_UP + ")",
+	[`${theme.breakpoints.down("xs")}`]: {
+		minHeight: "calc(100vh - " + TOP_BAR_HEIGHT_SM_DOWN + ")"
+	}
 });
 
 export const content = (theme: Theme) => ({
