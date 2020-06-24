@@ -255,8 +255,8 @@ export const DashboardIntern = (): ReactElement => {
 				</Paper>
 			</Grid>
 			<Grid container spacing={2} item xs={12} md={6}>
-				<Grid container item xs={12} className={classes.tileRow}>
-					<Grid item xs={6} className={classes.tileGrid}>
+				<Box className={classes.tileContainer}>
+					<Box className={classes.tileGrid}>
 						<Paper className={classes.tile}>
 							<Box padding={3}>
 								<Box display="flex" justifyContent="center">
@@ -284,8 +284,8 @@ export const DashboardIntern = (): ReactElement => {
 								</Button>
 							</Box>
 						</Paper>
-					</Grid>
-					<Grid item xs={6} className={classes.tileGrid}>
+					</Box>
+					<Box className={classes.tileGrid}>
 						<Paper className={classes.tile}>
 							<Box padding={3}>
 								<Box display="flex" justifyContent="center">
@@ -313,10 +313,8 @@ export const DashboardIntern = (): ReactElement => {
 								</Button>
 							</Box>
 						</Paper>
-					</Grid>
-				</Grid>
-				<Grid container item xs={12} className={classes.tileRow}>
-					<Grid item xs={6} className={classes.tileGrid}>
+					</Box>
+					<Box className={classes.tileGrid}>
 						<Paper className={classes.tile}>
 							<Box padding={3}>
 								<Box display="flex" justifyContent="center">
@@ -344,8 +342,8 @@ export const DashboardIntern = (): ReactElement => {
 								</Button>
 							</Box>
 						</Paper>
-					</Grid>
-					<Grid item xs={6} className={classes.tileGrid}>
+					</Box>
+					<Box className={classes.tileGrid}>
 						<Paper className={classes.tile}>
 							<Box padding={3}>
 								<Box display="flex" justifyContent="center">
@@ -373,8 +371,8 @@ export const DashboardIntern = (): ReactElement => {
 								</Button>
 							</Box>
 						</Paper>
-					</Grid>
-				</Grid>
+					</Box>
+				</Box>
 			</Grid>
 			<Grid item xs={12}>
 				<Paper className={classes.tile}>
