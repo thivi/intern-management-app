@@ -560,7 +560,7 @@ export const ProjectTasks = (): ReactElement => {
 								</IconButton>
 								<Typography variant="subtitle1">Task Name</Typography>
 							</Grid>
-							<Grid container item xs={4} md={4}>
+							<Grid container item xs={6} md={7}>
 								<IconButton
 									aria-label="sort order"
 									onClick={() => {
