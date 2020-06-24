@@ -47,7 +47,8 @@ import {
 	centerAlign,
 	coloredBackground,
 	primaryTextOnColoredBackground,
-	secondaryTextOnColoredBackground
+	secondaryTextOnColoredBackground,
+	overflowHidden
 } from "./generic";
 import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
 import { tile, tileRow, tileGrid, donutChart, centeredTile } from "./dashboard";
@@ -108,7 +109,8 @@ const useStyles = makeStyles(
 		speedDial: speedDial(theme),
 		broadList: broadList(theme),
 		broadListWrapper: broadListWrapper(theme),
-		noOverFlowScrollGrid: noOverFlowScrollGrid(theme)
+		noOverFlowScrollGrid: noOverFlowScrollGrid(theme),
+		overflowHidden: overflowHidden(theme)
 	}),
 	{ index: 1 }
 );

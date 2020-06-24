@@ -36,7 +36,7 @@ export const InternProfile = (props: InternProfilePropsInterface): ReactElement 
 				</Grid>
 			</Grid>
 
-			<Paper>
+			<Paper className={classes.overflowHidden}>
 				<Tabs
 					value={index}
 					onChange={(event, newIndex: number) => {
