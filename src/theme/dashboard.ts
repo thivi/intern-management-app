@@ -17,13 +17,23 @@ export const tileRow = (theme: Theme) => ({
 });
 
 export const tileGrid = (theme: Theme) => ({
-	height: "100%",
-	paddingRight: theme.spacing(1),
-	paddingLeft: theme.spacing(1)
+	height: "100%"
 });
 
 export const donutChart = (theme: Theme) => ({
 	"& #center-container": {
 		flexDirection: "column!important"
 	}
+});
+
+export const tileContainer = (theme: Theme) => ({
+	display: "grid",
+	gridTemplateColumns: "1fr 1fr",
+	gridRowGap: theme.spacing(),
+	gridColumnGap: theme.spacing(),
+	padding: theme.spacing(),
+	[`${theme.breakpoints.down("xs")}`]: {
+		gridTemplateColumns: "1fr"
+	},
+	width: "100%"
 });
