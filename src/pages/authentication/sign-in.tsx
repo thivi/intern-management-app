@@ -94,9 +94,16 @@ export const SignIn = (): React.ReactElement => {
 					GoogleAuth.isSignedIn.listen(() => {
 						signIn(GoogleAuth);
 					});
+				}).catch(error => {
+					dispatchNotification(
+						Notify({
+							status: NotificationType.ERROR,
+							message: error?.response?.data
+						})
+					);
 				});
 		});
-	}, [signIn]);
+	}, [signIn, dispatchNotification]);
 
 	return (
 		<Box
