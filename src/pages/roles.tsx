@@ -522,7 +522,7 @@ export const Roles = (): ReactElement => {
 									</Select>
 								</FormControl>
 							</Grid>
-							<Grid item xs={8} md={4} container justify="flex-end">
+							<Grid item xs={8} md={10} container justify="flex-end">
 								<Paper className={classes.search} variant="outlined">
 									<InputBase
 										placeholder="Search by email"
@@ -713,6 +713,7 @@ export const Roles = (): ReactElement => {
 											<Grid
 												container
 												justify="flex-end"
+												alignItems="center"
 												item
 												xs={2}
 												md={3}
