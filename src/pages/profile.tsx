@@ -45,7 +45,7 @@ export const ProfilePage = (): ReactElement => {
 						dispatch(
 							Notify({
 								status: NotificationType.SUCCESS,
-								message: "Profile was successfully added.",
+								message: "Profile was successfully added."
 							})
 						);
 					})
@@ -53,7 +53,7 @@ export const ProfilePage = (): ReactElement => {
 						dispatch(
 							Notify({
 								status: NotificationType.ERROR,
-								message: error,
+								message: error
 							})
 						);
 					})
@@ -67,7 +67,7 @@ export const ProfilePage = (): ReactElement => {
 						dispatch(
 							Notify({
 								status: NotificationType.SUCCESS,
-								message: "Profile was successfully added.",
+								message: "Profile was successfully added."
 							})
 						);
 					})
@@ -75,7 +75,7 @@ export const ProfilePage = (): ReactElement => {
 						dispatch(
 							Notify({
 								status: NotificationType.ERROR,
-								message: error,
+								message: error
 							})
 						);
 					})
@@ -94,7 +94,7 @@ export const ProfilePage = (): ReactElement => {
 			mentor: profile?.Mentor,
 			co_mentor: profile?.Co_mentor,
 			blog: profile?.Blog,
-			gantt_chart: profile?.Gantt_chart,
+			gantt_chart: profile?.Gantt_chart
 		},
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
@@ -125,7 +125,7 @@ export const ProfilePage = (): ReactElement => {
 			if (values.co_mentor && !validator.isEmail(values.co_mentor))
 				errors["co_mentor"] = "Co-mentor email should be a valid email address. " + (errors["co_mentor"] ?? "");
 			return errors;
-		},
+		}
 	});
 
 	const { handleSubmit, touched, errors, values, handleChange, handleBlur, setFieldValue } = formik;
@@ -140,26 +140,29 @@ export const ProfilePage = (): ReactElement => {
 						return true;
 					}
 				});
-				const profile: Profile = {
-					Email_ID: rawProfile[0],
-					Name: rawProfile[1],
-					University: rawProfile[2],
-					Degree: rawProfile[3],
-					Joined_date: rawProfile[4],
-					Leaving_date: rawProfile[5],
-					Contact_no: rawProfile[6],
-					Mentor: rawProfile[7],
-					Co_mentor: rawProfile[8],
-					Blog: rawProfile[9],
-					Gantt_chart: rawProfile[10],
-				};
+
+				const profile: Profile = rawProfile
+					? {
+							Email_ID: rawProfile[0],
+							Name: rawProfile[1],
+							University: rawProfile[2],
+							Degree: rawProfile[3],
+							Joined_date: rawProfile[4],
+							Leaving_date: rawProfile[5],
+							Contact_no: rawProfile[6],
+							Mentor: rawProfile[7],
+							Co_mentor: rawProfile[8],
+							Blog: rawProfile[9],
+							Gantt_chart: rawProfile[10]
+					  }
+					: null;
 				setProfile(profile);
 			})
 			.catch((error) => {
 				dispatch(
 					Notify({
 						status: NotificationType.ERROR,
-						message: error,
+						message: error
 					})
 				);
 			})
@@ -260,7 +263,7 @@ export const ProfilePage = (): ReactElement => {
 											setFieldValue("joined_date", date);
 										}}
 										KeyboardButtonProps={{
-											"aria-label": "change date",
+											"aria-label": "change date"
 										}}
 										error={!!(touched.joined_date && errors.joined_date)}
 									/>
@@ -286,7 +289,7 @@ export const ProfilePage = (): ReactElement => {
 											setFieldValue("leaving_date", date);
 										}}
 										KeyboardButtonProps={{
-											"aria-label": "change date",
+											"aria-label": "change date"
 										}}
 										value={values.leaving_date}
 										helperText={touched.leaving_date && errors.leaving_date && errors.leaving_date}
