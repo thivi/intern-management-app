@@ -207,8 +207,14 @@ export const Interns = (): ReactElement => {
 					const internProjectTasks: ProjectTask[] = projectTasks.map((projectTask: string[]) => ({
 						Email_ID: projectTask[0],
 						Title: projectTask[1],
-						PullRequest: projectTask[2],
-						Completed: projectTask[3]
+						PullRequest: projectTask[ 2 ],
+						Month: projectTask[ 3 ]
+							? new Date(projectTask[ 3 ]).toLocaleDateString("en-US", {
+                                      month: "long",
+                                      year: "numeric",
+							})
+							:"",
+						Completed: projectTask[4]
 					}));
 
 					const internProjects: Project[] = projects.map((project: string[]) => ({
