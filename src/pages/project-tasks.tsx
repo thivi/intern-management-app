@@ -18,8 +18,6 @@ import {
     InputBase,
     Switch,
     Box,
-    useMediaQuery,
-    Theme,
     Link,
     Hidden,
 } from "@material-ui/core";
@@ -77,8 +75,6 @@ export const ProjectTasks = (): ReactElement => {
 
     const { authState } = useContext(AuthContext);
     const { dispatch } = useContext(NotificationContext);
-
-    const isMdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
     const itemsPerPage = 10;
 
