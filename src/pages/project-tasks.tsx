@@ -772,7 +772,7 @@ export const ProjectTasks = (): ReactElement => {
                                                             </Typography>
                                                         </Link>
                                                     </Grid>{" "}
-                                                    <Grid item xs={2}>
+                                                    <Grid item alignItems="center" xs={2}>
                                                         <Typography component="h4">{gitIssue.Month}</Typography>
                                                     </Grid>
                                                 </>
