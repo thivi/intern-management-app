@@ -26,7 +26,7 @@ import {
 	deletePresentationOrWebinar
 } from "../apis";
 import { AuthContext, NotificationContext } from "../helpers";
-import { PULL_REQUESTS } from "../constants";
+import { PRESENTATIONS_OR_WEBINARS } from "../constants";
 import { Delete, Edit, Save, Close, Sort, Search, Add, MoreVertOutlined } from "@material-ui/icons";
 import { Skeleton, Pagination, SpeedDialAction, SpeedDial, SpeedDialIcon } from "@material-ui/lab";
 import useStyles from "../theme";
@@ -81,7 +81,7 @@ export const PresentationsOrWebinars = (): ReactElement => {
 				let id = 0;
 				response?.values?.forEach((issue: string[], index: number) => {
 					if (issue[0] === authState.authData.email) {
-						ranges.push(`${PULL_REQUESTS}!A${index + 1}:AA${index + 1}`);
+						ranges.push(`${PRESENTATIONS_OR_WEBINARS}!A${index + 1}:AA${index + 1}`);
 						issues.push({
 							Email_ID: authState.authData.email,
 							Title: issue[1],
