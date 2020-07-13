@@ -436,175 +436,176 @@ export const Blogs = (): ReactElement => {
 					) : (
 						paginatedBlogs?.map((gitIssue: Blog, index: number) => {
 							return (
-								<React.Fragment key={index}>
-									<ListItem>
-										<Grid container spacing={2}>
-											{editIndex === index ? (
-												<Grid container item xs={10} md={9}>
-													<form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
-														<Grid xs={6} item className={classes.gridRightMargin}>
-															<TextField
-																variant="standard"
-																name="title"
-																label="Title"
-																fullWidth
-																value={editForm.values.title}
-																onBlur={editForm.handleBlur}
-																onChange={editForm.handleChange}
-																helperText={
-																	editForm.touched.title &&
-																	editForm.errors.title &&
-																	editForm.errors.title
-																}
-																error={
-																	!!(editForm.touched.title && editForm.errors.title)
-																}
-															/>
-														</Grid>
-														<Grid xs={6} item>
-															<TextField
-																variant="standard"
-																name="link"
-																label="Link"
-																fullWidth
-																value={editForm.values.link}
-																onBlur={editForm.handleBlur}
-																onChange={editForm.handleChange}
-																helperText={
-																	editForm.touched.link &&
-																	editForm.errors.link &&
-																	editForm.errors.link
-																}
-																error={
-																	!!(editForm.touched.link && editForm.errors.link)
-																}
-															/>
-														</Grid>
-													</form>
-												</Grid>
-											) : (
-												<Grid container alignItems="center" item xs={10} md={9}>
-													<Link target="_blank" href={gitIssue.Link}>
-														<Typography>{gitIssue.Title}</Typography>
-													</Link>
-												</Grid>
-											)}
-											<Grid
-												container
-												justify="flex-end"
-												item
-												xs={2}
-												md={3}
-												className={classes.noOverFlowScrollGrid}
-											>
-												<Hidden mdUp>
-													<SpeedDial
-														direction="left"
-														icon={
-															<SpeedDialIcon
-																openIcon={<Close />}
-																icon={<MoreVertOutlined />}
-															/>
-														}
-														ariaLabel="more options"
-														open={speedDialIndex === index}
-														onClose={() => {
-															setSpeedDialIndex(-1);
-														}}
-														onOpen={() => {
-															setSpeedDialIndex(index);
-														}}
-														className={classes.speedDial}
-													>
-														{editIndex !== index && (
-															<SpeedDialAction
-																aria-label="edit"
-																onClick={() => {
-																	setSpeedDialIndex(-1);
-																	setEditIndex(index);
-																}}
-																icon={<Edit />}
-																tooltipTitle="Edit"
-															/>
-														)}
-														{editIndex === index && (
-															<SpeedDialAction
-																onClick={() => {
-																	setSpeedDialIndex(-1);
-																	editForm.handleSubmit();
-																}}
-																aria-label="save"
-																tooltipTitle="Save"
-																icon={<Save />}
-															/>
-														)}
-														{editIndex === index && (
-															<SpeedDialAction
-																aria-label="close"
-																onClick={() => {
-																	setSpeedDialIndex(-1);
-																	setEditIndex(-1);
-																}}
-																tooltipTitle="Close"
-																icon={<Close />}
-															/>
-														)}
-														<SpeedDialAction
-															aria-label="delete"
-															onClick={() => {
-																setSpeedDialIndex(-1);
-																setDeleteIndex(parseInt(gitIssue.id));
-															}}
-															tooltipTitle="Delete"
-															icon={<Delete />}
-														/>
-													</SpeedDial>
-												</Hidden>
-												<Hidden smDown>
-													{editIndex !== index && (
-														<IconButton
-															aria-label="edit"
-															onClick={() => {
-																setEditIndex(index);
-															}}
-														>
-															<Edit />
-														</IconButton>
-													)}
-													{editIndex === index && (
-														<IconButton
-															onClick={() => editForm.handleSubmit()}
-															type="submit"
-															aria-label="save"
-														>
-															<Save />
-														</IconButton>
-													)}
-													{editIndex === index && (
-														<IconButton
-															aria-label="close"
-															onClick={() => {
-																setEditIndex(-1);
-															}}
-														>
-															<Close />
-														</IconButton>
-													)}
-													<IconButton
-														aria-label="delete"
-														onClick={() => {
-															setDeleteIndex(parseInt(gitIssue.id));
-														}}
-													>
-														<Delete />
-													</IconButton>
-												</Hidden>
-											</Grid>
-										</Grid>
-									</ListItem>
-									{paginatedBlogs.length - 1 !== index && <Divider />}
-								</React.Fragment>
-							);
+                                <React.Fragment key={index}>
+                                    <ListItem>
+                                        <Grid container spacing={2}>
+                                            {editIndex === index ? (
+                                                <Grid container item xs={10} md={9}>
+                                                    <form onSubmit={editForm.handleSubmit} className={classes.gridForm}>
+                                                        <Grid xs={6} item className={classes.gridRightMargin}>
+                                                            <TextField
+                                                                variant="standard"
+                                                                name="title"
+                                                                label="Title"
+                                                                fullWidth
+                                                                value={editForm.values.title}
+                                                                onBlur={editForm.handleBlur}
+                                                                onChange={editForm.handleChange}
+                                                                helperText={
+                                                                    editForm.touched.title &&
+                                                                    editForm.errors.title &&
+                                                                    editForm.errors.title
+                                                                }
+                                                                error={
+                                                                    !!(editForm.touched.title && editForm.errors.title)
+                                                                }
+                                                            />
+                                                        </Grid>
+                                                        <Grid xs={6} item>
+                                                            <TextField
+                                                                variant="standard"
+                                                                name="link"
+                                                                label="Link"
+                                                                fullWidth
+                                                                value={editForm.values.link}
+                                                                onBlur={editForm.handleBlur}
+                                                                onChange={editForm.handleChange}
+                                                                helperText={
+                                                                    editForm.touched.link &&
+                                                                    editForm.errors.link &&
+                                                                    editForm.errors.link
+                                                                }
+                                                                error={
+                                                                    !!(editForm.touched.link && editForm.errors.link)
+                                                                }
+                                                            />
+                                                        </Grid>
+                                                    </form>
+                                                </Grid>
+                                            ) : (
+                                                <Grid container alignItems="center" item xs={10} md={9}>
+                                                    <Link target="_blank" href={gitIssue.Link}>
+                                                        <Typography>{gitIssue.Title}</Typography>
+                                                    </Link>
+                                                </Grid>
+                                            )}
+                                            <Grid
+                                                container
+                                                justify="flex-end"
+                                                item
+                                                xs={2}
+                                                md={3}
+                                                className={classes.noOverFlowScrollGrid}
+                                                alignItems="center"
+                                            >
+                                                <Hidden mdUp>
+                                                    <SpeedDial
+                                                        direction="left"
+                                                        icon={
+                                                            <SpeedDialIcon
+                                                                openIcon={<Close />}
+                                                                icon={<MoreVertOutlined />}
+                                                            />
+                                                        }
+                                                        ariaLabel="more options"
+                                                        open={speedDialIndex === index}
+                                                        onClose={() => {
+                                                            setSpeedDialIndex(-1);
+                                                        }}
+                                                        onOpen={() => {
+                                                            setSpeedDialIndex(index);
+                                                        }}
+                                                        className={classes.speedDial}
+                                                    >
+                                                        {editIndex !== index && (
+                                                            <SpeedDialAction
+                                                                aria-label="edit"
+                                                                onClick={() => {
+                                                                    setSpeedDialIndex(-1);
+                                                                    setEditIndex(index);
+                                                                }}
+                                                                icon={<Edit />}
+                                                                tooltipTitle="Edit"
+                                                            />
+                                                        )}
+                                                        {editIndex === index && (
+                                                            <SpeedDialAction
+                                                                onClick={() => {
+                                                                    setSpeedDialIndex(-1);
+                                                                    editForm.handleSubmit();
+                                                                }}
+                                                                aria-label="save"
+                                                                tooltipTitle="Save"
+                                                                icon={<Save />}
+                                                            />
+                                                        )}
+                                                        {editIndex === index && (
+                                                            <SpeedDialAction
+                                                                aria-label="close"
+                                                                onClick={() => {
+                                                                    setSpeedDialIndex(-1);
+                                                                    setEditIndex(-1);
+                                                                }}
+                                                                tooltipTitle="Close"
+                                                                icon={<Close />}
+                                                            />
+                                                        )}
+                                                        <SpeedDialAction
+                                                            aria-label="delete"
+                                                            onClick={() => {
+                                                                setSpeedDialIndex(-1);
+                                                                setDeleteIndex(parseInt(gitIssue.id));
+                                                            }}
+                                                            tooltipTitle="Delete"
+                                                            icon={<Delete />}
+                                                        />
+                                                    </SpeedDial>
+                                                </Hidden>
+                                                <Hidden smDown>
+                                                    {editIndex !== index && (
+                                                        <IconButton
+                                                            aria-label="edit"
+                                                            onClick={() => {
+                                                                setEditIndex(index);
+                                                            }}
+                                                        >
+                                                            <Edit />
+                                                        </IconButton>
+                                                    )}
+                                                    {editIndex === index && (
+                                                        <IconButton
+                                                            onClick={() => editForm.handleSubmit()}
+                                                            type="submit"
+                                                            aria-label="save"
+                                                        >
+                                                            <Save />
+                                                        </IconButton>
+                                                    )}
+                                                    {editIndex === index && (
+                                                        <IconButton
+                                                            aria-label="close"
+                                                            onClick={() => {
+                                                                setEditIndex(-1);
+                                                            }}
+                                                        >
+                                                            <Close />
+                                                        </IconButton>
+                                                    )}
+                                                    <IconButton
+                                                        aria-label="delete"
+                                                        onClick={() => {
+                                                            setDeleteIndex(parseInt(gitIssue.id));
+                                                        }}
+                                                    >
+                                                        <Delete />
+                                                    </IconButton>
+                                                </Hidden>
+                                            </Grid>
+                                        </Grid>
+                                    </ListItem>
+                                    {paginatedBlogs.length - 1 !== index && <Divider />}
+                                </React.Fragment>
+                            );
 						})
 					)}
 					{!isLoading && filteredBlogs.length > 10 && (
