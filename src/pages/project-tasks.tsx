@@ -265,9 +265,9 @@ export const ProjectTasks = (): ReactElement => {
 		},
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
-			if (!values.pullRequest) errors["pullRequest"] = "PullRequest is required.";
-			if (!validator.isURL(values.pullRequest))
-				errors["pullRequest"] = "Pull Request must be a valid URL. " + (errors["pullRequest"] ?? "");
+			if (!values.pullRequest) errors["pullRequest"] = "Pull Request/Issue is required.";
+			if (values.pullRequest && !validator.isURL(values.pullRequest))
+				errors["pullRequest"] = "Pull Request/Issue must be a valid URL. " + (errors["pullRequest"] ?? "");
 			if (!values.title) errors["title"] = "Title is required.";
 
 			return errors;
@@ -313,9 +313,9 @@ export const ProjectTasks = (): ReactElement => {
 		enableReinitialize: true,
 		validate: (values) => {
 			const errors: { [key: string]: string } = {};
-			if (!values.pullRequest) errors["pullRequest"] = "PullRequest is required.";
-			if (!validator.isURL(values.pullRequest))
-				errors["pullRequest"] = "Pull Request must be a valid URL. " + (errors["pullRequest"] ?? "");
+			if (!values.pullRequest) errors["pullRequest"] = "Pull Request/Issue is required.";
+			if (values.pullRequest && !validator.isURL(values.pullRequest))
+				errors["pullRequest"] = "Pull Request/Issue must be a valid URL. " + (errors["pullRequest"] ?? "");
 			if (!values.title) errors["title"] = "Title is required.";
 
 			return errors;
@@ -437,7 +437,7 @@ export const ProjectTasks = (): ReactElement => {
 							<TextField
 								variant="outlined"
 								name="pullRequest"
-								label="PullRequest"
+								label="Pull Request/Issue"
 								fullWidth
 								value={addForm.values.pullRequest}
 								onBlur={addForm.handleBlur}
@@ -584,7 +584,7 @@ export const ProjectTasks = (): ReactElement => {
 										}}
 									/>
 								</IconButton>
-								<Typography variant="subtitle1">Pull Request</Typography>
+								<Typography variant="subtitle1">Pull Request/Issue</Typography>
 							</Grid>
 						</Grid>
 					</ListItem>
@@ -631,7 +631,7 @@ export const ProjectTasks = (): ReactElement => {
 															<TextField
 																variant="standard"
 																name="pullRequest"
-																label="PullRequest"
+																label="Pull Request/Issue"
 																fullWidth
 																value={editForm.values.pullRequest}
 																onBlur={editForm.handleBlur}
