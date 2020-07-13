@@ -538,7 +538,8 @@ export const PresentationsOrWebinars = (): ReactElement => {
 												item
 												xs={2}
 												md={3}
-												className={classes.noOverFlowScrollGrid}
+												className={ classes.noOverFlowScrollGrid }
+												alignItems="center"
 											>
 												<Hidden mdUp>
 													<SpeedDial
