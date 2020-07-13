@@ -1,5 +1,5 @@
 import { createMuiTheme } from "@material-ui/core/styles";
-import { purple, deepOrange } from "@material-ui/core/colors";
+import { deepOrange } from "@material-ui/core/colors";
 import { BORDER_RADIUS, BORDER_RADIUS_HALF } from "./constants";
 
 export const theme = createMuiTheme({
