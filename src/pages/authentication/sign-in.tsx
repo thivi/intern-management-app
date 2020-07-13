@@ -89,16 +89,20 @@ export const SignIn = (): React.ReactElement => {
 					discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"]
 				})
 				.then(() => {
-					let GoogleAuth = gapi.auth2.getAuthInstance();
-					signIn(GoogleAuth);
-					GoogleAuth.isSignedIn.listen(() => {
+					try {
+						let GoogleAuth = gapi.auth2.getAuthInstance();
 						signIn(GoogleAuth);
-					});
+						GoogleAuth.isSignedIn.listen(() => {
+							signIn(GoogleAuth);
+						});
+					} catch (error) {
+						throw error.toString();
+					}
 				}).catch(error => {
 					dispatchNotification(
 						Notify({
 							status: NotificationType.ERROR,
-							message: error?.response?.data
+							message: error
 						})
 					);
 				});
