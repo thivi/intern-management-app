@@ -28,7 +28,7 @@ const SORT_BY: {
 	},
 	{
 		key: "PullRequest",
-		text: "PullRequest"
+		text: "Pull Request/Issue"
 	}
 ];
 
@@ -249,7 +249,7 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 									}}
 								/>
 							</IconButton>
-							<Typography variant="subtitle1">Pull Request</Typography>
+							<Typography variant="subtitle1">Pull Request/Issue</Typography>
 						</Grid>
 					</Grid>
 				</ListItem>
