@@ -97,7 +97,7 @@ export const ProfileTab = (props: ProfileTabPropsInterface): ReactElement => {
 					<Grid item xs={12}>
 						<Typography variant="subtitle2">Gantt Chart</Typography>
 						<Link href={profile.Gantt_chart} target="_blank">
-							<Typography>{profile.Gantt_chart}</Typography>
+							<Typography className={classes.overflowWrapAnywhere}>{profile.Gantt_chart}</Typography>
 						</Link>
 					</Grid>
 				</Grid>
