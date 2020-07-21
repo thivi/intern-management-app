@@ -10,7 +10,8 @@ import {
 	Typography,
 	FormControlLabel,
 	Checkbox,
-	Switch
+	Switch,
+	Link
 } from "@material-ui/core";
 import { ProjectTask } from "../../models";
 import { Close, Sort, Search } from "@material-ui/icons";
@@ -262,32 +263,34 @@ export const ProjectTasksTab = (props: ProjectTasksTabPropsInterface): ReactElem
 				) : (
 					paginatedProjectTasks?.map((gitIssue: ProjectTask, index: number) => {
 						return (
-							<React.Fragment key={index}>
-								<ListItem>
-									<Grid container spacing={2}>
-										<Grid item xs={1} className={classes.noOverFlowScrollGrid}>
-											<FormControlLabel
-												control={
-													<Checkbox
-														checked={gitIssue.Completed === "yes"}
-														name="completed"
-														disabled
-													/>
-												}
-												label=""
-											/>
-										</Grid>
-										<Grid container alignItems="center" item xs={6}>
-											<Typography component="h4">{gitIssue.Title}</Typography>
-										</Grid>
-										<Grid container alignItems="center" item xs={5}>
-											<Typography component="h4">{gitIssue.PullRequest}</Typography>
-										</Grid>
-									</Grid>
-								</ListItem>
-								{paginatedProjectTasks.length - 1 !== index && <Divider />}
-							</React.Fragment>
-						);
+                            <React.Fragment key={index}>
+                                <ListItem>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={1} className={classes.noOverFlowScrollGrid}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={gitIssue.Completed === "yes"}
+                                                        name="completed"
+                                                        disabled
+                                                    />
+                                                }
+                                                label=""
+                                            />
+                                        </Grid>
+                                        <Grid container alignItems="center" item xs={6}>
+                                            <Typography component="h4">{gitIssue.Title}</Typography>
+                                        </Grid>
+                                        <Grid container alignItems="center" item xs={5}>
+                                            <Link href={gitIssue.PullRequest} target="_blank">
+                                                <Typography component="h4">{gitIssue.PullRequest}</Typography>
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                </ListItem>
+                                {paginatedProjectTasks.length - 1 !== index && <Divider />}
+                            </React.Fragment>
+                        );
 					})
 				)}
 				{filteredProjectTasks.length > 10 && (
