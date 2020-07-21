@@ -12,6 +12,7 @@ import Project from "./project.svg";
 import Blog from "./blog.svg";
 import NotFound from "./404.svg";
 import Login from "./mobile-login.svg";
+import Wso2 from "./wso2-logo.svg";
 
 export const BoxGraphic = Box;
 export const SearchGraphic = Search;
@@ -27,3 +28,4 @@ export const ProjectGraphic = Project;
 export const BlogGraphic = Blog;
 export const NotFoundGraphic = NotFound;
 export const LoginGraphic = Login;
+export const Wso2Logo = Wso2;

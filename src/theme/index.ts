@@ -56,6 +56,7 @@ import {
 import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
 import { tile, tileRow, tileGrid, donutChart, centeredTile, tileContainer } from "./dashboard";
 import { placeholderImage } from "./placeholders";
+import { heartBeatAnimation } from './logo-animation';
 
 const useStyles = makeStyles(
     (theme: Theme) => ({
@@ -117,7 +118,25 @@ const useStyles = makeStyles(
         tileContainer: tileContainer(theme),
         editDatePicker: editDatePicker(theme),
         rightCenterFlex: rightCenterFlex(theme),
-        overflowWrapAnywhere: overflowWrapAnywhere(theme)
+        overflowWrapAnywhere: overflowWrapAnywhere(theme),
+        heartBeatAnimation: heartBeatAnimation(theme),
+        "@keyframes heartbeat": {
+            "0%": {
+                transform: "scale(0.4)"
+            },
+            "20%": {
+                transform: "scale(0.5)"
+            },
+            "35%": {
+                transform: "scale(0.4)"
+            },
+            "85%": {
+                transform: "scale(0.6)"
+            },
+            "100%": {
+                transform: "scale(0.4)"
+            }
+        }
     }),
     { index: 1 }
 );
