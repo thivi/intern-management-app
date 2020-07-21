@@ -450,7 +450,7 @@ export const Interns = (): ReactElement => {
 								>
 									<Grid
 										item
-										xs={authState.authData.role.includes(MENTOR) ? 6 : 4}
+										xs={authState.authData.role?.includes(MENTOR) ? 6 : 4}
 										md={2}
 										className={classes.noOverFlowScrollGrid}
 									>
@@ -472,7 +472,7 @@ export const Interns = (): ReactElement => {
 											}}
 										/>
 									</Grid>
-									{authState.authData.role.includes(MENTOR) && (
+									{authState.authData.role?.includes(MENTOR) && (
 										<Grid item xs={6} md={2} className={classes.noOverFlowScrollGrid}>
 											<FormControlLabel
 												control={
@@ -495,8 +495,8 @@ export const Interns = (): ReactElement => {
 									)}
 									<Grid
 										item
-										xs={authState.authData.role.includes(MENTOR) ? 12 : 8}
-										md={authState.authData.role.includes(MENTOR) ? 8 : 10}
+										xs={authState.authData.role?.includes(MENTOR) ? 12 : 8}
+										md={authState.authData.role?.includes(MENTOR) ? 8 : 10}
 										container
 										justify="flex-end"
 										alignItems="center"
