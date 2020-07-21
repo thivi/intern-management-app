@@ -138,8 +138,12 @@ export const Roles = (): ReactElement => {
 				setRoles(issues);
 
 				const filteredIssues = issues.filter((issue: Role) => {
-					return issue.Email_ID.toLowerCase().includes(searchQuery.toLowerCase());
-				});
+                    const matchesQuery = searchQuery
+                        ? issue.Email_ID?.toLowerCase()?.includes(searchQuery.toLowerCase())
+                        : true;
+                    const show = showRole === ALL ? true : issue.role?.includes(showRole as RoleType);
+                    return matchesQuery && show;
+                });
 
 				let issuesToPaginate;
 
@@ -185,7 +189,7 @@ export const Roles = (): ReactElement => {
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [searchQuery, sortOrder, sorted, sortBy, page, dispatch]);
+	}, [searchQuery, sortOrder, sorted, sortBy, page, dispatch, showRole]);
 
 	useEffect(() => {
 		if (init.current && getRolesCall && authState.authData) {
@@ -235,7 +239,7 @@ export const Roles = (): ReactElement => {
 				const query = roleFilter ? searchQuery.toLowerCase() : search.toLowerCase();
 				const matchesQuery = issue.Email_ID?.toLowerCase()?.includes(query);
 				const show = roleFilter
-					? showRole === "all"
+					? showRole === ALL
 						? true
 						: issue.role?.includes(showRole as RoleType)
 					: true;
