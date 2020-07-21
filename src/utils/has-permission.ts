@@ -6,18 +6,18 @@ export const hasPermission = (permissions: Permissions | Permissions[], role: Ro
 		return true;
 	}
 	if (typeof permissions === "string") {
-		return role.includes(permissions);
+		return role?.includes(permissions);
 	}
 
 	if (permissions instanceof Array) {
 		let isPermitted = false;
 
-		if (permissions.includes(ALL)) {
+		if (permissions?.includes(ALL)) {
 			return true;
 		}
 
 		for (const permission of permissions) {
-			if (role.includes(permission as RoleAndPermission)) {
+			if (role?.includes(permission as RoleAndPermission)) {
 				isPermitted = true;
 				break;
 			}
