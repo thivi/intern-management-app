@@ -257,7 +257,7 @@ export const Interns = (): ReactElement => {
 						gitIssues: internGitIssues.length,
 						presentationsOrWebinars: internPresentationsOrWebinars.length,
 						projectTasksCompletion:
-							Math.round((completedTasks / (internProjectTasks.length ?? 0) || 0) * 100) / 100,
+							Math.round((completedTasks / (internProjectTasks.length ?? 0) || 0) * 100),
 						name: internProfile.Name,
 						blogs: internBlogs.length,
 						projects: internProjects
@@ -855,7 +855,7 @@ export const Interns = (): ReactElement => {
 															</Grid>
 															<Grid container alignItems="center" item xs={2}>
 																<Typography>
-																	{intern.projectTasksCompletion * 100}%
+																	{intern.projectTasksCompletion}%
 																</Typography>
 															</Grid>
 															<Grid container alignItems="center" item xs={2}>
