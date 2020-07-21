@@ -8,78 +8,78 @@ import { GoogleProfile, NotificationType } from "../../models";
 import { Box, Typography, List, ListItem, ListItemText, ListItemIcon, Slide, LinearProgress } from "@material-ui/core";
 import { CheckCircleOutline } from "@material-ui/icons";
 import useStyles from "../../theme";
-import { LoginGraphic } from "../../theme/img";
+import { Wso2Logo } from "../../theme/img";
 
 export const SignIn = (): React.ReactElement => {
-	const { dispatch } = useContext(AuthContext);
-	const { dispatch: dispatchNotification } = useContext(NotificationContext);
+    const { dispatch } = useContext(AuthContext);
+    const { dispatch: dispatchNotification } = useContext(NotificationContext);
 
-	const history = useHistory();
+    const history = useHistory();
 
-	const [showTip, setShowTip] = useState(false);
+    const [showTip, setShowTip] = useState(false);
 
-	const classes = useStyles();
+    const classes = useStyles();
 
-	const signIn = useCallback(
-		(GoogleAuth: gapi.auth2.GoogleAuth) => {
-			let user = GoogleAuth.currentUser.get();
-			if (
-				user.hasGrantedScopes(
-					"https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.profile"
-				)
-			) {
-				dispatch({ type: SIGN_IN, payload: null });
+    const signIn = useCallback(
+        (GoogleAuth: gapi.auth2.GoogleAuth) => {
+            let user = GoogleAuth.currentUser.get();
+            if (
+                user.hasGrantedScopes(
+                    "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.profile"
+                )
+            ) {
+                dispatch({ type: SIGN_IN, payload: null });
 
-				getGoogleProfile()
-					.then((response: GoogleProfile) => {
-						dispatch({ type: ADD_DETAILS, payload: { ...response, role: null } });
+                getGoogleProfile()
+                    .then((response: GoogleProfile) => {
+                        dispatch({ type: ADD_DETAILS, payload: { ...response, role: null } });
 
-						getRoles()
-							.then((responseRoles) => {
-								const role = responseRoles?.values.find((role: string[]) => role[0] === response.email);
-								dispatch({
-									type: ADD_DETAILS,
-									payload: { role: role?.length > 0 ? role[1].split(" ") : [ANONYMOUS] }
-								});
-							})
-							.catch((error) => {
-								dispatchNotification(
-									Notify({
-										status: NotificationType.ERROR,
-										message: error
-									})
-								);
-							})
-							.finally(() => {
-								history?.push(getCallbackUrl() ?? "");
-							});
-					})
-					.catch((error) => {
-						dispatchNotification(
-							Notify({
-								status: NotificationType.ERROR,
-								message: error
-							})
-						);
-					});
-			} else {
-				GoogleAuth.signIn();
-			}
-		},
-		[dispatch, history, dispatchNotification]
-	);
+                        getRoles()
+                            .then((responseRoles) => {
+                                const role = responseRoles?.values.find((role: string[]) => role[0] === response.email);
+                                dispatch({
+                                    type: ADD_DETAILS,
+                                    payload: { role: role?.length > 0 ? role[1].split(" ") : [ANONYMOUS] }
+                                });
+                            })
+                            .catch((error) => {
+                                dispatchNotification(
+                                    Notify({
+                                        status: NotificationType.ERROR,
+                                        message: error
+                                    })
+                                );
+                            })
+                            .finally(() => {
+                                history?.push(getCallbackUrl() ?? "");
+                            });
+                    })
+                    .catch((error) => {
+                        dispatchNotification(
+                            Notify({
+                                status: NotificationType.ERROR,
+                                message: error
+                            })
+                        );
+                    });
+            } else {
+                GoogleAuth.signIn();
+            }
+        },
+        [dispatch, history, dispatchNotification]
+    );
 
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setShowTip(true);
-		}, 5000);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowTip(true);
+        }, 5000);
 
-		return () => {
-			clearTimeout(timer);
-		};
-	}, []);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []);
 
- 	useEffect(() => {
+    useEffect(() => {
 		gapi.load("client:auth2", () => {
 			gapi.client
 				.init({
@@ -109,66 +109,66 @@ export const SignIn = (): React.ReactElement => {
 		});
 	}, [signIn, dispatchNotification]);
 
-	return (
-		<Box
-			width="100%"
-			minHeight="100vh"
-			display="flex"
-			justifyContent="center"
-			alignItems="center"
-			flexDirection="column"
-			className={classes.coloredBackground}
-		>
-			<Box marginBottom={4}>
-				<img src={LoginGraphic} alt="login" width="400px" />
-			</Box>
-			<Typography variant="h4" align="center" className={classes.primaryTextOnColoredBackground}>
-				<Box width="100%" marginBottom={4}>
-					<LinearProgress color="secondary" />
-				</Box>
-				Hold on! You are being logged in...
-			</Typography>
+    return (
+        <Box
+            width="100%"
+            minHeight="100vh"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            flexDirection="column"
+            className={classes.coloredBackground}
+        >
+            <Box className={classes.heartBeatAnimation} marginBottom={4}>
+                <img src={Wso2Logo} alt="login" width="400px" />
+            </Box>
+            <Typography variant="h4" align="center" className={classes.primaryTextOnColoredBackground}>
+                <Box width="100%" marginBottom={4}>
+                    <LinearProgress color="secondary" />
+                </Box>
+                Hold on! You are being logged in...
+            </Typography>
 
-			<Slide direction="up" in={showTip}>
-				<Box marginTop={4}>
-					<Typography
-						variant="h5"
-						color="textSecondary"
-						align="center"
-						className={classes.secondaryTextOnColoredBackground}
-					>
-						Have trouble logging in?
-					</Typography>
-					<Box marginTop={4}>
-						<Typography
-							variant="h6"
-							color="textSecondary"
-							align="center"
-							className={classes.secondaryTextOnColoredBackground}
-						>
-							Please make sure
-							<List>
-								<ListItem>
-									<ListItemIcon>
-										<CheckCircleOutline className={classes.secondaryTextOnColoredBackground} />
-									</ListItemIcon>
-									<ListItemText className={classes.secondaryTextOnColoredBackground}>
-										You have enabled cookies for this site
-									</ListItemText>
-								</ListItem>
-								<ListItem>
-									<ListItemIcon>
-										<CheckCircleOutline className={classes.secondaryTextOnColoredBackground} />
-									</ListItemIcon>
-									<ListItemText className={classes.secondaryTextOnColoredBackground}>
-										You have enabled pop-ups for this site
-									</ListItemText>
-								</ListItem>
-							</List>
-						</Typography>
-					</Box>
-				</Box>
-			</Slide>
-		</Box>
-	);
+            <Slide direction="up" in={showTip}>
+                <Box marginTop={4}>
+                    <Typography
+                        variant="h5"
+                        color="textSecondary"
+                        align="center"
+                        className={classes.secondaryTextOnColoredBackground}
+                    >
+                        Have trouble logging in?
+                    </Typography>
+                    <Box marginTop={4}>
+                        <Typography
+                            variant="h6"
+                            color="textSecondary"
+                            align="center"
+                            className={classes.secondaryTextOnColoredBackground}
+                        >
+                            Please make sure
+                            <List>
+                                <ListItem>
+                                    <ListItemIcon>
+                                        <CheckCircleOutline className={classes.secondaryTextOnColoredBackground} />
+                                    </ListItemIcon>
+                                    <ListItemText className={classes.secondaryTextOnColoredBackground}>
+                                        You have enabled cookies for this site
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemIcon>
+                                        <CheckCircleOutline className={classes.secondaryTextOnColoredBackground} />
+                                    </ListItemIcon>
+                                    <ListItemText className={classes.secondaryTextOnColoredBackground}>
+                                        You have enabled pop-ups for this site
+                                    </ListItemText>
+                                </ListItem>
+                            </List>
+                        </Typography>
+                    </Box>
+                </Box>
+            </Slide>
+        </Box>
+    );
 };
