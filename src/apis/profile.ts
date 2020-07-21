@@ -19,7 +19,7 @@ export const getProfile = (): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -41,7 +41,7 @@ export const getGoogleProfile = (): Promise<GoogleProfile> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -68,7 +68,7 @@ export const updateProfile = (range: string, values: string[]): Promise<any> => 
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -95,6 +95,6 @@ export const addProfile = (values: string[]): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };

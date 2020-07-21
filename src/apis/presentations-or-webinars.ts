@@ -18,7 +18,7 @@ export const getPresentationsOrWebinars = (): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -45,7 +45,7 @@ export const updatePresentationsOrWebinars = (range: string, values: string[]): 
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -72,7 +72,7 @@ export const addPresentationsOrWebinars = (values: string[]): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -91,6 +91,6 @@ export const deletePresentationOrWebinar = (range: string): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };

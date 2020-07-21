@@ -18,7 +18,7 @@ export const getPullRequests = (): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -45,7 +45,7 @@ export const updatePullRequests = (range: string, values: string[]): Promise<any
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -72,7 +72,7 @@ export const addPullRequests = (values: string[]): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -91,6 +91,6 @@ export const deletePullRequest = (range: string): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };

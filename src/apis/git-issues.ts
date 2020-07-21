@@ -18,7 +18,7 @@ export const getIssues = (): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -45,7 +45,7 @@ export const updateIssues = (range: string, values: string[]): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -72,7 +72,7 @@ export const addIssues = (values: string[]): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
 
@@ -91,6 +91,6 @@ export const deleteIssue = (range: string): Promise<any> => {
 			return Promise.resolve(response.data);
 		})
 		.catch((error) => {
-			return Promise.reject(error?.response?.data);
+			return Promise.reject(error?.response?.data?.error?.message);
 		});
 };
