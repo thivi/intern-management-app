@@ -51,6 +51,7 @@ import {
     primaryTextOnColoredBackground,
     secondaryTextOnColoredBackground,
     overflowHidden,
+    overflowWrapAnywhere,
 } from "./generic";
 import { profileAvatar, fieldsHeader, fieldsPaper, backButton } from "./profile";
 import { tile, tileRow, tileGrid, donutChart, centeredTile, tileContainer } from "./dashboard";
@@ -116,6 +117,7 @@ const useStyles = makeStyles(
         tileContainer: tileContainer(theme),
         editDatePicker: editDatePicker(theme),
         rightCenterFlex: rightCenterFlex(theme),
+        overflowWrapAnywhere: overflowWrapAnywhere(theme)
     }),
     { index: 1 }
 );

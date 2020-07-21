@@ -38,3 +38,7 @@ export const secondaryTextOnColoredBackground = (theme: Theme) => ({
 export const overflowHidden = (theme: Theme) => ({
 	overflow: "hidden"
 });
+
+export const overflowWrapAnywhere = (theme: Theme) => ({
+	overflowWrap: "anywhere" as const
+});
