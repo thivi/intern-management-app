@@ -47,6 +47,9 @@ jobs:
       run: |
         git config --global user.email "version.bump@github.action.com"
         git config --global user.name "GitHub Action Version Bumping"
+        git remote update
+        git fetch
+        git checkout --progress --force -B master refs/remotes/origin/master
         npm version minor
         git push
       if: github.event.action=='released'
