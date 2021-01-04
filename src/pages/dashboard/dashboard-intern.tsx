@@ -126,7 +126,7 @@ export const DashboardIntern = (): ReactElement => {
 					Email_ID: projectTask[0],
 					Title: projectTask[1],
 					PullRequest: projectTask[2],
-					Completed: projectTask[3]
+					Completed: projectTask[4]
 				}));
 
 				const internProjects: Project[] = projects.map((project: string[]) => ({
@@ -146,7 +146,8 @@ export const DashboardIntern = (): ReactElement => {
 					Mentor: profile[7],
 					Co_mentor: profile[8],
 					Blog: profile[9],
-					Gantt_chart: profile[10]
+					Gantt_chart: profile[ 10 ],
+					active: new Date(profile[ 5 ]) >= new Date()
 				};
 
 				const internInfoObj = {
@@ -229,12 +230,12 @@ export const DashboardIntern = (): ReactElement => {
 							<Chart
 								data={[
 									{
-										type: `Completed (${intern.projectTasksCompletion * 100}%)`,
-										value: intern?.projectTasksCompletion * 100
+										type: `Completed (${Math.round(intern.projectTasksCompletion * 100)}%)`,
+										value: Math.round(intern?.projectTasksCompletion * 100)
 									},
 									{
-										type: `Incomplete (${100 - intern?.projectTasksCompletion * 100}%)`,
-										value: 100 - intern?.projectTasksCompletion * 100
+										type: `Incomplete (${Math.round(100 - intern?.projectTasksCompletion * 100)}%)`,
+										value: Math.round(100 - intern?.projectTasksCompletion * 100)
 									}
 								]}
 							>
