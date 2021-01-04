@@ -153,7 +153,8 @@ export const ProfilePage = (): ReactElement => {
 							Mentor: rawProfile[7],
 							Co_mentor: rawProfile[8],
 							Blog: rawProfile[9],
-							Gantt_chart: rawProfile[10]
+							Gantt_chart: rawProfile[ 10 ],
+							active: new Date(rawProfile[ 5 ]) >= new Date()
 					  }
 					: null;
 				setProfile(profile);

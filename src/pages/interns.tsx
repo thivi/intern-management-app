@@ -134,10 +134,6 @@ export const Interns = (): ReactElement => {
 
 	const isMdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
-	const isActive = useCallback((intern: Intern): boolean => {
-		return new Date(intern.profile.Leaving_date) >= new Date();
-	}, []);
-
 	const { dispatch } = useContext(NotificationContext);
 	const { authState } = useContext(AuthContext);
 
@@ -234,7 +230,8 @@ export const Interns = (): ReactElement => {
 						Mentor: profile[7],
 						Co_mentor: profile[8],
 						Blog: profile[9],
-						Gantt_chart: profile[10]
+						Gantt_chart: profile[ 10 ],
+						active: new Date(profile[ 5 ]) >= new Date()
 					};
 
 					internInfos.push({
@@ -269,7 +266,7 @@ export const Interns = (): ReactElement => {
 				const filteredInterns = internsList.filter((intern: Intern) => {
 					const query = searchQuery.toLowerCase();
 					const matchesQuery = intern.name.toLowerCase().includes(query);
-					const showActive = showOnlyActive ? isActive(intern) : true;
+					const showActive = showOnlyActive ? intern.profile.active : true;
 					const showMentees = showOnlyMentees ? isMentee(intern) : true;
 					return matchesQuery && showActive && showMentees;
 				});
@@ -321,7 +318,7 @@ export const Interns = (): ReactElement => {
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [searchQuery, sortOrder, sorted, sortBy, page, isActive, isMentee, showOnlyMentees, showOnlyActive, dispatch]);
+	}, [searchQuery, sortOrder, sorted, sortBy, page, isMentee, showOnlyMentees, showOnlyActive, dispatch]);
 
 	useEffect(() => {
 		if (init.current && getInternsCall && authState.authData) {
@@ -377,7 +374,9 @@ export const Interns = (): ReactElement => {
 		const filteredInterns = interns.filter((Intern: Intern) => {
 			const query = active || mentees ? searchQuery.toLowerCase() : search.toLowerCase();
 			const matchesQuery = Intern.name.toLowerCase().includes(query);
-			const showActive = (active && !showOnlyActive) || (!active && showOnlyActive) ? isActive(Intern) : true;
+			const showActive = (active && !showOnlyActive) || (!active && showOnlyActive)
+				? Intern.profile.active
+				: true;
 			const showMentees =
 				(mentees && !showOnlyMentees) || (!mentees && showOnlyMentees) ? isMentee(Intern) : true;
 			return matchesQuery && showActive && showMentees;
