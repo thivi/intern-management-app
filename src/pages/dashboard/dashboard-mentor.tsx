@@ -123,7 +123,7 @@ export const DashboardMentor = (): ReactElement => {
 					Email_ID: projectTask[0],
 					Title: projectTask[1],
 					PullRequest: projectTask[2],
-					Completed: projectTask[3]
+					Completed: projectTask[4]
 				}));
 
 				const internProjects: Project[] = projects.map((project: string[]) => ({
@@ -224,12 +224,12 @@ export const DashboardMentor = (): ReactElement => {
 							<Chart
 								data={[
 									{
-										type: `Completed (${intern.projectTasksCompletion * 100}%)`,
-										value: intern?.projectTasksCompletion * 100
+										type: `Completed (${Math.round(intern.projectTasksCompletion * 100)}%)`,
+										value: Math.round(intern?.projectTasksCompletion * 100)
 									},
 									{
-										type: `Incomplete (${100 - intern?.projectTasksCompletion * 100}%)`,
-										value: 100 - intern?.projectTasksCompletion * 100
+										type: `Incomplete (${Math.round(100 - intern?.projectTasksCompletion * 100)}%)`,
+										value: Math.round(100 - intern?.projectTasksCompletion * 100)
 									}
 								]}
 							>
