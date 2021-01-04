@@ -23,4 +23,5 @@ export interface Profile {
 	Co_mentor: string;
 	Blog: string;
 	Gantt_chart: string;
+	active: boolean;
 }
